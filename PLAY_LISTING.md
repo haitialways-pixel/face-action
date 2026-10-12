@@ -4,6 +4,8 @@
 **Category:** Games → Arcade · **Tags:** casual, arcade, endless
 **Contains ads:** No · **In-app purchases:** No (v1)
 **Privacy policy URL:** https://haitialways-pixel.github.io/face-action/privacy.html
+**Developer name:** Steeve J.
+**Copyright:** © 2026 Steeve J. All rights reserved.
 **Contact email:** CONTACT_EMAIL@example.com (replace before submitting)
 
 ## Short description (≤80 chars)
