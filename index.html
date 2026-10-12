@@ -40,7 +40,7 @@ small{opacity:.75}
   <button id="bHow" class="sec">❓ How to Play</button>
   <button id="bRecalStart" class="sec">🎯 Recalibrate face</button>
   <button id="bTouch" class="sec">👆 Play with Touch</button>
-  <p id="best"></p><p id="msg"><small></small></p>
+  <p id="best"></p><p><a href="privacy.html" style="color:#9cf;font-size:13px">Privacy policy</a></p><p id="msg"><small></small></p>
 </div>
 <div id="howto" class="ov hide">
  <h2>How to Play</h2>
@@ -86,17 +86,25 @@ let sens=+(localStorage.getItem('ftq_sens')||1); // 0.5 = very sensitive … 1.5
 const MP_VER='0.10.14';
 const CDN='https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@'+MP_VER;
 const MODEL='https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task';
+// Prefer the copy bundled with the app (works offline / inside the Android app); fall back to CDN
+const MP_SOURCES=[{lib:'./vendor/mediapipe/vision_bundle.mjs',wasm:new URL('./vendor/mediapipe/wasm',location.href).href,model:new URL('./vendor/mediapipe/face_landmarker.task',location.href).href,name:'local'},
+  {lib:CDN+'/vision_bundle.mjs',wasm:CDN+'/wasm',model:MODEL,name:'CDN'}];
 async function initFace(){
-  modelStatus='loading library…';
-  const v=await import(CDN+'/vision_bundle.mjs');
+  let lastErr;
+  for(const src of MP_SOURCES){try{await initFaceFrom(src);return}catch(e){lastErr=e;console.warn('MediaPipe '+src.name+' failed',e)}}
+  throw lastErr;
+}
+async function initFaceFrom(src){
+  modelStatus='loading library ('+src.name+')…';
+  const v=await import(src.lib);
   modelStatus='loading wasm…';
-  const files=await v.FilesetResolver.forVisionTasks(CDN+'/wasm');
-  const opts=d=>({baseOptions:{modelAssetPath:MODEL,delegate:d},runningMode:'VIDEO',numFaces:1,outputFaceBlendshapes:true,outputFacialTransformationMatrixes:true,minFaceDetectionConfidence:.4,minFacePresenceConfidence:.4,minTrackingConfidence:.4});
+  const files=await v.FilesetResolver.forVisionTasks(src.wasm);
+  const opts=d=>({baseOptions:{modelAssetPath:src.model,delegate:d},runningMode:'VIDEO',numFaces:1,outputFaceBlendshapes:true,outputFacialTransformationMatrixes:true,minFaceDetectionConfidence:.4,minFacePresenceConfidence:.4,minTrackingConfidence:.4});
   for(const d of ['GPU','CPU']){
     try{modelStatus='loading model ('+d+')…';landmarker=await v.FaceLandmarker.createFromOptions(files,opts(d));
       // smoke-run once; some GPUs create fine but throw on first detect
       if(video.readyState>=2){lastTs=Math.max(lastTs+1,performance.now());landmarker.detectForVideo(video,lastTs)}
-      modelStatus='ready ('+d+')';return}
+      modelStatus='ready ('+d+', '+src.name+')';return}
     catch(e){console.warn('FaceLandmarker '+d+' failed',e);landmarker=null;modelStatus=d+' failed: '+(e.message||e)}
   }
   throw new Error('Face model failed to load: '+modelStatus);
