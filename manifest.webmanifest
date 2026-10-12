@@ -1,2 +1,2 @@
-{"name":"Face Treasure Hunter","short_name":"FaceTreasure","start_url":"./","scope":"./","display":"standalone","orientation":"portrait","background_color":"#1b1033","theme_color":"#1b1033",
+{"name":"Face-Action","short_name":"Face-Action","start_url":"./","scope":"./","display":"standalone","orientation":"portrait","background_color":"#1b1033","theme_color":"#1b1033",
 "icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png"},{"src":"icons/icon-512-maskable.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}

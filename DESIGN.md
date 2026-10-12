@@ -1,4 +1,4 @@
-# Face Treasure Hunter: Design Doc (prototype v0.1)
+# Face-Action: Design Doc (prototype v0.1)
 
 ## Concept
 You're a treasure hunter 🤠 at the bottom of a cavern. Treasure falls toward you along with **guardians** that protect it. You play with your **face** through the front camera: look left or right to move, blink to strike, open your mouth to vacuum loot, and smile to unleash a special move. The run never ends. Each stage adds a new twist, and difficulty rises gently and levels off so players keep going.
@@ -76,7 +76,7 @@ All face tracking runs on-device (MediaPipe WASM). No video or images are upload
 2. **Wrap with Capacitor:**
    ```
    npm init -y && npm i @capacitor/core @capacitor/cli @capacitor/ios @capacitor/android
-   npx cap init "Face Treasure Hunter" com.yourname.facetreasure --web-dir=www
+   npx cap init "Face-Action" com.yourname.faceaction --web-dir=www
    mkdir www && cp -r index.html manifest.webmanifest sw.js icons www/
    npx cap add ios && npx cap add android && npx cap sync
    ```
@@ -87,4 +87,7 @@ All face tracking runs on-device (MediaPipe WASM). No video or images are upload
 5. Optional: native ML (ARKit face blendshapes on iOS, MediaPipe Android SDK) for better battery life.
 
 ## Hosting (free)
-Cloudflare Pages: drag and drop the `face-treasure` folder in the dashboard (Workers & Pages → Create → Pages → Upload assets), or run `npx wrangler pages deploy face-treasure --project-name face-treasure`. You get free HTTPS at `*.pages.dev`. GitHub Pages and Netlify also work.
+Cloudflare Pages: drag and drop the `face-action` folder in the dashboard (Workers & Pages → Create → Pages → Upload assets), or run `npx wrangler pages deploy face-action --project-name face-action`. You get free HTTPS at `*.pages.dev`. GitHub Pages and Netlify also work.
+
+## Sound
+All sounds are synthesized in code with the Web Audio API (no audio files, no licensing). Effects: shot, guardian hit, guardian defeated, treasure collect (pitch rises with point value; extra sparkle for 70/100), power-up, combo (every 5), hurt, stage up, game over, Treasure Nova, and calibration countdown beeps. There's a light pentatonic music loop that only plays during active play. The 🔊 button cycles loud → quiet → mute and is saved on the device. Audio unlocks on the first tap (needed for iOS Safari).
