@@ -35,7 +35,7 @@ small{opacity:.75}
   <button id="bTouch" class="sec">👆 Play with Touch</button>
   <p id="best"></p><p id="msg"><small></small></p>
 </div>
-<div id="calib" class="ov hide"><h2 id="cTitle">Calibrating…</h2><p id="cText"></p><div style="font-size:64px" id="cIcon">😐</div></div>
+<div id="calib" class="ov hide"><h2 id="cTitle">Calibrating…</h2><p id="cText"></p><div style="font-size:64px" id="cIcon">😐</div><div style="width:70%;height:12px;background:#333;border-radius:6px;overflow:hidden"><div id="cBar" style="height:100%;width:0;background:#ffd54a"></div></div><div id="cCount" style="font-size:28px;font-weight:700"></div><small id="cStep"></small></div>
 <div id="rest" class="ov hide"><h2>😌 Face break</h2><p>Relax your face, look into the distance, blink gently.</p><p id="restT" style="font-size:48px"></p><button id="bSkip" class="sec">Skip</button></div>
 <div id="over" class="ov hide"><h2>Ouch! Out of hearts</h2><p id="oScore"></p><button id="bAgain">Play again</button></div>
 <button id="bHud" style="position:fixed;left:auto;right:8px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6">🐞</button>
@@ -320,16 +320,19 @@ async function calibrate(){
   I.textContent='😐';T.textContent='Finding your face…';
   const t0=performance.now();while(!faceSeen&&performance.now()-t0<8000)await wait(100);
   if(!faceSeen){T.textContent='No face found — hold the phone at eye level in good light. Continuing anyway; open 🐞 to debug.';await wait(2500)}
-  T.textContent='Relax your face and look at the screen';await wait(600);
-  const b=await sample(2000);yaw0=b._yaw;delete b._yaw;delete b._n;
+  // each step: 3 s with countdown + progress bar
+  const STEP=3000;let si=0;const total=5;
+  async function stepRun(title,icon,doSample){si++;T.textContent=title;I.textContent=icon;$('cStep').textContent='Step '+si+' of '+total;
+    const t0=performance.now();const tick=setInterval(()=>{const e=performance.now()-t0;$('cBar').style.width=Math.min(100,e/STEP*100)+'%';$('cCount').textContent=Math.max(1,Math.ceil((STEP-e)/1000))},50);
+    const r=doSample?await sample(STEP):(await wait(STEP),null);clearInterval(tick);$('cBar').style.width='100%';return r}
+  const b=await stepRun('Relax your face and look straight at the screen. Hold still.','😐',true);yaw0=b._yaw;delete b._yaw;delete b._n;
   for(const k in b)b[k]=Math.min(b[k],.5);base=b; // neutral baseline (capped so a held expression can't disable a gesture)
-  T.textContent='Turn your head (or look) LEFT';I.textContent='👈';await wait(700);
-  const l=await sample(1200);
-  const d=l._yaw-yaw0;if(Math.abs(d)>.05){moveSign=d<0?1:-1;moveRange=Math.min(.4,Math.max(.12,Math.abs(d)*.7))}
-  // with head turned left the hunter must go left (x negative): head = (yaw-yaw0)/range*sign  -> sign chosen so that value is negative
-  if(Math.abs(d)>.05)moveSign=-Math.sign(d);
-  const steps=[['Blink to attack','😑'],['Open your mouth to vacuum','😮'],['Smile for your special','😁']];
-  for(const[s,i]of steps){T.textContent=s;I.textContent=i;await wait(1200)}
+  const l=await stepRun('Turn your head to YOUR LEFT and hold it there.','👈',true);
+  const d=l._yaw-yaw0;if(Math.abs(d)>.05){moveSign=-Math.sign(d);moveRange=Math.min(.4,Math.max(.12,Math.abs(d)*.7))}
+  await stepRun('Face the screen again. Blink a few times: each blink = attack!','😑');
+  await stepRun('Open your mouth wide: this vacuums up treasure.','😮');
+  await stepRun('Give a big smile and hold it: this fires your special move.','😁');
+  $('cCount').textContent='';$('cStep').textContent='';
   saveCal();$('calib').classList.add('hide');
 }
 function begin(){$('start').classList.add('hide');if(mode==='touch')$('touch').classList.remove('hide');newGame();running=true;last=performance.now()}
