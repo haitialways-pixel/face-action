@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#1b1033">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Face Treasure">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<title>Face Treasure Hunter</title>
+<style>
+html,body{margin:0;height:100%;background:#05030c;color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
+#cam.off{opacity:0;pointer-events:none}
+#camNote{position:fixed;right:4px;top:calc(env(safe-area-inset-top) + 124px);width:90px;font-size:9px;line-height:1.2;text-align:right;opacity:.7;z-index:3}
+#game{position:fixed;inset:0;width:100vw;height:100dvh;display:block}
+#cam{position:fixed;right:8px;top:calc(env(safe-area-inset-top) + 48px);width:54px;height:72px;object-fit:cover;transform:scaleX(-1);border-radius:10px;border:2px solid #ffd54a;opacity:.8;z-index:3}
+.ov{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:rgba(20,10,40,.92);z-index:5;gap:12px}
+.hide{display:none!important}
+button{font-size:18px;padding:14px 22px;border:0;border-radius:14px;background:#ffd54a;color:#2a1600;font-weight:700;min-width:220px}
+button.sec{background:#5b4a8a;color:#fff}
+#touch{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 10px);display:flex;justify-content:space-around;z-index:4}
+#touch button{min-width:0;width:22vw;height:22vw;max-width:90px;max-height:90px;border-radius:50%;font-size:26px;opacity:.8;padding:0}
+small{opacity:.75}
+</style></head><body>
+<canvas id="game"></canvas>
+<video id="cam" playsinline muted autoplay class="hide"></video>
+<div id="start" class="ov">
+  <h1>💎 Face Treasure Hunter</h1>
+  <p>Defeat guardians and grab treasure using only your face.<br><small>A fun facial workout. Camera stays on your device; nothing is uploaded.</small></p>
+  <button id="bFace">😀 Play with Face</button>
+  <button id="bTouch" class="sec">👆 Play with Touch</button>
+  <p id="best"></p><p id="msg"><small></small></p>
+</div>
+<div id="calib" class="ov hide"><h2 id="cTitle">Calibrating…</h2><p id="cText"></p><div style="font-size:64px" id="cIcon">😐</div></div>
+<div id="rest" class="ov hide"><h2>😌 Face break</h2><p>Relax your face, look into the distance, blink gently.</p><p id="restT" style="font-size:48px"></p><button id="bSkip" class="sec">Skip</button></div>
+<div id="over" class="ov hide"><h2>Ouch! Out of hearts</h2><p id="oScore"></p><button id="bAgain">Play again</button></div>
+<button id="bHud" style="position:fixed;left:auto;right:8px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6">🐞</button>
+<div id="sensBox" class="hide" style="position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top) + 150px);z-index:6;background:rgba(0,0,0,.7);padding:6px;border-radius:8px;font-size:13px">Sensitivity (left = easier) <input id="sens" type="range" min="0.4" max="1.6" step="0.05" style="width:100%"> <button id="bRecal" class="sec" style="min-width:0;font-size:13px;padding:6px 10px">Recalibrate</button></div>
+<button id="bPrev" class="hide" style="position:fixed;right:56px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6" title="Show/hide camera preview">👁</button>
+<div id="camNote" class="hide">🔒 Video stays on your device, never recorded or uploaded.</div>
+<div id="camInd" class="hide" style="position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 6px);z-index:6;background:rgba(0,0,0,.6);padding:3px 8px;border-radius:10px;font-size:12px"><span style="color:#f33">●</span> camera on</div>
+<button id="camResume" class="hide" style="position:fixed;left:50%;top:40%;transform:translateX(-50%);z-index:6">📷 Tap to resume camera</button>
+<div id="touch" class="hide">
+ <button data-k="left">⬅️</button><button data-k="attack">⚔️</button><button data-k="vac">🌀</button><button data-k="special">✨</button><button data-k="right">➡️</button>
+</div>
+<script type="module">
+const $=id=>document.getElementById(id);
+const cv=$('game'),ctx=cv.getContext('2d'),video=$('cam');
+let W,H,DPR;function resize(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize);resize();
+const BEST_KEY='ftq_best';$('best').textContent='Best: '+(+localStorage.getItem(BEST_KEY)||0);
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+// ---------- Input layer: face or touch both write to `inp` ----------
+const inp={x:0,attack:false,vac:false,special:false,shield:false};
+const touch={left:false,right:false,attack:false,vac:false,special:false};
+let mode='touch',landmarker=null,base={},lastVT=-1,lastTs=0,faceSeen=false,faceFps=0,camStatus='off',modelStatus='not loaded',yaw=0,yaw0=0,moveSign=1,moveRange=.25,faceLoopOn=false,frames=0,fpsT=0;
+let sens=+(localStorage.getItem('ftq_sens')||1); // 0.5 = very sensitive … 1.5 = strict
+// Pinned, known-good MediaPipe build
+const MP_VER='0.10.14';
+const CDN='https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@'+MP_VER;
+const MODEL='https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task';
+async function initFace(){
+  modelStatus='loading library…';
+  const v=await import(CDN+'/vision_bundle.mjs');
+  modelStatus='loading wasm…';
+  const files=await v.FilesetResolver.forVisionTasks(CDN+'/wasm');
+  const opts=d=>({baseOptions:{modelAssetPath:MODEL,delegate:d},runningMode:'VIDEO',numFaces:1,outputFaceBlendshapes:true,outputFacialTransformationMatrixes:true,minFaceDetectionConfidence:.4,minFacePresenceConfidence:.4,minTrackingConfidence:.4});
+  for(const d of ['GPU','CPU']){
+    try{modelStatus='loading model ('+d+')…';landmarker=await v.FaceLandmarker.createFromOptions(files,opts(d));
+      // smoke-run once; some GPUs create fine but throw on first detect
+      if(video.readyState>=2){lastTs=Math.max(lastTs+1,performance.now());landmarker.detectForVideo(video,lastTs)}
+      modelStatus='ready ('+d+')';return}
+    catch(e){console.warn('FaceLandmarker '+d+' failed',e);landmarker=null;modelStatus=d+' failed: '+(e.message||e)}
+  }
+  throw new Error('Face model failed to load: '+modelStatus);
+}
+let bs={};
+function readFace(){
+  if(!landmarker||video.readyState<2||video.paused||!video.videoWidth)return;
+  if(video.currentTime===lastVT)return; // only new frames
+  lastVT=video.currentTime;
+  lastTs=Math.max(lastTs+1,performance.now()); // strictly increasing timestamps
+  let r;try{r=landmarker.detectForVideo(video,lastTs)}catch(e){modelStatus='detect error: '+e.message;return}
+  frames++;
+  const c=r.faceBlendshapes&&r.faceBlendshapes[0];faceSeen=!!c;if(!c){bs={};return}
+  bs={};for(const b of c.categories)bs[b.categoryName]=b.score;
+  const m=r.facialTransformationMatrixes&&r.facialTransformationMatrixes[0];
+  if(m&&m.data)yaw=Math.atan2(m.data[8],m.data[10]); // head turn (radians)
+}
+function faceLoop(){if(!faceLoopOn)return;readFace();const n=performance.now();if(n-fpsT>1000){faceFps=frames;frames=0;fpsT=n}requestAnimationFrame(faceLoop)}
+// relative activation 0..1 above the user's own neutral baseline
+const act=n=>{const b=base[n]||0;return Math.max(0,((bs[n]||0)-b)/Math.max(.15,1-b))};
+const TH={blink:.35,jaw:.22,smile:.3,puff:.3,brow:.3};
+const th=k=>Math.min(.9,TH[k]*sens);
+const lvl={};let flash={};
+function fire(k){flash[k]=performance.now()}
+let blinkHeld=0,smileHeld=0,wasJaw=false;
+function moveAxis(){
+  const L=(act('eyeLookOutLeft')+act('eyeLookInRight'))/2, R=(act('eyeLookInLeft')+act('eyeLookOutRight'))/2;
+  const head=(yaw-yaw0)/Math.max(.08,moveRange)*moveSign; // calibrated head turn
+  const gaze=(R-L)*2;
+  const v=Math.abs(head)>Math.abs(gaze)?head:gaze;
+  return Math.abs(v)<.15*sens?0:Math.max(-1,Math.min(1,v));
+}
+function updateInput(dt){
+  if(mode==='face'){
+    if(!faceSeen){inp.x=0;inp.vac=false;return}
+    inp.x=moveAxis();lvl.move=inp.x;
+    const blink=(act('eyeBlinkLeft')+act('eyeBlinkRight'))/2;lvl.blink=blink;
+    if(blink>th('blink')){blinkHeld+=dt}else{if(blinkHeld>0.02&&blinkHeld<0.8){inp.attack=true;fire('blink')}blinkHeld=0}
+    lvl.jaw=act('jawOpen');inp.vac=lvl.jaw>th('jaw');if(inp.vac&&!wasJaw)fire('jaw');wasJaw=inp.vac;
+    const sm=(act('mouthSmileLeft')+act('mouthSmileRight'))/2;lvl.smile=sm;
+    if(sm>th('smile')){smileHeld+=dt;if(smileHeld>.4){inp.special=true;fire('smile');smileHeld=-1.5}}else if(smileHeld>0)smileHeld=0;else smileHeld=Math.min(0,smileHeld+dt);
+    lvl.puff=act('cheekPuff');lvl.brow=act('browInnerUp');
+    inp.shield=lvl.puff>th('puff')||lvl.brow>th('brow');if(inp.shield)fire('shield');
+  }else{
+    inp.x=(touch.right?1:0)-(touch.left?1:0);
+    if(touch.attack){inp.attack=true;touch.attack=false}
+    inp.vac=touch.vac; if(touch.special){inp.special=true;touch.special=false}
+  }
+}
+// ---------- Debug HUD ----------
+let hudOn=localStorage.getItem('ftq_hud')==='1';
+function drawHud(){
+  if(!hudOn)return;const x=8,y0=H*.40,w=Math.min(W*.6,240);
+  ctx.save();ctx.textAlign='left';ctx.fillStyle='rgba(0,0,0,.75)';ctx.fillRect(x-4,y0-18,w+8,190);
+  ctx.font='12px monospace';ctx.fillStyle='#fff';
+  ctx.fillText('cam: '+camStatus+'  '+(video.videoWidth||0)+'x'+(video.videoHeight||0),x,y0-6);
+  ctx.fillText('model: '+modelStatus,x,y0+8);
+  ctx.fillStyle=faceSeen?'#0f0':'#f44';ctx.fillText('face: '+(faceSeen?'YES':'NO')+'  '+faceFps+' fps  sens '+sens.toFixed(2),x,y0+22);
+  const rows=[['blink','blink'],['jaw','mouth'],['smile','smile'],['puff','puff'],['brow','brow']];
+  rows.forEach(([k,n],i)=>{const y=y0+36+i*22,v=lvl[k]||0,t=th(k),fl=performance.now()-(flash[k==='puff'||k==='brow'?'shield':k]||0)<300;
+    ctx.fillStyle=fl?'#ff0':'#fff';ctx.fillText(n,x,y+10);ctx.fillStyle='#333';ctx.fillRect(x+48,y,w-50,12);
+    ctx.fillStyle=v>t?'#0f0':'#29f';ctx.fillRect(x+48,y,(w-50)*Math.min(1,v),12);ctx.fillStyle='#f00';ctx.fillRect(x+48+(w-50)*t,y-2,2,16)});
+  const y=y0+36+5*22;ctx.fillStyle='#fff';ctx.fillText('move',x,y+10);ctx.fillStyle='#333';ctx.fillRect(x+48,y,w-50,12);
+  ctx.fillStyle='#fa0';const mid=x+48+(w-50)/2;ctx.fillRect(Math.min(mid,mid+(lvl.move||0)*(w-50)/2),y,Math.abs(lvl.move||0)*(w-50)/2,12);
+  ctx.restore();
+}
+document.querySelectorAll('#touch button').forEach(b=>{const k=b.dataset.k;
+  const on=e=>{e.preventDefault();touch[k]=true},off=e=>{e.preventDefault();if(k!=='attack'&&k!=='special')touch[k]=false};
+  b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointerleave',off);b.addEventListener('pointercancel',off)});
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft')touch.left=true;if(e.key==='ArrowRight')touch.right=true;if(e.key===' ')touch.attack=true;if(e.key==='v')touch.vac=true;if(e.key==='s')touch.special=true});
+addEventListener('keyup',e=>{if(e.key==='ArrowLeft')touch.left=false;if(e.key==='ArrowRight')touch.right=false;if(e.key==='v')touch.vac=false});
+
+// ---------- Game data ----------
+const TREASURES=[{e:'🪙',p:5,w:40},{e:'💍',p:10,w:25},{e:'🏺',p:20,w:15},{e:'👑',p:40,w:10},{e:'💎',p:70,w:6},{e:'🏆',p:100,w:4}];
+const GUARDS=[
+ {id:'goblin',e:'👺',hp:1,sp:1,from:1},
+ {id:'bat',e:'🦇',hp:1,sp:1.5,zig:true,from:2},
+ {id:'golem',e:'🗿',hp:3,sp:.6,from:3},
+ {id:'ghost',e:'👻',hp:1,sp:1,phase:true,from:4},
+ {id:'mimic',e:'📦',hp:2,sp:.9,mimic:true,from:5},
+ {id:'dragon',e:'🐉',hp:8,sp:.4,boss:true,from:5}];
+const POWER=[{e:'❤️',k:'heart'},{e:'🧲',k:'magnet'},{e:'⏳',k:'slow'},{e:'🛡️',k:'shield'}];
+const STAGE_TWISTS=['','Bats zig-zag!','Golems take 3 hits','Ghosts fade in & out — hit them when solid','Mimics look like treasure!','Boss: Dragon','Fog: shorter view','Double treasure rain'];
+let S;
+function newGame(){S={score:0,hearts:3,stage:0,combo:0,comboT:0,special:0,x:0.5,ents:[],shots:[],fx:[],t:0,stageT:0,spawnT:0,kills:0,need:0,banner:'',bannerT:0,pw:{},playT:0,ended:false,shieldCd:0};nextStage()}
+// Difficulty: gentle logarithmic-ish ramp, capped
+const diff=s=>({speed:60*(1+0.08*Math.min(s-1,15)+0.02*Math.max(0,s-16)),spawn:Math.max(0.55,1.6*Math.pow(0.94,s-1)),kills:6+Math.floor(s*1.5)});
+function nextStage(){S.stage++;S.kills=0;S.need=diff(S.stage).kills;S.stageT=0;
+  const tw=S.stage<STAGE_TWISTS.length?STAGE_TWISTS[S.stage-1]:['Faster guardians','Mixed horde','Treasure frenzy','Boss rematch'][S.stage%4];
+  S.banner='Stage '+S.stage+(tw?' — '+tw:'');S.bannerT=3;S.bossOut=false;
+  if(S.stage>1&&(S.stage-1)%3===0)startRest();}
+function pick(arr){let t=arr.reduce((a,b)=>a+b.w,0)*Math.random();for(const a of arr){t-=a.w;if(t<=0)return a}return arr[0]}
+function spawn(){
+  const d=diff(S.stage),pool=GUARDS.filter(g=>g.from<=S.stage&&!g.boss);
+  if(S.stage%5===0&&!S.bossOut&&S.kills>=S.need-1){S.bossOut=true;const b=GUARDS[5];S.ents.push({t:'g',...b,x:.5,y:-40,hpL:b.hp+Math.floor(S.stage/5),sp:b.sp,ph:0});return}
+  const r=Math.random();
+  if(r<0.62){const g=pool[Math.floor(Math.random()*pool.length)];S.ents.push({t:'g',...g,x:.1+Math.random()*.8,y:-30,hpL:g.hp+(S.stage>10&&Math.random()<.3?1:0),ph:Math.random()*6})}
+  else if(r<0.95){const tr=pick(TREASURES);S.ents.push({t:'t',...tr,x:.1+Math.random()*.8,y:-30,ph:0})}
+  else{const p=POWER[Math.floor(Math.random()*4)];S.ents.push({t:'p',...p,x:.1+Math.random()*.8,y:-30,ph:0})}
+}
+function fx(x,y,txt,col){S.fx.push({x,y,txt,col,t:1})}
+function startRest(){paused=true;camStop();let n=15;$('rest').classList.remove('hide');$('restT').textContent=n;clearInterval(restI);restI=setInterval(()=>{n--;$('restT').textContent=n;if(n<=0)endRest()},1000)}
+let restI,paused=false;function endRest(){clearInterval(restI);$('rest').classList.add('hide');paused=false;last=performance.now();camResume()}
+$('bSkip').onclick=endRest;
+
+// ---------- Loop ----------
+let last=performance.now(),running=false;
+function step(now){requestAnimationFrame(step);const dt=Math.min(.05,(now-last)/1000);last=now;
+  if(!running)return;updateInput(dt);if(!paused&&!S.ended)update(dt);draw()}
+function update(dt){
+  S.t+=dt;S.stageT+=dt;S.shieldCd-=dt;S.bannerT-=dt;S.comboT-=dt;if(S.comboT<=0)S.combo=0;
+  for(const k in S.pw)if((S.pw[k]-=dt)<=0)delete S.pw[k];
+  const d=diff(S.stage),slow=S.pw.slow?.5:1;
+  S.x=Math.max(.06,Math.min(.94,S.x+inp.x*dt*0.9));
+  const px=S.x*W,py=H*0.78;
+  if(inp.attack){inp.attack=false;S.shots.push({x:px,y:py-30});}
+  if(inp.special){inp.special=false;if(S.special>=100){S.special=0;fx(px,py-60,'💥 TREASURE NOVA!','#ffd54a');
+    for(const e of S.ents)if(e.t==='g'&&!e.boss){e.dead=true;addScore(10,e.x*W,e.y)}else if(e.boss)e.hpL-=3;}}
+  S.spawnT-=dt;if(S.spawnT<=0){S.spawnT=d.spawn*(0.7+Math.random()*.6);spawn();if(S.stage>=8&&S.stage%4===3)spawn()}
+  for(const s of S.shots)s.y-=520*dt;S.shots=S.shots.filter(s=>s.y>-20&&!s.hit);
+  const vac=inp.vac;
+  for(const e of S.ents){
+    e.ph+=dt;e.y+=d.speed*e.sp*slow*dt*(e.t==='g'?1:0.8);
+    if(e.zig)e.x+=Math.sin(e.ph*4)*0.25*dt;
+    const ex=e.x*W;
+    if(e.t!=='g'&&(vac||S.pw.magnet)){const dx=px-ex,dy=py-e.y,dd=Math.hypot(dx,dy);if(dd<(S.pw.magnet?W:W*.45)){e.x+=dx/dd*1.2*dt;e.y+=dy/dd*260*dt}}
+    if(e.t==='g'){
+      const solid=!e.phase||Math.sin(e.ph*2)>-.2;
+      for(const s of S.shots)if(!s.hit&&solid&&Math.abs(s.x-ex)<U()*28&&Math.abs(s.y-e.y)<U()*28){s.hit=true;e.hpL--;fx(ex,e.y,'⚔️');if(e.hpL<=0){e.dead=true;S.kills++;S.combo++;S.comboT=3;S.special=Math.min(100,S.special+8);addScore((e.boss?150:10)*(1+Math.min(S.combo,10)*0.1),ex,e.y)}}
+      if(!e.dead&&e.y>py-20&&Math.abs(ex-px)<40){e.dead=true;hurt()}
+      if(e.y>H+30){e.dead=true}
+    }else{
+      if(Math.hypot(ex-px,e.y-py)<(vac?60:38)){e.dead=true;
+        if(e.t==='t'){const guarded=S.ents.some(o=>o.t==='g'&&!o.dead&&!o.boss&&Math.abs(o.y-e.y)<120&&Math.abs(o.x-e.x)<.2);
+          const mult=1+Math.min(S.combo,10)*0.1;addScore(e.p*mult*(guarded?0.5:1),ex,e.y);S.special=Math.min(100,S.special+3)}
+        else powerup(e.k,ex,e.y)}
+      if(e.y>H+30)e.dead=true}
+  }
+  S.ents=S.ents.filter(e=>!e.dead);
+  if(S.kills>=S.need&&!S.ents.some(e=>e.boss))nextStage();
+  for(const f of S.fx){f.t-=dt;f.y-=40*dt}S.fx=S.fx.filter(f=>f.t>0);
+}
+function addScore(p,x,y){p=Math.round(p);S.score+=p;fx(x,y,'+'+p,'#ffd54a')}
+function powerup(k,x,y){if(k==='heart')S.hearts=Math.min(5,S.hearts+1);else S.pw[k]=k==='shield'?8:6;fx(x,y,{heart:'+❤️',magnet:'Magnet!',slow:'Slow-mo!',shield:'Shield!'}[k],'#7cf')}
+function hurt(){if(S.pw.shield||inp.shield&&S.shieldCd<=0){fx(S.x*W,H*.7,'Blocked!','#7cf');S.shieldCd=4;return}
+  S.hearts--;S.combo=0;navigator.vibrate&&navigator.vibrate(120);if(S.hearts<=0)gameOver()}
+function gameOver(){S.ended=true;camStop();const b=Math.max(S.score,+localStorage.getItem(BEST_KEY)||0);localStorage.setItem(BEST_KEY,b);
+  $('oScore').innerHTML=`Score ${S.score} · Stage ${S.stage}<br>Best ${b}`;$('over').classList.remove('hide')}
+$('bAgain').onclick=()=>{$('over').classList.add('hide');newGame();camResume()};
+const U=()=>Math.min(W,H)/400;
+const COL={goblin:['#e53935','G'],bat:['#d500f9','B'],golem:['#ff6d00','R'],ghost:['#00e5ff','?'],mimic:['#ff1744','M'],dragon:['#ff1744','D'],
+ heart:['#ff4081','+'],magnet:['#2979ff','U'],slow:['#00e676','S'],shield:['#18ffff','O']};
+const TCOL={5:'#ffd600',10:'#e0e0e0',20:'#ff9100',40:'#ffea00',70:'#40c4ff',100:'#ffd740'};
+function shape(kind,x,y,r,fill,stroke){ctx.save();ctx.shadowColor=fill;ctx.shadowBlur=r*.9;ctx.fillStyle=fill;ctx.strokeStyle=stroke;ctx.lineWidth=Math.max(3,r*.18);ctx.beginPath();
+ if(kind==='circle')ctx.arc(x,y,r,0,Math.PI*2);
+ else if(kind==='spike'){for(let i=0;i<16;i++){const a=i*Math.PI/8,rr=i%2?r*.7:r;ctx.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}ctx.closePath()}
+ else if(kind==='diamond'){ctx.moveTo(x,y-r);ctx.lineTo(x+r,y);ctx.lineTo(x,y+r);ctx.lineTo(x-r,y);ctx.closePath()}
+ else if(kind==='star'){for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.45:r;ctx.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}ctx.closePath()}
+ else {ctx.rect(x-r,y-r,2*r,2*r)}
+ ctx.fill();ctx.shadowBlur=0;ctx.stroke();ctx.restore()}
+function drawEnt(e){const x=e.x*W,y=e.y,u=U();let label,emoji=e.e;
+ ctx.globalAlpha=e.phase?(Math.sin(e.ph*2)>-.2?1:.35):1;
+ if(e.t==='g'){const disguised=e.mimic&&e.y<H*.4;const r=u*(e.boss?40:22);
+   if(disguised){shape('star',x,y,r,TCOL[20],'#fff');emoji='🏺';label='$'}
+   else{const[c,l]=COL[e.id];shape('spike',x,y,r,c,'#ffffff');label=l}
+   if(e.hpL>1){ctx.fillStyle='#fff';ctx.font='bold '+Math.round(u*12)+'px sans-serif';ctx.fillText('HP '+e.hpL,x,y+r+u*12)}}
+ else if(e.t==='t'){const r=u*(14+e.p/10);shape(e.p>=70?'diamond':'star',x,y,r,TCOL[e.p],'#ffffff');label=e.p}
+ else{const[c,l]=COL[e.k];shape('square',x,y,u*16,c,'#ffffff');label=l}
+ // readable text label in solid black (never inherits a dark fill), emoji overlaid on top if the font has it
+ ctx.fillStyle='#000';ctx.font='bold '+Math.round(u*14)+'px sans-serif';ctx.fillText(String(label),x,y+1);
+ ctx.font=Math.round(u*16)+'px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';ctx.fillStyle='#fff';ctx.globalAlpha*=.9;ctx.fillText(emoji,x,y-u*20);
+ ctx.globalAlpha=1}
+function draw(){
+  const gr=ctx.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#05030c');gr.addColorStop(1,'#120a04');ctx.fillStyle=gr;ctx.fillRect(0,0,W,H);
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  for(const e of S.ents)drawEnt(e);
+  ctx.globalAlpha=1;ctx.fillStyle='#ffd54a';for(const s of S.shots){ctx.beginPath();ctx.arc(s.x,s.y,U()*7,0,7);ctx.fill()}
+  const px=S.x*W,py=H*.78;
+  if(inp.vac){ctx.strokeStyle='rgba(120,200,255,.5)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(px,py,55+Math.sin(S.t*20)*5,0,7);ctx.stroke()}
+  if(S.pw.shield){ctx.strokeStyle='#7cf';ctx.lineWidth=4;ctx.beginPath();ctx.arc(px,py,42,0,7);ctx.stroke()}
+  {const r=U()*26;shape('circle',px,py,r,'#ffb300','#ffffff');ctx.fillStyle='#000';ctx.font='bold '+Math.round(r*1.1)+'px sans-serif';ctx.fillText('🤠',px,py+1)}
+  for(const f of S.fx){ctx.globalAlpha=Math.max(0,f.t);ctx.fillStyle=f.col||'#fff';ctx.font='bold 18px sans-serif';ctx.fillText(f.txt,f.x,f.y)}ctx.globalAlpha=1;
+  const top=(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat'))||0)+14;
+  ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font='bold 18px sans-serif';
+  ctx.fillText('💰 '+S.score,12,top+10);ctx.fillText('❤️'.repeat(Math.max(0,S.hearts)),12,top+36);
+  ctx.fillText('Stage '+S.stage+'  '+S.kills+'/'+S.need,12,top+62);
+  if(S.combo>1){ctx.fillStyle='#ffd54a';ctx.fillText('Combo x'+S.combo,12,top+88)}
+  ctx.fillStyle='#333';ctx.fillRect(12,H*.86,W*.4,10);ctx.fillStyle=S.special>=100?'#ffd54a':'#a58';ctx.fillRect(12,H*.86,W*.4*S.special/100,10);
+  ctx.fillStyle='#fff';ctx.font='12px sans-serif';ctx.fillText(S.special>=100?(mode==='face'?'SMILE for Nova!':'✨ ready!'):'Special',12,H*.86-8);
+  if(S.bannerT>0){ctx.textAlign='center';ctx.globalAlpha=Math.min(1,S.bannerT);ctx.font='bold 20px sans-serif';ctx.fillStyle='#ffd54a';ctx.fillText(S.banner,W/2,H*.35);ctx.globalAlpha=1}
+  drawHud();
+  if(mode==='face'&&!faceSeen){ctx.textAlign='center';ctx.fillStyle='#f88';ctx.font='14px sans-serif';ctx.fillText('Face not found — hold phone at eye level',W/2,H*.45)}
+}
+document.documentElement.style.setProperty('--sat','env(safe-area-inset-top)');
+
+// ---------- Start / calibration ----------
+const SECURE=window.isSecureContext&&location.protocol!=='file:';
+if(!SECURE){$('msg').innerHTML='<b style="color:#ff6">⚠️ Face controls need HTTPS.</b><br><small>You opened this as '+location.protocol+'// — browsers block the camera/face model here. Open the https:// link (or http://localhost) instead. Touch mode still works.</small>'}
+async function startFace(){
+  if(!SECURE){$('msg').innerHTML='<b style="color:#f66">Camera blocked: page is not HTTPS ('+location.protocol+'). Use the https link.</b>';return}
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$('msg').innerHTML='<b style="color:#f66">This browser has no camera API.</b>';return}
+  $('msg').innerHTML='<small>Starting camera…</small>';
+  if(!await camStart(true))return;
+  try{
+    const t=setInterval(()=>{$('msg').innerHTML='<small>'+modelStatus+'</small>'},200);
+    await initFace();clearInterval(t);
+  }catch(e){$('msg').innerHTML='<b style="color:#f66">'+e.message+'</b><br><small>Check internet / try another browser. Touch mode works.</small>';return}
+  mode='face';faceLoopOn=true;faceLoop();$('start').classList.add('hide');await calibrate();begin();
+}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+// ---------- Camera lifecycle: camera only on while actively playing ----------
+let stream=null,camWanted=false;
+let prevOn=localStorage.getItem('ftq_prev')!=='0';
+function updInd(){video.classList.toggle('off',!prevOn);$('bPrev').classList.toggle('hide',!stream);$('camNote').classList.toggle('hide',!stream||!prevOn);$('camInd').classList.toggle('hide',!stream);$('camResume').classList.toggle('hide',!(camWanted&&!stream&&mode==='face'&&running&&!S.ended&&!paused))}
+async function camStart(first){
+  if(stream)return true;
+  try{
+    camStatus='requesting';
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:false});
+    video.muted=true;video.setAttribute('playsinline','');video.srcObject=stream;video.classList.remove('hide');
+    await video.play();
+    if(video.readyState<2)await new Promise(r=>video.addEventListener('loadeddata',r,{once:true}));
+    camStatus='playing';camWanted=true;lastVT=-1;
+    if(landmarker&&!faceLoopOn){faceLoopOn=true;faceLoop()}
+    updInd();return true;
+  }catch(e){stream=null;camStatus='error '+e.name;
+    if(first)$('msg').innerHTML='<b style="color:#f66">Camera error: '+e.name+' '+(e.message||'')+'</b>';
+    updInd();return false}
+}
+function camStop(){faceLoopOn=false;faceSeen=false;bs={};
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+  video.srcObject=null;video.classList.add('hide');if(camStatus==='playing')camStatus='stopped';updInd()}
+const camResume=()=>{if(mode==='face'&&camWanted&&running&&!S.ended&&!paused&&!document.hidden)camStart()};
+async function sample(ms){const acc={},n={};let y=0,yn=0;const end=performance.now()+ms;while(performance.now()<end){if(faceSeen){for(const k in bs){acc[k]=(acc[k]||0)+bs[k];n[k]=(n[k]||0)+1}y+=yaw;yn++}await wait(40)}const o={};for(const k in acc)o[k]=acc[k]/n[k];o._yaw=yn?y/yn:0;o._n=yn;return o}
+async function calibrate(){
+  $('calib').classList.remove('hide');const T=$('cText'),I=$('cIcon');
+  I.textContent='😐';T.textContent='Finding your face…';
+  const t0=performance.now();while(!faceSeen&&performance.now()-t0<8000)await wait(100);
+  if(!faceSeen){T.textContent='No face found — hold the phone at eye level in good light. Continuing anyway; open 🐞 to debug.';await wait(2500)}
+  T.textContent='Relax your face and look at the screen';await wait(600);
+  const b=await sample(2000);yaw0=b._yaw;delete b._yaw;delete b._n;
+  for(const k in b)b[k]=Math.min(b[k],.5);base=b; // neutral baseline (capped so a held expression can't disable a gesture)
+  T.textContent='Turn your head (or look) LEFT';I.textContent='👈';await wait(700);
+  const l=await sample(1200);
+  const d=l._yaw-yaw0;if(Math.abs(d)>.05){moveSign=d<0?1:-1;moveRange=Math.min(.4,Math.max(.12,Math.abs(d)*.7))}
+  // with head turned left the hunter must go left (x negative): head = (yaw-yaw0)/range*sign  -> sign chosen so that value is negative
+  if(Math.abs(d)>.05)moveSign=-Math.sign(d);
+  const steps=[['Blink to attack','😑'],['Open your mouth to vacuum','😮'],['Smile for your special','😁']];
+  for(const[s,i]of steps){T.textContent=s;I.textContent=i;await wait(1200)}
+  $('calib').classList.add('hide');
+}
+function begin(){$('start').classList.add('hide');if(mode==='touch')$('touch').classList.remove('hide');newGame();running=true;last=performance.now()}
+$('bFace').onclick=startFace;
+const sl=$('sens');sl.value=sens;sl.oninput=()=>{sens=+sl.value;localStorage.setItem('ftq_sens',sens)};
+function syncHud(){$('sensBox').classList.toggle('hide',!hudOn)}syncHud();
+$('bHud').onclick=()=>{hudOn=!hudOn;localStorage.setItem('ftq_hud',hudOn?'1':'0');syncHud()};
+$('bRecal').onclick=async()=>{if(mode!=='face')return;paused=true;await calibrate();paused=false;last=performance.now()};
+$('bTouch').onclick=()=>{mode='touch';begin()};
+document.addEventListener('visibilitychange',()=>{if(document.hidden){camStop();if(running)paused=true}else{if($('rest').classList.contains('hide')&&$('calib').classList.contains('hide'))paused=false;last=performance.now();camResume()}updInd()});
+addEventListener('pagehide',camStop);addEventListener('pageshow',e=>{if(e.persisted)camResume()});
+$('camResume').onclick=()=>camStart();
+$('bPrev').onclick=()=>{prevOn=!prevOn;localStorage.setItem('ftq_prev',prevOn?'1':'0');updInd()};
+newGame();requestAnimationFrame(step);
+window.__ft={startRest,endRest,gameOver,get stream(){return stream},get S(){return S},begin,inp,update,draw,get bs(){return bs},get st(){return {camStatus,modelStatus,faceSeen,faceFps,mode}}};
+</script></body></html>
