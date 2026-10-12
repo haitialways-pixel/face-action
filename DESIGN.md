@@ -91,3 +91,16 @@ Cloudflare Pages: drag and drop the `face-action` folder in the dashboard (Worke
 
 ## Sound
 All sounds are synthesized in code with the Web Audio API (no audio files, no licensing). Effects: shot, guardian hit, guardian defeated, treasure collect (pitch rises with point value; extra sparkle for 70/100), power-up, combo (every 5), hurt, stage up, game over, Treasure Nova, and calibration countdown beeps. There's a light pentatonic music loop that only plays during active play. The 🔊 button cycles loud → quiet → mute and is saved on the device. Audio unlocks on the first tap (needed for iOS Safari).
+
+## Monetization plan
+
+Launch free. Earn from optional ads and small purchases, and never use camera data for ads.
+
+1. **Rewarded ads (main earner):** the player chooses to watch a short video for a bonus, such as an extra life, double treasure for one run, or an instant special-meter refill. Limit to about 5 per day.
+2. **Ads between rounds:** at most one short ad after every 3 or more game overs, and never during play or calibration. Skip them in a player's first few runs.
+3. **"Remove ads" purchase:** one-time, $2.99 to $4.99. It removes the between-round ads, and rewarded bonuses stay available without ads.
+4. **Cosmetics (after launch):** hunter skins, treasure themes, and cavern backgrounds. Nothing that makes the game pay-to-win.
+
+**Tools:** Google AdMob for ads and Google Play Billing for purchases, connected through Capacitor plugins.
+**Privacy:** use non-personalized ads by default, show Google's consent form where it's required, and update the privacy policy and Play Data safety answers before adding ads, because the ad SDK collects device data.
+**Rollout:** launch v1.0 with no ads to get through the closed test and early reviews. Add rewarded ads and "remove ads" in v1.1, then cosmetics in v1.2.
