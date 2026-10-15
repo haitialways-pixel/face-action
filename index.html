@@ -36,47 +36,93 @@ small{opacity:.75}
 <video id="cam" playsinline muted autoplay class="hide"></video>
 <div id="start" class="ov">
   <h1>💎 Face-Action</h1>
-  <p>Defeat guardians and grab treasure using only your face.<br><small>A fun facial workout. Camera stays on your device; nothing is uploaded.</small></p>
-  <button id="bFace">😀 Play with Face</button>
-  <button id="bHow" class="sec">❓ How to Play</button>
-  <button id="bRecalStart" class="sec">🎯 Recalibrate face</button>
-  <button id="bTouch" class="sec">👆 Play with Touch</button>
-  <p id="best"></p><p><a href="privacy.html" style="color:#9cf;font-size:13px">Privacy policy</a><br><small style="opacity:.6;font-size:11px">© 2026 Steeve J. All rights reserved.</small></p><p id="msg"><small></small></p>
+  <p data-h="intro"></p>
+  <button id="bFace" data-t="playFace"></button>
+  <button id="bHow" class="sec" data-t="howBtn"></button>
+  <button id="bRecalStart" class="sec" data-t="recalFace"></button>
+  <button id="bTouch" class="sec" data-t="playTouch"></button>
+  <p id="best"></p><p><a href="privacy.html" style="color:#9cf;font-size:13px" data-t="privacy"></a> · <a href="#" id="bLang" style="color:#9cf;font-size:13px"></a><br><small style="opacity:.6;font-size:11px" data-t="copy"></small></p><p id="msg"><small></small></p>
 </div>
 <div id="howto" class="ov hide">
- <h2>How to Play</h2>
- <div class="hrow"><span class="ic">↔️</span><div><b>Move</b><br>Turn your head left / right (eyes work as a backup)</div></div>
- <div class="hrow"><span class="ic">😑</span><div><b>Attack</b><br>Quick blink with both eyes</div></div>
- <div class="hrow"><span class="ic">😮</span><div><b>Collect treasure</b><br>Open your mouth and hold</div></div>
- <div class="hrow"><span class="ic">😁</span><div><b>Special move</b><br>Big smile held ~0.5 s when the meter is full</div></div>
- <div class="hrow"><span class="ic">😤</span><div><b>Block</b><br>Puff cheeks or raise eyebrows (4 s cooldown)</div></div>
- <h2 style="font-size:20px">Treasure points</h2>
+ <h2 data-t="howTitle"></h2>
+ <div class="hrow"><span class="ic">↔️</span><div data-h="hMove"></div></div>
+ <div class="hrow"><span class="ic">😑</span><div data-h="hAtk"></div></div>
+ <div class="hrow"><span class="ic">😮</span><div data-h="hCol"></div></div>
+ <div class="hrow"><span class="ic">😁</span><div data-h="hSp"></div></div>
+ <div class="hrow"><span class="ic">😤</span><div data-h="hBlk"></div></div>
+ <h2 style="font-size:20px" data-t="tPts"></h2>
  <div class="tgrid"><div><span>🪙</span>5</div><div><span>💍</span>10</div><div><span>🏺</span>20</div><div><span>👑</span>40</div><div><span>💎</span>70</div><div><span>🏆</span>100</div></div>
- <div class="hrow"><span class="ic">💡</span><div>Keep your face centered and well lit, about an arm's length away.<br>Use <b>🎯</b> to recalibrate and the <b>🐞</b> sensitivity slider if gestures feel off.</div></div>
- <button id="bHowOk">Got it!</button>
- <small style="opacity:.6;font-size:11px">© 2026 Steeve J. All rights reserved.</small>
+ <div class="hrow"><span class="ic">💡</span><div data-h="hTip"></div></div>
+ <button id="bHowOk" data-t="gotIt"></button>
+ <small style="opacity:.6;font-size:11px" data-t="copy"></small>
 </div>
-<div id="pause" class="ov hide"><h2>⏸ Paused</h2><button id="bResume">▶️ Resume</button><button id="bHowP" class="sec">❓ How to Play</button></div>
+<div id="pause" class="ov hide"><h2 data-t="paused"></h2><button id="bResume" data-t="resume"></button><button id="bHowP" class="sec" data-t="howBtn"></button></div>
 <button id="bPause" class="hide" style="position:fixed;right:152px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6">⏸</button>
-<div id="calib" class="ov hide"><h2 id="cTitle">Calibrating…</h2><p id="cText"></p><div style="font-size:64px" id="cIcon">😐</div><div style="width:70%;height:12px;background:#333;border-radius:6px;overflow:hidden"><div id="cBar" style="height:100%;width:0;background:#ffd54a"></div></div><div id="cCount" style="font-size:28px;font-weight:700"></div><small id="cStep"></small></div>
-<div id="rest" class="ov hide"><h2>😌 Face break</h2><p>Relax your face, look into the distance, blink gently.</p><p id="restT" style="font-size:48px"></p><button id="bSkip" class="sec">Skip</button></div>
-<div id="over" class="ov hide"><h2>Ouch! Out of hearts</h2><p id="oScore"></p><button id="bAgain">Play again</button></div>
+<div id="calib" class="ov hide"><h2 id="cTitle" data-t="calibrating"></h2><p id="cText"></p><div style="font-size:64px" id="cIcon">😐</div><div style="width:70%;height:12px;background:#333;border-radius:6px;overflow:hidden"><div id="cBar" style="height:100%;width:0;background:#ffd54a"></div></div><div id="cCount" style="font-size:28px;font-weight:700"></div><small id="cStep"></small></div>
+<div id="rest" class="ov hide"><h2 data-t="restT"></h2><p data-t="restP"></p><p id="restT" style="font-size:48px"></p><button id="bSkip" class="sec" data-t="skip"></button></div>
+<div id="over" class="ov hide"><h2 data-t="ouch"></h2><p id="oScore"></p><button id="bAgain" data-t="again"></button></div>
 <button id="bHud" style="position:fixed;left:auto;right:8px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6">🐞</button>
-<div id="sensBox" class="hide" style="position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top) + 150px);z-index:6;background:rgba(0,0,0,.7);padding:6px;border-radius:8px;font-size:13px">Sensitivity (left = easier) <input id="sens" type="range" min="0.4" max="1.6" step="0.05" style="width:100%"> <button id="bRecal" class="sec" style="min-width:0;font-size:13px;padding:6px 10px">Recalibrate</button></div>
-<button id="bVol" style="position:fixed;right:104px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6" title="Sound">🔊</button>
-<button id="bPrev" class="hide" style="position:fixed;right:56px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6" title="Show/hide camera preview">👁</button>
-<div id="camNote" class="hide">🔒 Video stays on your device, never recorded or uploaded.</div>
-<button id="bRecalAuto" class="hide" style="position:fixed;left:50%;top:50%;transform:translateX(-50%);z-index:6">Can't see your face. Recalibrate?</button>
-<div id="camInd" class="hide" style="position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 6px);z-index:6;background:rgba(0,0,0,.6);padding:3px 8px;border-radius:10px;font-size:12px"><span style="color:#f33">●</span> camera on</div>
-<button id="camResume" class="hide" style="position:fixed;left:50%;top:40%;transform:translateX(-50%);z-index:6">📷 Tap to resume camera</button>
+<div id="sensBox" class="hide" style="position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top) + 150px);z-index:6;background:rgba(0,0,0,.7);padding:6px;border-radius:8px;font-size:13px"><span data-t="sensL"></span> <input id="sens" type="range" min="0.4" max="1.6" step="0.05" style="width:100%"> <button id="bRecal" class="sec" style="min-width:0;font-size:13px;padding:6px 10px" data-t="recal"></button></div>
+<button id="bVol" style="position:fixed;right:104px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6" data-ti="sound">🔊</button>
+<button id="bPrev" class="hide" style="position:fixed;right:56px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6" data-ti="prevT">👁</button>
+<div id="camNote" class="hide" data-t="camNote"></div>
+<button id="bRecalAuto" class="hide" style="position:fixed;left:50%;top:50%;transform:translateX(-50%);z-index:6" data-t="noFaceRecal"></button>
+<div id="camInd" class="hide" style="position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 6px);z-index:6;background:rgba(0,0,0,.6);padding:3px 8px;border-radius:10px;font-size:12px"><span style="color:#f33">●</span> <span data-t="camOn"></span></div>
+<button id="camResume" class="hide" style="position:fixed;left:50%;top:40%;transform:translateX(-50%);z-index:6"><span data-t="camResume"></span></button>
 <div id="touch" class="hide">
  <button data-k="left">⬅️</button><button data-k="attack">⚔️</button><button data-k="vac">🌀</button><button data-k="special">✨</button><button data-k="right">➡️</button>
 </div>
 <script type="module">
 const $=id=>document.getElementById(id);
+const L={en:{intro:'Defeat guardians and grab treasure using only your face.<br><small>A fun facial workout. Camera stays on your device; nothing is uploaded.</small>',
+playFace:'😀 Play with Face',howBtn:'❓ How to Play',recalFace:'🎯 Recalibrate face',playTouch:'👆 Play with Touch',privacy:'Privacy policy',copy:'© 2026 Steeve J. All rights reserved.',
+howTitle:'How to Play',hMove:'<b>Move</b><br>Turn your head left / right (eyes work as a backup)',hAtk:'<b>Attack</b><br>Quick blink with both eyes',hCol:'<b>Collect treasure</b><br>Open your mouth and hold',hSp:'<b>Special move</b><br>Big smile held ~0.5 s when the meter is full',hBlk:'<b>Block</b><br>Puff cheeks or raise eyebrows (4 s cooldown)',
+hTip:"Keep your face centered and well lit, about an arm's length away.<br>Use <b>🎯</b> to recalibrate and the <b>🐞</b> sensitivity slider if gestures feel off.",tPts:'Treasure points',gotIt:'Got it!',
+paused:'⏸ Paused',resume:'▶️ Resume',calibrating:'Calibrating…',restT:'😌 Face break',restP:'Relax your face, look into the distance, blink gently.',skip:'Skip',ouch:'Ouch! Out of hearts',again:'Play again',
+sensL:'Sensitivity (left = easier)',recal:'Recalibrate',sound:'Sound',prevT:'Show/hide camera preview',camNote:'🔒 Video stays on your device, never recorded or uploaded.',noFaceRecal:"Can't see your face. Recalibrate?",camOn:'camera on',camResume:'📷 Tap to resume camera',
+faceBest:'🙂 Face best',touchBest:'👆 Touch best',faceL:'🙂 Face',touchL:'👆 Touch',overLine:'{m} mode · Score {s} · Stage {g}',newBest:'🏆 New {m} best!',bestIs:'{m} best {b}',
+needHttps:'<b style="color:#ff6">⚠️ Face controls need HTTPS.</b><br><small>You opened this as {p}// — browsers block the camera/face model here. Open the https:// link (or http://localhost) instead. Touch mode still works.</small>',
+blockedHttps:'<b style="color:#f66">Camera blocked: page is not HTTPS ({p}). Use the https link.</b>',noCamApi:'<b style="color:#f66">This browser has no camera API.</b>',startingCam:'<small>Starting camera…</small>',
+loadFail:'<b style="color:#f66">{e}</b><br><small>Check internet / try another browser. Touch mode works.</small>',camErr:'<b style="color:#f66">Camera error: {e}</b>',loadingModel:'Loading face model…',
+findFace:'Finding your face…',noFaceCal:'No face found — hold the phone at eye level in good light. Continuing anyway; open 🐞 to debug.',stepOf:'Step {i} of {n}',
+c1:'Relax your face and look straight at the screen. Hold still.',c2:'Turn your head to YOUR LEFT and hold it there.',c3:'Face the screen again. Blink a few times: each blink = attack!',c4:'Open your mouth wide: this vacuums up treasure.',c5:'Give a big smile and hold it: this fires your special move.',
+stage:'Stage',tw:['','Bats zig-zag!','Golems take 3 hits','Ghosts fade in & out — hit them when solid','Mimics look like treasure!','Boss: Dragon','Fog: shorter view','Double treasure rain'],tw2:['Faster guardians','Mixed horde','Treasure frenzy','Boss rematch'],
+combo:'Combo x',comboUp:'COMBO x',nova:'💥 TREASURE NOVA!',magnet:'Magnet!',slow:'Slow-mo!',shield:'Shield!',blocked:'Blocked!',hp:'HP',smileNova:'SMILE for Nova!',ready:'✨ ready!',special:'Special',noFace:'Face not found — hold phone at eye level',
+dCam:'cam',dModel:'model',dFace:'face',yes:'YES',no:'NO',dSens:'sens',dBlink:'blink',dMouth:'mouth',dSmile:'smile',dPuff:'puff',dBrow:'brow',dMove:'move',langBtn:'Français'},
+fr:{intro:'Battez les gardiens et ramassez les trésors avec votre visage seulement.<br><small>Un exercice facial amusant. La caméra reste sur votre appareil ; rien n\'est envoyé.</small>',
+playFace:'😀 Jouer avec le visage',howBtn:'❓ Comment jouer',recalFace:'🎯 Recalibrer le visage',playTouch:'👆 Jouer en tactile',privacy:'Politique de confidentialité',copy:'© 2026 Steeve J. Tous droits réservés.',
+howTitle:'Comment jouer',hMove:'<b>Se déplacer</b><br>Tournez la tête à gauche / à droite (les yeux servent de secours)',hAtk:'<b>Attaquer</b><br>Clignez rapidement des deux yeux',hCol:'<b>Ramasser les trésors</b><br>Ouvrez la bouche et maintenez',hSp:'<b>Coup spécial</b><br>Grand sourire tenu ~0,5 s quand la jauge est pleine',hBlk:'<b>Bloquer</b><br>Gonflez les joues ou levez les sourcils (recharge de 4 s)',
+hTip:'Gardez le visage centré et bien éclairé, à environ une longueur de bras.<br>Utilisez <b>🎯</b> pour recalibrer et le curseur de sensibilité <b>🐞</b> si les gestes répondent mal.',tPts:'Points des trésors',gotIt:'Compris !',
+paused:'⏸ Pause',resume:'▶️ Reprendre',calibrating:'Calibrage…',restT:'😌 Pause visage',restP:'Détendez votre visage, regardez au loin, clignez doucement.',skip:'Passer',ouch:'Aïe ! Plus de cœurs',again:'Rejouer',
+sensL:'Sensibilité (gauche = plus facile)',recal:'Recalibrer',sound:'Son',prevT:'Afficher/masquer l\'aperçu caméra',camNote:'🔒 La vidéo reste sur votre appareil, jamais enregistrée ni envoyée.',noFaceRecal:'Visage introuvable. Recalibrer ?',camOn:'caméra active',camResume:'📷 Touchez pour réactiver la caméra',
+faceBest:'🙂 Record Visage ',touchBest:'👆 Record Tactile ',faceL:'🙂 Visage',touchL:'👆 Tactile',overLine:'Mode {m} · Score {s} · Niveau {g}',newBest:'🏆 Nouveau record {m} !',bestIs:'Record {m} : {b}',
+needHttps:'<b style="color:#ff6">⚠️ Les commandes faciales nécessitent HTTPS.</b><br><small>Vous avez ouvert cette page en {p}// — les navigateurs y bloquent la caméra et le modèle facial. Ouvrez plutôt le lien https:// (ou http://localhost). Le mode tactile fonctionne toujours.</small>',
+blockedHttps:'<b style="color:#f66">Caméra bloquée : la page n\'est pas en HTTPS ({p}). Utilisez le lien https.</b>',noCamApi:'<b style="color:#f66">Ce navigateur n\'a pas d\'accès caméra.</b>',startingCam:'<small>Démarrage de la caméra…</small>',
+loadFail:'<b style="color:#f66">{e}</b><br><small>Vérifiez votre connexion ou essayez un autre navigateur. Le mode tactile fonctionne.</small>',camErr:'<b style="color:#f66">Erreur caméra : {e}</b>',loadingModel:'Chargement du modèle facial…',
+findFace:'Recherche de votre visage…',noFaceCal:'Aucun visage détecté — tenez le téléphone à hauteur des yeux, dans un endroit bien éclairé. On continue quand même ; ouvrez 🐞 pour diagnostiquer.',stepOf:'Étape {i} sur {n}',
+c1:'Détendez votre visage et regardez l\'écran bien en face. Ne bougez pas.',c2:'Tournez la tête vers VOTRE GAUCHE et restez ainsi.',c3:'Regardez de nouveau l\'écran. Clignez des yeux plusieurs fois : chaque clignement = attaque !',c4:'Ouvrez grand la bouche : cela aspire les trésors.',c5:'Faites un grand sourire et tenez-le : cela déclenche votre coup spécial.',
+stage:'Niveau',tw:['','Les chauves-souris zigzaguent !','Les golems encaissent 3 coups','Les fantômes apparaissent et disparaissent — frappez-les quand ils sont visibles','Les mimiques ressemblent à des trésors !','Boss : Dragon','Brouillard : vue réduite','Pluie de trésors doublée'],tw2:['Gardiens plus rapides','Horde mixte','Frénésie de trésors','Revanche du boss'],
+combo:'Combo x',comboUp:'COMBO x',nova:'💥 TREASURE NOVA !',magnet:'Aimant !',slow:'Ralenti !',shield:'Bouclier !',blocked:'Bloqué !',hp:'PV',smileNova:'SOURIEZ pour la Nova !',ready:'✨ prêt !',special:'Spécial',noFace:'Visage introuvable — tenez le téléphone à hauteur des yeux',
+dCam:'caméra',dModel:'modèle',dFace:'visage',yes:'OUI',no:'NON',dSens:'sens.',dBlink:'cligner',dMouth:'bouche',dSmile:'sourire',dPuff:'joues',dBrow:'sourcils',dMove:'bouger',langBtn:'English'}};
+const detectLang=()=>{const s=localStorage.getItem('fa_lang');if(s==='en'||s==='fr')return s;const ls=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'en']);return String(ls[0]||'').toLowerCase().startsWith('fr')?'fr':'en'};
+let LANG=detectLang();
+const t=(k,v)=>{let s=(L[LANG]&&L[LANG][k]!==undefined?L[LANG][k]:L.en[k]);if(s===undefined)return k;if(v&&typeof s==='string')s=s.replace(/\{(\w+)\}/g,(m,n)=>v[n]!==undefined?v[n]:m);return s};
+let msgState=null,overState=null,calState={};
+function setMsg(k,v){msgState=k?[k,v]:null;$('msg').innerHTML=k?t(k,v):'<small></small>'}
+function applyLang(){document.documentElement.lang=LANG;
+  document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t(e.dataset.t));
+  document.querySelectorAll('[data-h]').forEach(e=>e.innerHTML=t(e.dataset.h));
+  document.querySelectorAll('[data-ti]').forEach(e=>e.title=t(e.dataset.ti));
+  $('bLang').textContent='🌐 '+t('langBtn');
+  if(msgState)$('msg').innerHTML=t(msgState[0],msgState[1]);
+  if(overState)renderOver();
+  if(calState.text)$('cText').textContent=t(calState.text);if(calState.step)$('cStep').textContent=t('stepOf',calState.step);
+  showBest()}
+
 const cv=$('game'),ctx=cv.getContext('2d'),video=$('cam');
 let W,H,DPR;function resize(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize);resize();
-const BEST_KEYS={face:'fa_best_face',touch:'fa_best_touch'};const getBest=m=>+localStorage.getItem(BEST_KEYS[m])||0;function showBest(){$('best').innerHTML='🙂 Face best: <b>'+getBest('face')+'</b> &nbsp;·&nbsp; 👆 Touch best: <b>'+getBest('touch')+'</b>'}showBest();
+const BEST_KEYS={face:'fa_best_face',touch:'fa_best_touch'};const getBest=m=>+localStorage.getItem(BEST_KEYS[m])||0;function showBest(){$('best').innerHTML=t('faceBest')+': <b>'+getBest('face')+'</b> &nbsp;·&nbsp; '+t('touchBest')+': <b>'+getBest('touch')+'</b>'}applyLang();
+$('bLang').onclick=e=>{e.preventDefault();LANG=LANG==='fr'?'en':'fr';localStorage.setItem('fa_lang',LANG);applyLang()};
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 
 // ---------- Input layer: face or touch both write to `inp` ----------
@@ -164,14 +210,14 @@ function drawHud(){
   if(!hudOn)return;const x=8,y0=H*.40,w=Math.min(W*.6,240);
   ctx.save();ctx.textAlign='left';ctx.fillStyle='rgba(0,0,0,.75)';ctx.fillRect(x-4,y0-18,w+8,190);
   ctx.font='12px monospace';ctx.fillStyle='#fff';
-  ctx.fillText('cam: '+camStatus+'  '+(video.videoWidth||0)+'x'+(video.videoHeight||0),x,y0-6);
-  ctx.fillText('model: '+modelStatus,x,y0+8);
-  ctx.fillStyle=faceSeen?'#0f0':'#f44';ctx.fillText('face: '+(faceSeen?'YES':'NO')+'  '+faceFps+' fps  sens '+sens.toFixed(2),x,y0+22);
-  const rows=[['blink','blink'],['jaw','mouth'],['smile','smile'],['puff','puff'],['brow','brow']];
+  ctx.fillText(t('dCam')+': '+camStatus+'  '+(video.videoWidth||0)+'x'+(video.videoHeight||0),x,y0-6);
+  ctx.fillText(t('dModel')+': '+modelStatus,x,y0+8);
+  ctx.fillStyle=faceSeen?'#0f0':'#f44';ctx.fillText(t('dFace')+': '+(faceSeen?t('yes'):t('no'))+'  '+faceFps+' fps  '+t('dSens')+' '+sens.toFixed(2),x,y0+22);
+  const rows=[['blink',t('dBlink')],['jaw',t('dMouth')],['smile',t('dSmile')],['puff',t('dPuff')],['brow',t('dBrow')]];
   rows.forEach(([k,n],i)=>{const y=y0+36+i*22,v=lvl[k]||0,t=th(k),fl=performance.now()-(flash[k==='puff'||k==='brow'?'shield':k]||0)<300;
     ctx.fillStyle=fl?'#ff0':'#fff';ctx.fillText(n,x,y+10);ctx.fillStyle='#333';ctx.fillRect(x+48,y,w-50,12);
     ctx.fillStyle=v>t?'#0f0':'#29f';ctx.fillRect(x+48,y,(w-50)*Math.min(1,v),12);ctx.fillStyle='#f00';ctx.fillRect(x+48+(w-50)*t,y-2,2,16)});
-  const y=y0+36+5*22;ctx.fillStyle='#fff';ctx.fillText('move',x,y+10);ctx.fillStyle='#333';ctx.fillRect(x+48,y,w-50,12);
+  const y=y0+36+5*22;ctx.fillStyle='#fff';ctx.fillText(t('dMove'),x,y+10);ctx.fillStyle='#333';ctx.fillRect(x+48,y,w-50,12);
   ctx.fillStyle='#fa0';const mid=x+48+(w-50)/2;ctx.fillRect(Math.min(mid,mid+(lvl.move||0)*(w-50)/2),y,Math.abs(lvl.move||0)*(w-50)/2,12);
   ctx.restore();
 }
@@ -233,14 +279,13 @@ const GUARDS=[
  {id:'mimic',e:'📦',hp:2,sp:.9,mimic:true,from:5},
  {id:'dragon',e:'🐉',hp:8,sp:.4,boss:true,from:5}];
 const POWER=[{e:'❤️',k:'heart'},{e:'🧲',k:'magnet'},{e:'⏳',k:'slow'},{e:'🛡️',k:'shield'}];
-const STAGE_TWISTS=['','Bats zig-zag!','Golems take 3 hits','Ghosts fade in & out — hit them when solid','Mimics look like treasure!','Boss: Dragon','Fog: shorter view','Double treasure rain'];
+const NTW=8;
 let S;
 function newGame(){S={score:0,hearts:3,stage:0,combo:0,comboT:0,special:0,x:0.5,ents:[],shots:[],fx:[],t:0,stageT:0,spawnT:0,kills:0,need:0,banner:'',bannerT:0,pw:{},playT:0,ended:false,shieldCd:0};nextStage()}
 // Difficulty: gentle logarithmic-ish ramp, capped
 const diff=s=>({speed:60*(1+0.08*Math.min(s-1,15)+0.02*Math.max(0,s-16)),spawn:Math.max(0.55,1.6*Math.pow(0.94,s-1)),kills:6+Math.floor(s*1.5)});
 function nextStage(){S.stage++;if(S.stage>1)sfx.stage();S.kills=0;S.need=diff(S.stage).kills;S.stageT=0;
-  const tw=S.stage<STAGE_TWISTS.length?STAGE_TWISTS[S.stage-1]:['Faster guardians','Mixed horde','Treasure frenzy','Boss rematch'][S.stage%4];
-  S.banner='Stage '+S.stage+(tw?' — '+tw:'');S.bannerT=3;S.bossOut=false;
+  const st=S.stage;S.banner=()=>{const tw=st<NTW?t('tw')[st-1]:t('tw2')[st%4];return t('stage')+' '+st+(tw?' — '+tw:'')};S.bannerT=3;S.bossOut=false;
   if(S.stage>1&&(S.stage-1)%3===0)startRest();}
 function pick(arr){let t=arr.reduce((a,b)=>a+b.w,0)*Math.random();for(const a of arr){t-=a.w;if(t<=0)return a}return arr[0]}
 function spawn(){
@@ -267,7 +312,7 @@ function update(dt){
   S.x=Math.max(.06,Math.min(.94,S.x+inp.x*dt*0.9));
   const px=S.x*W,py=H*0.78;
   if(inp.attack){inp.attack=false;S.shots.push({x:px,y:py-30});sfx.shot()}
-  if(inp.special){inp.special=false;if(S.special>=100){S.special=0;sfx.nova();fx(px,py-60,'💥 TREASURE NOVA!','#ffd54a');
+  if(inp.special){inp.special=false;if(S.special>=100){S.special=0;sfx.nova();fx(px,py-60,t('nova'),'#ffd54a');
     for(const e of S.ents)if(e.t==='g'&&!e.boss){e.dead=true;addScore(10,e.x*W,e.y)}else if(e.boss)e.hpL-=3;}}
   S.spawnT-=dt;if(S.spawnT<=0){S.spawnT=d.spawn*(0.7+Math.random()*.6);spawn();if(S.stage>=8&&S.stage%4===3)spawn()}
   for(const s of S.shots)s.y-=520*dt;S.shots=S.shots.filter(s=>s.y>-20&&!s.hit);
@@ -279,7 +324,7 @@ function update(dt){
     if(e.t!=='g'&&(vac||S.pw.magnet)){const dx=px-ex,dy=py-e.y,dd=Math.hypot(dx,dy);if(dd<(S.pw.magnet?W:W*.45)){e.x+=dx/dd*1.2*dt;e.y+=dy/dd*260*dt}}
     if(e.t==='g'){
       const solid=!e.phase||Math.sin(e.ph*2)>-.2;
-      for(const s of S.shots)if(!s.hit&&solid&&Math.abs(s.x-ex)<U()*28&&Math.abs(s.y-e.y)<U()*28){s.hit=true;e.hpL--;fx(ex,e.y,'⚔️');if(e.hpL>0)sfx.hit();if(e.hpL<=0){e.dead=true;S.kills++;S.combo++;sfx.kill();if(S.combo>1&&S.combo%5===0){sfx.combo(S.combo);fx(ex,e.y-30,'COMBO x'+S.combo,'#ff0')}S.comboT=3;S.special=Math.min(100,S.special+8);addScore((e.boss?150:10)*(1+Math.min(S.combo,10)*0.1),ex,e.y)}}
+      for(const s of S.shots)if(!s.hit&&solid&&Math.abs(s.x-ex)<U()*28&&Math.abs(s.y-e.y)<U()*28){s.hit=true;e.hpL--;fx(ex,e.y,'⚔️');if(e.hpL>0)sfx.hit();if(e.hpL<=0){e.dead=true;S.kills++;S.combo++;sfx.kill();if(S.combo>1&&S.combo%5===0){sfx.combo(S.combo);fx(ex,e.y-30,t('comboUp')+S.combo,'#ff0')}S.comboT=3;S.special=Math.min(100,S.special+8);addScore((e.boss?150:10)*(1+Math.min(S.combo,10)*0.1),ex,e.y)}}
       if(!e.dead&&e.y>py-20&&Math.abs(ex-px)<40){e.dead=true;hurt()}
       if(e.y>H+30){e.dead=true}
     }else{
@@ -294,11 +339,12 @@ function update(dt){
   for(const f of S.fx){f.t-=dt;f.y-=40*dt}S.fx=S.fx.filter(f=>f.t>0);
 }
 function addScore(p,x,y){p=Math.round(p);S.score+=p;fx(x,y,'+'+p,'#ffd54a')}
-function powerup(k,x,y){sfx.power();if(k==='heart')S.hearts=Math.min(5,S.hearts+1);else S.pw[k]=k==='shield'?8:6;fx(x,y,{heart:'+❤️',magnet:'Magnet!',slow:'Slow-mo!',shield:'Shield!'}[k],'#7cf')}
-function hurt(){if(S.pw.shield||inp.shield&&S.shieldCd<=0){fx(S.x*W,H*.7,'Blocked!','#7cf');S.shieldCd=4;return}
+function powerup(k,x,y){sfx.power();if(k==='heart')S.hearts=Math.min(5,S.hearts+1);else S.pw[k]=k==='shield'?8:6;fx(x,y,(k==='heart'?'+❤️':t(k)),'#7cf')}
+function hurt(){if(S.pw.shield||inp.shield&&S.shieldCd<=0){fx(S.x*W,H*.7,t('blocked'),'#7cf');S.shieldCd=4;return}
   S.hearts--;S.combo=0;sfx.hurt();navigator.vibrate&&navigator.vibrate(120);if(S.hearts<=0)gameOver()}
-function gameOver(){S.ended=true;sfx.over();camStop();const m=mode==='face'?'face':'touch',lbl=m==='face'?'🙂 Face':'👆 Touch',prev=getBest(m),b=Math.max(S.score,prev);localStorage.setItem(BEST_KEYS[m],b);showBest();
-  $('oScore').innerHTML=`${lbl} mode · Score ${S.score} · Stage ${S.stage}<br>${S.score>prev?'🏆 New '+lbl+' best!':lbl+' best '+b}`;$('over').classList.remove('hide')}
+function gameOver(){S.ended=true;sfx.over();camStop();const m=mode==='face'?'face':'touch',prev=getBest(m),b=Math.max(S.score,prev);localStorage.setItem(BEST_KEYS[m],b);showBest();
+  overState={m,s:S.score,g:S.stage,nb:S.score>prev,b};renderOver();$('over').classList.remove('hide')}
+function renderOver(){const o=overState,lbl=t(o.m+'L');$('oScore').innerHTML=t('overLine',{m:lbl,s:o.s,g:o.g})+'<br>'+(o.nb?t('newBest',{m:lbl}):t('bestIs',{m:lbl,b:o.b}))}
 $('bAgain').onclick=()=>{$('over').classList.add('hide');newGame();camResume()};
 const U=()=>Math.min(W,H)/400;
 const COL={goblin:['#e53935','G'],bat:['#d500f9','B'],golem:['#ff6d00','R'],ghost:['#00e5ff','?'],mimic:['#ff1744','M'],dragon:['#ff1744','D'],
@@ -316,7 +362,7 @@ function drawEnt(e){const x=e.x*W,y=e.y,u=U();let label,emoji=e.e;
  if(e.t==='g'){const disguised=e.mimic&&e.y<H*.4;const r=u*(e.boss?40:22);
    if(disguised){shape('star',x,y,r,TCOL[20],'#fff');emoji='🏺';label='$'}
    else{const[c,l]=COL[e.id];shape('spike',x,y,r,c,'#ffffff');label=l}
-   if(e.hpL>1){ctx.fillStyle='#fff';ctx.font='bold '+Math.round(u*12)+'px sans-serif';ctx.fillText('HP '+e.hpL,x,y+r+u*12)}}
+   if(e.hpL>1){ctx.fillStyle='#fff';ctx.font='bold '+Math.round(u*12)+'px sans-serif';ctx.fillText(t('hp')+' '+e.hpL,x,y+r+u*12)}}
  else if(e.t==='t'){const r=u*(14+e.p/10);shape(e.p>=70?'diamond':'star',x,y,r,TCOL[e.p],'#ffffff');label=e.p}
  else{const[c,l]=COL[e.k];shape('square',x,y,u*16,c,'#ffffff');label=l}
  // readable text label in solid black (never inherits a dark fill), emoji overlaid on top if the font has it
@@ -336,28 +382,28 @@ function draw(){
   const top=(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat'))||0)+14;
   ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font='bold 18px sans-serif';
   ctx.fillText('💰 '+S.score,12,top+10);ctx.fillText('❤️'.repeat(Math.max(0,S.hearts)),12,top+36);
-  ctx.fillText('Stage '+S.stage+'  '+S.kills+'/'+S.need,12,top+62);
-  if(S.combo>1){ctx.fillStyle='#ffd54a';ctx.fillText('Combo x'+S.combo,12,top+88)}
+  ctx.fillText(t('stage')+' '+S.stage+'  '+S.kills+'/'+S.need,12,top+62);
+  if(S.combo>1){ctx.fillStyle='#ffd54a';ctx.fillText(t('combo')+S.combo,12,top+88)}
   ctx.fillStyle='#333';ctx.fillRect(12,H*.86,W*.4,10);ctx.fillStyle=S.special>=100?'#ffd54a':'#a58';ctx.fillRect(12,H*.86,W*.4*S.special/100,10);
-  ctx.fillStyle='#fff';ctx.font='12px sans-serif';ctx.fillText(S.special>=100?(mode==='face'?'SMILE for Nova!':'✨ ready!'):'Special',12,H*.86-8);
-  if(S.bannerT>0){ctx.textAlign='center';ctx.globalAlpha=Math.min(1,S.bannerT);ctx.font='bold 20px sans-serif';ctx.fillStyle='#ffd54a';ctx.fillText(S.banner,W/2,H*.35);ctx.globalAlpha=1}
+  ctx.fillStyle='#fff';ctx.font='12px sans-serif';ctx.fillText(S.special>=100?(mode==='face'?t('smileNova'):t('ready')):t('special'),12,H*.86-8);
+  if(S.bannerT>0){ctx.textAlign='center';ctx.globalAlpha=Math.min(1,S.bannerT);ctx.font='bold 20px sans-serif';ctx.fillStyle='#ffd54a';ctx.fillText(typeof S.banner==='function'?S.banner():S.banner,W/2,H*.35);ctx.globalAlpha=1}
   drawHud();
-  if(mode==='face'&&!faceSeen){ctx.textAlign='center';ctx.fillStyle='#f88';ctx.font='14px sans-serif';ctx.fillText('Face not found — hold phone at eye level',W/2,H*.45)}
+  if(mode==='face'&&!faceSeen){ctx.textAlign='center';ctx.fillStyle='#f88';ctx.font='14px sans-serif';ctx.fillText(t('noFace'),W/2,H*.45)}
 }
 document.documentElement.style.setProperty('--sat','env(safe-area-inset-top)');
 
 // ---------- Start / calibration ----------
 const SECURE=window.isSecureContext&&location.protocol!=='file:';
-if(!SECURE){$('msg').innerHTML='<b style="color:#ff6">⚠️ Face controls need HTTPS.</b><br><small>You opened this as '+location.protocol+'// — browsers block the camera/face model here. Open the https:// link (or http://localhost) instead. Touch mode still works.</small>'}
+if(!SECURE){setMsg('needHttps',{p:location.protocol})}
 async function startFace(){
-  if(!SECURE){$('msg').innerHTML='<b style="color:#f66">Camera blocked: page is not HTTPS ('+location.protocol+'). Use the https link.</b>';return}
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$('msg').innerHTML='<b style="color:#f66">This browser has no camera API.</b>';return}
-  $('msg').innerHTML='<small>Starting camera…</small>';
+  if(!SECURE){setMsg('blockedHttps',{p:location.protocol});return}
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setMsg('noCamApi');return}
+  setMsg('startingCam');
   if(!await camStart(true))return;
   try{
-    const t=setInterval(()=>{$('msg').innerHTML='<small>'+modelStatus+'</small>'},200);
+    const t=setInterval(()=>{msgState=null;$('msg').innerHTML='<small>'+t('loadingModel')+' ('+modelStatus+')</small>'},200);
     await initFace();clearInterval(t);
-  }catch(e){$('msg').innerHTML='<b style="color:#f66">'+e.message+'</b><br><small>Check internet / try another browser. Touch mode works.</small>';return}
+  }catch(e){setMsg('loadFail',{e:e.message});return}
   mode='face';faceLoopOn=true;faceLoop();$('start').classList.add('hide');if(forceCal||!loadCal())await calibrate();forceCal=false;begin();
 }
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
@@ -377,7 +423,7 @@ async function camStart(first){
     if(landmarker&&!faceLoopOn){faceLoopOn=true;faceLoop()}
     updInd();return true;
   }catch(e){stream=null;camStatus='error '+e.name;
-    if(first)$('msg').innerHTML='<b style="color:#f66">Camera error: '+e.name+' '+(e.message||'')+'</b>';
+    if(first)setMsg('camErr',{e:e.name+' '+(e.message||'')});
     updInd();return false}
 }
 function camStop(){faceLoopOn=false;faceSeen=false;bs={};
@@ -391,22 +437,22 @@ function loadCal(){try{const c=JSON.parse(localStorage.getItem(CAL_KEY)||'null')
   base=c.base;yaw0=c.yaw0||0;moveSign=c.moveSign||1;moveRange=c.moveRange||.25;if(c.sens)sens=c.sens;$('sens').value=sens;return true}catch(e){return false}}
 async function calibrate(){
   $('calib').classList.remove('hide');const T=$('cText'),I=$('cIcon');
-  I.textContent='😐';T.textContent='Finding your face…';
+  I.textContent='😐';calState={text:'findFace'};T.textContent=t('findFace');
   const t0=performance.now();while(!faceSeen&&performance.now()-t0<8000)await wait(100);
-  if(!faceSeen){T.textContent='No face found — hold the phone at eye level in good light. Continuing anyway; open 🐞 to debug.';await wait(2500)}
+  if(!faceSeen){calState={text:'noFaceCal'};T.textContent=t('noFaceCal');await wait(2500)}
   // each step: 3 s with countdown + progress bar
   const STEP=3000;let si=0;const total=5;
-  async function stepRun(title,icon,doSample){si++;T.textContent=title;I.textContent=icon;$('cStep').textContent='Step '+si+' of '+total;
+  async function stepRun(title,icon,doSample){si++;calState={text:title,step:{i:si,n:total}};T.textContent=t(title);I.textContent=icon;$('cStep').textContent=t('stepOf',calState.step);
     sfx.beep(false);let lastSec=3;const t0=performance.now();const tick=setInterval(()=>{const e=performance.now()-t0;const sec=Math.max(1,Math.ceil((STEP-e)/1000));if(sec<lastSec){lastSec=sec;sfx.beep(false)}$('cBar').style.width=Math.min(100,e/STEP*100)+'%';$('cCount').textContent=Math.max(1,Math.ceil((STEP-e)/1000))},50);
     const r=doSample?await sample(STEP):(await wait(STEP),null);clearInterval(tick);$('cBar').style.width='100%';sfx.beep(true);return r}
-  const b=await stepRun('Relax your face and look straight at the screen. Hold still.','😐',true);yaw0=b._yaw;delete b._yaw;delete b._n;
+  const b=await stepRun('c1','😐',true);yaw0=b._yaw;delete b._yaw;delete b._n;
   for(const k in b)b[k]=Math.min(b[k],.5);base=b; // neutral baseline (capped so a held expression can't disable a gesture)
-  const l=await stepRun('Turn your head to YOUR LEFT and hold it there.','👈',true);
+  const l=await stepRun('c2','👈',true);
   const d=l._yaw-yaw0;if(Math.abs(d)>.05){moveSign=-Math.sign(d);moveRange=Math.min(.4,Math.max(.12,Math.abs(d)*.7))}
-  await stepRun('Face the screen again. Blink a few times: each blink = attack!','😑');
-  await stepRun('Open your mouth wide: this vacuums up treasure.','😮');
-  await stepRun('Give a big smile and hold it: this fires your special move.','😁');
-  $('cCount').textContent='';$('cStep').textContent='';
+  await stepRun('c3','😑');
+  await stepRun('c4','😮');
+  await stepRun('c5','😁');
+  $('cCount').textContent='';$('cStep').textContent='';calState={};
   saveCal();$('calib').classList.add('hide');
 }
 function begin(){$('start').classList.add('hide');$('bPause').classList.remove('hide');if(mode==='touch')$('touch').classList.remove('hide');newGame();running=true;last=performance.now()}
