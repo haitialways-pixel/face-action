@@ -6,7 +6,7 @@
 **Privacy policy URL:** https://haitialways-pixel.github.io/face-action/privacy.html
 **Developer name:** Steeve J.
 **Copyright:** © 2026 Steeve J. All rights reserved.
-**Contact email:** faceaction.support@gmail.com (replace before submitting)
+**Contact email:** faceaction.support@gmail.com
 
 ## Short description (≤80 chars)
 Blink, smile and turn your head to hunt treasure. A fun facial workout game!

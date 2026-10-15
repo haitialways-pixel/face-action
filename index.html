@@ -76,7 +76,7 @@ small{opacity:.75}
 const $=id=>document.getElementById(id);
 const cv=$('game'),ctx=cv.getContext('2d'),video=$('cam');
 let W,H,DPR;function resize(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize);resize();
-const BEST_KEY='ftq_best';$('best').textContent='Best: '+(+localStorage.getItem(BEST_KEY)||0);
+const BEST_KEYS={face:'fa_best_face',touch:'fa_best_touch'};const getBest=m=>+localStorage.getItem(BEST_KEYS[m])||0;function showBest(){$('best').innerHTML='🙂 Face best: <b>'+getBest('face')+'</b> &nbsp;·&nbsp; 👆 Touch best: <b>'+getBest('touch')+'</b>'}showBest();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 
 // ---------- Input layer: face or touch both write to `inp` ----------
@@ -297,8 +297,8 @@ function addScore(p,x,y){p=Math.round(p);S.score+=p;fx(x,y,'+'+p,'#ffd54a')}
 function powerup(k,x,y){sfx.power();if(k==='heart')S.hearts=Math.min(5,S.hearts+1);else S.pw[k]=k==='shield'?8:6;fx(x,y,{heart:'+❤️',magnet:'Magnet!',slow:'Slow-mo!',shield:'Shield!'}[k],'#7cf')}
 function hurt(){if(S.pw.shield||inp.shield&&S.shieldCd<=0){fx(S.x*W,H*.7,'Blocked!','#7cf');S.shieldCd=4;return}
   S.hearts--;S.combo=0;sfx.hurt();navigator.vibrate&&navigator.vibrate(120);if(S.hearts<=0)gameOver()}
-function gameOver(){S.ended=true;sfx.over();camStop();const b=Math.max(S.score,+localStorage.getItem(BEST_KEY)||0);localStorage.setItem(BEST_KEY,b);
-  $('oScore').innerHTML=`Score ${S.score} · Stage ${S.stage}<br>Best ${b}`;$('over').classList.remove('hide')}
+function gameOver(){S.ended=true;sfx.over();camStop();const m=mode==='face'?'face':'touch',lbl=m==='face'?'🙂 Face':'👆 Touch',prev=getBest(m),b=Math.max(S.score,prev);localStorage.setItem(BEST_KEYS[m],b);showBest();
+  $('oScore').innerHTML=`${lbl} mode · Score ${S.score} · Stage ${S.stage}<br>${S.score>prev?'🏆 New '+lbl+' best!':lbl+' best '+b}`;$('over').classList.remove('hide')}
 $('bAgain').onclick=()=>{$('over').classList.add('hide');newGame();camResume()};
 const U=()=>Math.min(W,H)/400;
 const COL={goblin:['#e53935','G'],bat:['#d500f9','B'],golem:['#ff6d00','R'],ghost:['#00e5ff','?'],mimic:['#ff1744','M'],dragon:['#ff1744','D'],
