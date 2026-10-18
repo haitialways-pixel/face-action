@@ -427,7 +427,9 @@ const VOLS=[0.7,0.3,0];function volIcon(){return SND.vol===0?'🔇':SND.vol<0.5?
 function cycleVol(){const i=VOLS.indexOf(SND.vol);SND.vol=VOLS[(i+1)%VOLS.length];localStorage.setItem('fa_vol',SND.vol);if(SND.master)SND.master.gain.value=SND.vol;$('bVol').textContent=volIcon()}
 
 // ---------- Game data ----------
-const TREASURES=[{e:'🪙',p:5,w:40},{e:'💍',p:10,w:25},{e:'🏺',p:20,w:15},{e:'👑',p:40,w:10},{e:'💎',p:70,w:6},{e:'🏆',p:100,w:4}];
+// v1.1 (Oct 18): rarer high-value treasure (was 40/25/15/10/6/4)
+const TREASURES=[{e:'🪙',p:5,w:46},{e:'💍',p:10,w:28},{e:'🏺',p:20,w:14},{e:'👑',p:40,w:7},{e:'💎',p:70,w:3.5},{e:'🏆',p:100,w:1.5}];
+const TREAS_CAP=3,IDOL_PITY=60; // max treasures on screen; guaranteed 🏆 if none spawned for 60 s of play
 const GUARDS=[
  {id:'goblin',e:'👺',hp:1,sp:1,from:1},
  {id:'bat',e:'🦇',hp:1,sp:1.5,zig:true,from:2},
@@ -457,8 +459,11 @@ function spawn(){
   if(S.stage%5===0&&!S.bossOut&&S.kills>=S.need-1){S.bossOut=true;const b=GUARDS[5];S.ents.push({t:'g',...b,x:.5,y:-40,hpL:b.hp+Math.floor(S.stage/5),sp:b.sp,ph:0});return}
   const r=R();
   if(r<0.62){const g=pool[Math.floor(R()*pool.length)];S.ents.push({t:'g',...g,x:.1+R()*.8,y:-30,hpL:g.hp+(S.stage>10&&R()<.3?1:0),ph:R()*6})}
-  else if(r<0.95){const tr=pick(TREASURES);S.ents.push({t:'t',...tr,x:.1+R()*.8,y:-30,ph:0})}
-  else{const p=R()<.14?POWER[0]:POWER[1+Math.floor(R()*3)]; // v1.1: heart drops ~half as often (shorter sessions)
+  else if(r<0.75){ // v1.1 (Oct 18): treasure 13% of spawn ticks (was 33%), the freed ticks spawn nothing so guardian density is unchanged
+   if(S.ents.filter(e=>e.t==='t'&&!e.dead).length>=TREAS_CAP)return;
+   if(S.lastIdol==null)S.lastIdol=S.t;let tr=pick(TREASURES);if(S.t-S.lastIdol>=IDOL_PITY)tr=TREASURES[5];if(tr.p===100)S.lastIdol=S.t;
+   S.ents.push({t:'t',...tr,x:.1+R()*.8,y:-30,ph:0})}
+  else if(r<0.80){const p=R()<.14?POWER[0]:POWER[1+Math.floor(R()*3)]; // power-ups stay 5%; heart drops ~half as often as v1.0
    S.ents.push({t:'p',...p,x:.1+R()*.8,y:-30,ph:0})}
 }
 function fx(x,y,txt,col,size=18){S.fx.push({x,y,txt,col,t:1,size})}
@@ -771,12 +776,14 @@ async function startFace(){
   if(!SECURE){setMsg('blockedHttps',{p:location.protocol});return}
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setMsg('noCamApi');return}
   setMsg('startingCam');
-  if(!await camStart(true))return;
+  const gen=window.__faceGen=(window.__faceGen||0)+1; // bumped by Home/back/Touch to cancel a pending face start
+  if(!await camStart(true))return;if(gen!==window.__faceGen){camStop();return}
   try{
-    const t=setInterval(()=>{msgState=null;$('msg').innerHTML='<small>'+t('loadingModel')+' ('+modelStatus+')</small>'},200);
-    try{await initFace()}finally{clearInterval(t)}
+    const iv=setInterval(()=>{msgState=null;$('msg').innerHTML='<small>'+t('loadingModel')+' ('+modelStatus+')</small>'},200);
+    try{await initFace()}finally{clearInterval(iv)}
   }catch(e){setMsg('loadFail',{e:e.message});camStop();return}
-  mode='face';faceLoopOn=true;faceLoop();$('start').classList.add('hide');if(forceCal||!loadCal())await calibrate();forceCal=false;begin(false);
+  if(gen!==window.__faceGen){camStop();setMsg(null);return}
+  mode='face';faceLoopOn=true;faceLoop();$('start').classList.add('hide');if(forceCal||!loadCal()){try{await calibrate()}catch(e){if(e==='cancel'){lightWatch(false);return}throw e}}if(gen!==window.__faceGen)return;forceCal=false;begin(false);
 }
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 // ---------- Camera lifecycle: camera only on while actively playing ----------
@@ -807,16 +814,16 @@ const CAL_KEY='ftq_cal_v1';let forceCal=false;
 function saveCal(){try{localStorage.setItem(CAL_KEY,JSON.stringify({v:1,base,yaw0,moveSign,moveRange,sens,t:Date.now()}))}catch(e){}}
 function loadCal(){try{const c=JSON.parse(localStorage.getItem(CAL_KEY)||'null');if(!c||c.v!==1||!c.base)return false;
   base=c.base;yaw0=c.yaw0||0;moveSign=c.moveSign||1;moveRange=c.moveRange||.25;if(c.sens)sens=c.sens;$('sens').value=sens;return true}catch(e){return false}}
-async function calibrate(){
+async function calibrate(){const cg=window.__faceGen;const chk=()=>{if(cg!==window.__faceGen)throw 'cancel'}; // Home/back during calibration aborts it
   $('calib').classList.remove('hide');lightWatch(true);const T=$('cText'),I=$('cIcon');
   I.textContent='😐';calState={text:'findFace'};T.textContent=t('findFace');
-  const t0=performance.now();while(!faceSeen&&performance.now()-t0<8000)await wait(100);
+  const t0=performance.now();while(!faceSeen&&performance.now()-t0<8000)await wait(100);chk();
   if(!faceSeen){calState={text:'noFaceCal'};T.textContent=t('noFaceCal');await wait(2500)}
   // each step: 3 s with countdown + progress bar
   const STEP=3000;let si=0;const total=5;
-  async function stepRun(title,icon,doSample){si++;calState={text:title,step:{i:si,n:total}};T.textContent=t(title);I.textContent=icon;$('cStep').textContent=t('stepOf',calState.step);
-    sfx.beep(false);let lastSec=3;const t0=performance.now();const tick=setInterval(()=>{const e=performance.now()-t0;const sec=Math.max(1,Math.ceil((STEP-e)/1000));if(sec<lastSec){lastSec=sec;sfx.beep(false)}$('cBar').style.width=Math.min(100,e/STEP*100)+'%';$('cCount').textContent=Math.max(1,Math.ceil((STEP-e)/1000))},50);
-    const r=doSample?await sample(STEP):(await wait(STEP),null);clearInterval(tick);$('cBar').style.width='100%';sfx.beep(true);return r}
+  async function stepRun(title,icon,doSample){chk();si++;calState={text:title,step:{i:si,n:total}};T.textContent=t(title);I.textContent=icon;$('cStep').textContent=t('stepOf',calState.step);
+    sfx.beep(false);let lastSec=3;const t0=performance.now();const tick=setInterval(()=>{if(cg!==window.__faceGen){clearInterval(tick);return}const e=performance.now()-t0;const sec=Math.max(1,Math.ceil((STEP-e)/1000));if(sec<lastSec){lastSec=sec;sfx.beep(false)}$('cBar').style.width=Math.min(100,e/STEP*100)+'%';$('cCount').textContent=Math.max(1,Math.ceil((STEP-e)/1000))},50);
+    const r=doSample?await sample(STEP):(await wait(STEP),null);clearInterval(tick);chk();$('cBar').style.width='100%';sfx.beep(true);return r}
   const b=await stepRun('c1','😐',true);yaw0=b._yaw;delete b._yaw;delete b._n;
   for(const k in b)b[k]=Math.min(b[k],.5);base=b; // neutral baseline (capped so a held expression can't disable a gesture)
   const l=await stepRun('c2','👈',true);
@@ -854,4 +861,45 @@ $('bPrev').onclick=()=>{prevOn=!prevOn;localStorage.setItem('ftq_prev',prevOn?'1
 newGame();requestAnimationFrame(step);
 window.__ft={sfx,SND,startRest,endRest,gameOver,get stream(){return stream},get S(){return S},begin,inp,touch,update,draw,get bs(){return bs},get st(){return {camStatus,modelStatus,faceSeen,faceFps,mode}},
   setMode:m=>{mode=m},setBs:v=>{bs=v;faceSeen=true},setYaw:v=>{yaw=v},updateInput,setDay:d=>{FAKE_DAY=d;syncDaily()},recordDaily,syncDaily,get PROG(){return PROG},ev,get STATS(){return STATS},get BGOT(){return BGOT},showRewardedAd,lightWatch,luma,get OPT(){return OPT},endOrOffer,diff,get running(){return running},nextStage,setSkin:k=>{skin=k},get W(){return W},get H(){return H}};
+
+// ===== Navigation: 🏠 Home in the top bar, quit confirmation, ← Back on overlays, Android hardware back (Oct 18 2026) =====
+Object.assign(L.en,{home:'Home',quitT:'Quit to menu?',quitP:"Your score won't be saved.",quitYes:'🏠 Yes, quit',quitNo:'▶️ No, keep playing',quitNoP:'↩️ No, go back',navBack:'← Back'});
+Object.assign(L.fr,{home:'Accueil',quitT:'Retourner au menu ?',quitP:'Votre score ne sera pas enregistré.',quitYes:'🏠 Oui, quitter',quitNo:'▶️ Non, continuer',quitNoP:'↩️ Non, revenir',navBack:'← Retour'});
+(()=>{const st=document.createElement('style');st.textContent='.navBack{position:fixed;left:8px;top:calc(env(safe-area-inset-top) + 8px);min-width:0!important;width:auto!important;padding:7px 14px!important;font-size:15px!important;z-index:7;border-radius:999px!important}#quitAsk{z-index:10}';document.head.appendChild(st);
+ const h=document.createElement('button');h.id='bHome';h.className='hide';h.dataset.ti='home';h.textContent='🏠';h.setAttribute('aria-label','Home');
+ h.style.cssText='position:fixed;right:200px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6';document.body.appendChild(h);
+ const q=document.createElement('div');q.id='quitAsk';q.className='ov hide';q.innerHTML='<div style="font-size:52px">🏠</div><h2 data-t="quitT" style="margin:0"></h2><p data-t="quitP" style="margin:0;font-size:17px"></p><button id="bQuitYes" class="play pTouch" data-t="quitYes"></button><button id="bQuitNo" class="sec" data-t="quitNo"></button>';document.body.appendChild(q);
+ for(const id of ['howto','styles','settings','missions']){const o=$(id);if(!o)continue;const b=document.createElement('button');b.className='sec navBack';b.dataset.t='navBack';b.dataset.for=id;o.insertBefore(b,o.firstChild)}
+ new MutationObserver(()=>h.classList.toggle('hide',$('bPause').classList.contains('hide'))).observe($('bPause'),{attributes:true,attributeFilter:['class']});
+})();
+const vis=id=>{const e=$(id);return !!e&&!e.classList.contains('hide')};
+function closeOv(id){({howto:'bHowOk',styles:'bStyleOk',settings:'bSetOk',missions:'bMisOk',camEx:'bCamBack'})[id]&&$(({howto:'bHowOk',styles:'bStyleOk',settings:'bSetOk',missions:'bMisOk',camEx:'bCamBack'})[id]).click()}
+document.querySelectorAll('.navBack').forEach(b=>b.onclick=()=>closeOv(b.dataset.for));
+// leave whatever is happening and show the start screen; toMenu() stops the loop and the camera
+function cancelFace(){window.__faceGen=(window.__faceGen||0)+1}
+function goHome(){cancelFace();try{clearInterval(restI)}catch(e){}document.querySelectorAll('.ov').forEach(o=>{if(o.id!=='start')o.classList.add('hide')});try{overState=null}catch(e){}toMenu();camStop();try{setMsg(null)}catch(e){}}
+// tapping Touch while the face model is still loading cancels the face start and turns the camera off
+$('bTouch').addEventListener('click',()=>{if(stream||window.__faceGen){cancelFace();camStop()}},true);
+let askFrom=null;
+function askQuit(from){if(running&&S&&!S.ended&&!paused)doPause();if(!running||!S||S.ended){goHome();return}askFrom=from;$('bQuitNo').textContent=t(from==='pause'?'quitNoP':'quitNo');$('quitAsk').classList.remove('hide')}
+$('bHome').onclick=()=>askQuit('home');
+$('bQuit').onclick=()=>askQuit('pause');
+$('bQuitYes').onclick=goHome;
+$('bQuitNo').onclick=()=>{$('quitAsk').classList.add('hide');if(askFrom==='home')$('bResume').click();askFrom=null};
+// hardware/system back: returns true when handled, false at the start screen (caller exits the app)
+function navBack(){if(vis('ad'))return true;
+ if(vis('quitAsk')){$('bQuitNo').click();return true}
+ for(const id of ['camEx','howto','styles','settings','missions'])if(vis(id)){closeOv(id);return true}
+ if(vis('cont')){$('bContNo').click();return true}
+ if(vis('over')){$('bMenu').click();return true}
+ if(vis('calib')||vis('rest')){goHome();return true}
+ if(vis('pause')){askQuit('pause');return true}
+ if(running&&S&&!S.ended){doPause();return true}
+ if(vis('start')&&stream){goHome();return true} // face start still loading: cancel it, camera off
+ return false}
+{const CapApp=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;
+ if(CapApp&&CapApp.addListener)CapApp.addListener('backButton',()=>{if(!navBack())CapApp.exitApp()})}
+addEventListener('keydown',e=>{if(e.key==='Escape')navBack()});
+window.__nav={navBack,goHome,askQuit,vis};
+applyLang();
 </script></body></html>

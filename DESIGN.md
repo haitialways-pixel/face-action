@@ -21,12 +21,12 @@ Calibration records your neutral face for 2 s and subtracts it, so resting expre
 ## Treasures
 | Treasure | Points | Spawn weight |
 |---|---|---|
-| 🪙 Coin | 5 | 40% |
-| 💍 Ring | 10 | 25% |
-| 🏺 Urn | 20 | 15% |
-| 👑 Crown | 40 | 10% |
-| 💎 Diamond | 70 | 6% |
-| 🏆 Golden Idol | 100 | 4% |
+| 🪙 Coin | 5 | 46% (v1.0: 40%) |
+| 💍 Ring | 10 | 28% (25%) |
+| 🏺 Urn | 20 | 14% (15%) |
+| 👑 Crown | 40 | 7% (10%) |
+| 💎 Diamond | 70 | 3.5% (6%) |
+| 🏆 Golden Idol | 100 | 1.5% (4%) + a guaranteed one if none has spawned for 60 s of play |
 
 Combo multiplier: +10% per consecutive kill, up to ×2. The combo resets after 3 s or when you take a hit. Grabbing treasure while a guardian is still nearby pays only 50%.
 
@@ -130,3 +130,34 @@ The start screen must not look like Falling Bricks', even as a thumbnail. Treasu
 - **Buttons:** amber-gold (Touch) and cyan (Face) plaques with a dark stone border and gem studs. The daily card, chapter chip and secondary buttons use dark wood/stone with gold trim.
 - **Performance:** a canvas (DPR capped at 2) runs only while the start screen is visible and the tab is shown. It holds 14 coins, 22 sparkles and 50 stars. With prefers-reduced-motion it draws one static frame.
 - **Theme color:** `#170b24`.
+
+## Treasure density (Oct 18 2026, user feedback: "treasures are overwhelming")
+Guardians are the main focus; treasure is a reward, not a carpet.
+- **Spawn mix per spawn tick:** guardian 62% (unchanged), treasure **13%** (was 33%), power-up 5% (unchanged), nothing 20% (new). The freed ticks spawn nothing, so guardian density and difficulty stay the same.
+- **On-screen cap:** at most **3** treasures at once; a treasure tick is skipped while 3 are falling.
+- **High-value treasure (40+ pts)** is 12% of treasures (was 30%). Golden idols are 1.5% of treasures, plus a pity rule: if no 🏆 has spawned for 60 s of play, the next treasure is a 🏆. This keeps the "collect 1 golden idol" mission and the Idol Collector badge achievable.
+- **Measured** with a headless bot (3 × 60 s per stage, before → after):
+
+| Stage | Treasures / min | Avg on screen | Max on screen | 40+ pt / min | Guardians / min |
+|---|---|---|---|---|---|
+| 1 | 15.3 → 6.3 | 4.0 → 1.7 | 8 → 3 | 3.0 → 1.3 | 27.7 → 26.7 |
+| 4 | 19.0 → 8.0 | 3.7 → 1.4 | 8 → 3 | 4.7 → 1.0 | 33.3 → 32.3 |
+| 8 | 23.3 → 8.7 | 3.8 → 1.5 | 9 → 3 | 3.7 → 1.3 | 46.7 → 45.0 |
+
+- **Golden idols:** over 20 simulated 150 s games, every game had at least one 🏆 (1–3, the first at 5–108 s).
+- **Session length** (bot sim, N=50, median): casual 2:32, typical 4:10, skilled 5:27, Relaxed 6:36. That's within noise of the earlier 2:35 / 3:43 / 5:26, so the difficulty was not changed.
+
+## Navigation (Oct 18 2026)
+- **🏠 Home** in the top bar next to ⏸ during play. It pauses and asks "Quit to menu? Your score won't be saved." Yes goes to the start screen; No resumes. The pause menu's 🏠 Menu asks the same question (No returns to the pause menu).
+- **← Back** (top-left) on How to Play, Collection, Settings and Chapter missions. It returns to wherever you came from (the start screen, or the pause menu for How to Play). Game over has 🏠 Menu.
+- **Android hardware back** (Capacitor App plugin `backButton`):
+  - During play: pauses.
+  - On the pause menu: asks to quit.
+  - Quit dialog: No.
+  - Overlays (How to Play, Collection, Settings, missions, camera explainer): closes them.
+  - Continue? offer: No thanks.
+  - Game over: goes to the menu.
+  - Calibration or face break: goes to the start screen.
+  - Start screen: exits the app.
+  - On the web, Escape does the same, except it never exits.
+- **Camera:** always off on the start screen. Home or back during camera start-up, model loading or calibration cancels the face start, and so does tapping Touch while the model loads. Calibration aborts instead of finishing and starting a game.
