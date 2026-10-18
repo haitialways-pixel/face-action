@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="theme-color" content="#1b1033">
+<meta name="theme-color" content="#170b24">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -57,11 +57,47 @@ h1 small{display:block;font-size:22px;color:#fff;text-shadow:0 0 12px #00e5ff;op
 #touch button.cd{opacity:.35}
 #oMeta{font-size:15px;line-height:1.45;margin:0;max-width:360px}
 small{opacity:.75}
+/* ===== Treasure Hunt start-screen identity: night cavern, carved gold, torches ===== */
+#start.thFA{background:radial-gradient(ellipse at 50% 16%,#3b1d52 0%,#1a0c29 42%,#080310 100%);gap:11px}
+#startBg{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+#start.thFA>*:not(canvas){position:relative;z-index:1}
+.thFA .heroArt{width:132px;height:132px;flex:none;border-radius:50%;padding:5px;background:conic-gradient(from 20deg,#fff1b8,#c48a1c,#ffe08a,#7a4a0e,#ffd54a,#9a6414,#fff1b8);box-shadow:0 0 0 3px #2a1606,0 0 28px rgba(0,229,255,.55),0 0 60px rgba(255,140,0,.35)}
+.thFA .heroArt img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;border:3px solid #1a0d04}
+.thFA h1{text-shadow:none;line-height:1}
+.thFA .faT1{display:block;font-family:'Cinzel','Trajan Pro','Cormorant Garamond',Georgia,'DejaVu Serif','Times New Roman',serif;font-weight:700;font-size:42px;letter-spacing:1.5px;background:linear-gradient(180deg,#fff7cf 0%,#ffd54a 32%,#b97812 58%,#ffe7a0 74%,#7d4d0c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 #3b2208) drop-shadow(0 0 12px rgba(255,170,40,.45))}
+.thFA .faSub{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px}
+.thFA .faSub::before,.thFA .faSub::after{content:'';width:34px;height:2px;background:linear-gradient(90deg,transparent,#ff9d2e)}
+.thFA .faSub::after{transform:scaleX(-1)}
+@media (max-width:400px){.thFA .faSub::before,.thFA .faSub::after{width:16px}}
+.thFA .daily .dTop{font-size:16px}
+.thFA h1 small{display:inline;margin:0;font-family:Georgia,'DejaVu Serif',serif;font-size:clamp(13px,3.9vw,16px);font-weight:700;letter-spacing:clamp(1.5px,.8vw,4px);white-space:nowrap;text-transform:uppercase;color:#ffa53a;text-shadow:0 0 10px rgba(255,120,0,.75),0 1px 0 #3b1a00}
+.thFA .chest{width:30px;height:26px;flex:none;filter:drop-shadow(0 0 6px rgba(255,200,60,.6))}
+.thFA [data-h="intro"]{font-family:Georgia,'DejaVu Serif',serif;font-style:italic;color:#f1dcb0}
+.thFA [data-h="intro"] small{color:#c9b48a}
+.thFA .play{border-radius:10px;border:3px solid #2e1d0c;font-family:Georgia,'DejaVu Serif',serif;font-weight:800;letter-spacing:.4px;overflow:visible}
+.thFA .play::before,.thFA .play::after{content:'';position:absolute;top:50%;width:12px;height:12px;margin-top:-6px;transform:rotate(45deg);border:2px solid #2e1d0c;border-radius:2px}
+.thFA .play::before{left:-8px}.thFA .play::after{right:-8px}
+.thFA .pTouch{background:linear-gradient(180deg,#ffe48a 0%,#ffb300 52%,#d35400 100%);color:#2b1200;text-shadow:0 1px 0 rgba(255,240,190,.7);box-shadow:0 0 0 2px #d9ad52,inset 0 2px 0 rgba(255,255,255,.6),inset 0 -4px 0 rgba(90,30,0,.35),0 6px 18px rgba(0,0,0,.6),0 0 24px rgba(255,150,0,.35)}
+.thFA .pTouch::before,.thFA .pTouch::after{background:radial-gradient(circle at 35% 35%,#fff,#ff3d3d 45%,#8e0000)}
+.thFA .pFace{background:linear-gradient(180deg,#b5ffff 0%,#00d8ff 52%,#00698f 100%);color:#00202c;text-shadow:0 1px 0 rgba(220,255,255,.7);box-shadow:0 0 0 2px #d9ad52,inset 0 2px 0 rgba(255,255,255,.6),inset 0 -4px 0 rgba(0,40,60,.35),0 6px 18px rgba(0,0,0,.6),0 0 24px rgba(0,229,255,.45)}
+.thFA .pFace::before,.thFA .pFace::after{background:radial-gradient(circle at 35% 35%,#fff,#00e676 45%,#00592b)}
+.thFA .daily{background:linear-gradient(180deg,#2e1b0d,#170d06);border:2px solid #b8862f;border-radius:8px;box-shadow:0 0 0 1px #000,inset 0 0 18px rgba(0,0,0,.6)}
+.thFA .daily .dTop{font-family:Georgia,'DejaVu Serif',serif;color:#ffcf66}
+.thFA .daily .dSub{color:#f1dcb0}
+.thFA .daily:not(.on) .pill{background:#4a2c10;color:#ffd98a;border:1px solid #8a5a1e}
+.thFA .chap{background:#2a1608;color:#ffcc80;border:1px solid #ff9800aa;border-radius:6px;font-family:Georgia,'DejaVu Serif',serif}
+.thFA .mini button{background:linear-gradient(180deg,#3b3048,#211a2b);color:#f6e3b4;border:1px solid #8a6a2e;border-radius:6px}
+.thFA a{color:#ffcf66!important}
+.thFA #best{color:#f1dcb0}
+@media (max-height:780px){.thFA .heroArt{width:96px;height:96px;padding:4px}.thFA .faT1{font-size:36px}}
+@media (max-height:660px){.thFA .heroArt{width:70px;height:70px}.thFA .faT1{font-size:32px}.thFA [data-h="intro"] small{display:none}}
 </style></head><body>
 <canvas id="game"></canvas>
 <video id="cam" playsinline muted autoplay class="hide"></video>
-<div id="start" class="ov">
-  <h1>💎 Face-Action<small data-t="sub"></small></h1>
+<div id="start" class="ov thFA">
+  <canvas id="startBg" aria-hidden="true"></canvas>
+  <div class="heroArt"><img src="art/hero.webp" alt="" width="132" height="132" decoding="async"></div>
+  <h1><span class="faT1">Face-Action</span><span class="faSub"><svg class="chest" viewBox="0 0 64 54" aria-hidden="true"><ellipse cx="32" cy="23" rx="23" ry="6" fill="#ffd54a"/><circle cx="24" cy="20" r="4" fill="#ffe680" stroke="#b07a10"/><circle cx="38" cy="19" r="4" fill="#ffe680" stroke="#b07a10"/><path d="M6 24Q6 4 32 4Q58 4 58 24Z" fill="#8a4b1c" stroke="#3b1f0a" stroke-width="2"/><path d="M15 24Q15 8 23 6M49 24Q49 8 41 6" stroke="#ffcf4a" stroke-width="4" fill="none"/><rect x="6" y="24" width="52" height="27" rx="3" fill="#a0561f" stroke="#3b1f0a" stroke-width="2"/><rect x="13" y="24" width="5" height="27" fill="#ffcf4a"/><rect x="46" y="24" width="5" height="27" fill="#ffcf4a"/><rect x="27" y="27" width="10" height="12" rx="2" fill="#ffd54a" stroke="#3b1f0a" stroke-width="1.5"/><circle cx="32" cy="32" r="1.8" fill="#3b1f0a"/></svg><small data-t="sub"></small></span></h1>
   <p data-h="intro" style="max-width:360px;margin:0;font-size:15px"></p>
   <button id="bTouch" class="play pTouch" data-t="playTouch"></button>
   <button id="bFace" class="play pFace" data-t="playFace"></button>
@@ -70,6 +106,42 @@ small{opacity:.75}
   <div class="mini"><button id="bStyle" class="sec" data-t="collectBtn"></button><button id="bSet" class="sec" data-t="setBtn"></button><button id="bHow" class="sec" data-t="howBtn"></button></div>
   <p id="best" style="margin:0;font-size:14px"></p><p style="margin:0"><a href="privacy.html" style="color:#9cf;font-size:13px" data-t="privacy"></a> · <a href="#" id="bLang" style="color:#9cf;font-size:13px"></a><br><small style="opacity:.6;font-size:11px" data-t="copy"></small></p><p id="msg" style="margin:0"><small></small></p>
 </div>
+<script>/* start-screen background: animates only while #start is visible; one static frame with prefers-reduced-motion */
+(()=>{const st=document.getElementById('start'),cv=document.getElementById('startBg');if(!st||!cv)return;const g=cv.getContext('2d');
+const RM=matchMedia('(prefers-reduced-motion: reduce)');let W=0,H=0,D=1,raf=0,last=0,T=0;const R=Math.random;
+const stars=[],coins=[],sparks=[];let rocks=[];const MAXC=14,MAXS=22;
+const coin=a=>({x:R()*W,y:a?R()*H:-20,r:5+R()*5,vy:14+R()*18,vx:(R()-.5)*10,a:R()*6,va:1.5+R()*2.5});
+const spark=a=>({x:R()*W,y:a?R()*H:H+10,vy:-(8+R()*16),l:R()*6,r:R()*1.6+.6});
+const count=()=>coins.length+sparks.length+stars.length;
+function init(){stars.length=coins.length=sparks.length=0;for(let i=0;i<50;i++)stars.push({x:R()*W,y:R()*H*.6,r:R()*1.3+.3,p:R()*6});
+ for(let i=0;i<MAXC;i++)coins.push(coin(1));for(let i=0;i<MAXS;i++)sparks.push(spark(1));
+ rocks=[];let x=-10;while(x<W+20){const w=18+R()*34,h=(x<W*.22||x>W*.78?60:22)+R()*46;rocks.push([x,w,h]);x+=w*.7}}
+function step(dt){for(const c of coins){c.y+=c.vy*dt;c.x+=c.vx*dt+Math.sin(T+c.a)*.2;c.a+=c.va*dt;if(c.y>H+20)Object.assign(c,coin(0))}
+ for(const s of sparks){s.y+=s.vy*dt;s.l+=dt;if(s.y<-10)Object.assign(s,spark(0))}}
+function dragon(x,y,s,f){g.save();g.translate(x,y);g.scale(s,s);g.fillStyle='rgba(8,2,14,.92)';g.strokeStyle='rgba(255,140,40,.35)';g.lineWidth=1.2;
+ const w=Math.sin(f)*26;g.beginPath();g.moveTo(-6,0);g.lineTo(-28,-18-w);g.lineTo(-58,-30-w*1.4);g.lineTo(-46,-12-w*.6);g.lineTo(-64,-14-w*.9);g.lineTo(-40,2);g.closePath();
+ g.moveTo(6,0);g.lineTo(20,-16-w);g.lineTo(44,-28-w*1.3);g.lineTo(36,-10-w*.6);g.lineTo(50,-10-w*.8);g.lineTo(26,4);g.closePath();g.fill();g.stroke();
+ g.beginPath();g.ellipse(0,2,30,8,0,0,7);g.fill();g.beginPath();g.moveTo(26,0);g.quadraticCurveTo(42,-10,52,-6);g.lineTo(62,-4);g.lineTo(52,2);g.quadraticCurveTo(42,4,26,6);g.fill();
+ g.beginPath();g.moveTo(-26,2);g.quadraticCurveTo(-50,14,-74,6);g.lineTo(-84,10);g.lineTo(-74,12);g.quadraticCurveTo(-48,22,-24,7);g.fill();
+ g.fillStyle='rgba(255,120,30,.9)';g.beginPath();g.arc(56,-5,1.4,0,7);g.fill();g.restore()}
+function draw(){g.clearRect(0,0,W,H);
+ const mx=W*.84,my=H*.09;let gr=g.createRadialGradient(mx,my,10,mx,my,90);gr.addColorStop(0,'rgba(255,236,200,.28)');gr.addColorStop(1,'rgba(255,236,200,0)');g.fillStyle=gr;g.fillRect(mx-90,my-90,180,180);
+ g.fillStyle='#f6e7c8';g.beginPath();g.arc(mx,my,22,0,7);g.fill();g.fillStyle='#24113a';g.beginPath();g.arc(mx+9,my-5,19,0,7);g.fill();
+ for(const s of stars){g.globalAlpha=.35+.35*Math.sin(T*1.6+s.p);g.fillStyle='#fff3d6';g.fillRect(s.x,s.y,s.r,s.r)}g.globalAlpha=1;
+ const per=22,u=((T+9)%per)/per;dragon(-120+u*(W+240),H*.2+Math.sin(T*.7)*14,Math.min(1.1,W/380),T*5);
+ for(const [tx,dir] of [[W*.07,1],[W*.93,-1]]){const ty=H*.6,fl=.8+.2*Math.sin(T*13+tx)+.1*Math.sin(T*7);gr=g.createRadialGradient(tx,ty,4,tx,ty,150*fl);gr.addColorStop(0,'rgba(255,150,40,.45)');gr.addColorStop(1,'rgba(255,90,0,0)');g.fillStyle=gr;g.fillRect(tx-160,ty-160,320,320);
+  g.fillStyle='#3a220f';g.fillRect(tx-3,ty,6,30);g.fillStyle='#ffb347';g.beginPath();g.moveTo(tx-7,ty);g.quadraticCurveTo(tx,ty-26*fl,tx+7*dir*.2+7,ty);g.fill();g.fillStyle='#fff1a8';g.beginPath();g.ellipse(tx,ty-5,2.5,6*fl,0,0,7);g.fill()}
+ for(const s of sparks){const a=.5+.5*Math.sin(s.l*5);g.fillStyle='rgba(255,220,120,'+a.toFixed(2)+')';const r=s.r*(1+a);g.beginPath();g.moveTo(s.x,s.y-r*2);g.lineTo(s.x+r*.5,s.y);g.lineTo(s.x,s.y+r*2);g.lineTo(s.x-r*.5,s.y);g.closePath();g.fill();g.fillRect(s.x-r*1.6,s.y-.4,r*3.2,.8)}
+ for(const c of coins){const w=Math.max(.8,c.r*Math.abs(Math.cos(c.a)));g.fillStyle='#b8860b';g.beginPath();g.ellipse(c.x,c.y,w,c.r,0,0,7);g.fill();g.fillStyle='#ffd54a';g.beginPath();g.ellipse(c.x-w*.12,c.y,w*.78,c.r*.8,0,0,7);g.fill();g.fillStyle='rgba(255,255,255,.7)';g.fillRect(c.x-w*.3,c.y-c.r*.5,Math.max(.6,w*.25),c.r*.4)}
+ g.fillStyle='#05010a';g.beginPath();g.moveTo(-10,H+10);for(const [x,w,h] of rocks){g.lineTo(x,H-h*.35);g.lineTo(x+w*.5,H-h);g.lineTo(x+w,H-h*.3)}g.lineTo(W+10,H+10);g.closePath();g.fill()}
+
+function size(){D=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=W*D|0;cv.height=H*D|0;g.setTransform(D,0,0,D,0,0);init()}
+function frame(ts){raf=0;if(st.classList.contains('hide')||document.hidden)return;const dt=Math.min(.05,(ts-(last||ts))/1000);last=ts;T+=dt;step(dt);draw();raf=requestAnimationFrame(frame)}
+function kick(){if(st.classList.contains('hide'))return;if(RM.matches){draw();return}if(!raf){last=0;raf=requestAnimationFrame(frame)}}
+new MutationObserver(kick).observe(st,{attributes:true,attributeFilter:['class']});document.addEventListener('visibilitychange',kick);
+addEventListener('resize',()=>{size();draw()});RM.addEventListener&&RM.addEventListener('change',kick);size();draw();kick();
+window.__startBg={get running(){return !!raf},get count(){return typeof count==='function'?count():0}};})();
+</script>
 <div id="camEx" class="ov hide" style="z-index:9"><div style="font-size:56px">📷</div><h2 data-t="camExT" style="margin:0;color:#7df"></h2>
   <div class="hrow"><span class="ic">😀</span><div data-t="camEx1"></div></div><div class="hrow"><span class="ic">🔒</span><div data-t="camEx2"></div></div><div class="hrow"><span class="ic">👆</span><div data-t="camEx3"></div></div>
   <button id="bCamGo" class="play pFace" data-t="camExGo"></button><button id="bCamBack" class="sec" data-t="back"></button></div>

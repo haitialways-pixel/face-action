@@ -121,3 +121,12 @@ Launch free. Earn from optional ads and small purchases, and never use camera da
 - **Skipped:** Falling Bricks' decaying point values (they don't fit the treasure-value system) and its per-color fill patterns (entities here are already shape-coded, so outlines and markers were used instead).
 - **Bug fix:** treasure and power-ups had no fall speed (`sp`), so their position became NaN and they never appeared in v1.0. They now fall at 0.8× guardian speed.
 - **Session length:** in a headless bot simulation (N=50, 1.1.0 build), median game times were 2:35 (casual bot), 3:43 (typical) and 5:26 (skilled), and 8:45 for the typical bot in Relaxed. The bot steers perfectly, so a real typical player sits near the casual profile, at about 2–3 min.
+
+## Start-screen identity (v1.1, Oct 18 2026)
+The start screen must not look like Falling Bricks', even as a thumbnail. Treasure Hunt uses an adventure/fantasy look:
+- **Background:** a night-cavern gradient (deep purple to black) with a crescent moon and twinkling stars. A dragon silhouette flies across, gold coins drift down with sparkles, torches flicker on both sides, and the bottom edge is a jagged rock silhouette.
+- **Hero art:** the helmeted hunter with cyan eye-lasers (`art/hero.webp`, 288 px, about 23 KB, taken from the store icon) in a gold medallion.
+- **Title:** carved-gold serif "Face-Action" with a treasure-chest icon and a torch-orange letter-spaced subtitle.
+- **Buttons:** amber-gold (Touch) and cyan (Face) plaques with a dark stone border and gem studs. The daily card, chapter chip and secondary buttons use dark wood/stone with gold trim.
+- **Performance:** a canvas (DPR capped at 2) runs only while the start screen is visible and the tab is shown. It holds 14 coins, 22 sparkles and 50 stars. With prefers-reduced-motion it draws one static frame.
+- **Theme color:** `#170b24`.

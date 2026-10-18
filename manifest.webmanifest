@@ -1,2 +1,2 @@
-{"name":"Face-Action Treasure Hunt","short_name":"FA Treasure","start_url":"./","scope":"./","display":"standalone","orientation":"portrait","background_color":"#1b1033","theme_color":"#1b1033",
+{"name":"Face-Action Treasure Hunt","short_name":"FA Treasure","start_url":"./","scope":"./","display":"standalone","orientation":"portrait","background_color":"#170b24","theme_color":"#170b24",
 "icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png"},{"src":"icons/icon-512-maskable.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}
