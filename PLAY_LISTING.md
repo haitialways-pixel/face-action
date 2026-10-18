@@ -1,6 +1,6 @@
-# Face-Action: Google Play listing draft
+# Face-Action Treasure Hunt: Google Play listing draft
 
-**App name (30 max):** Face-Action
+**App name (30 max):** Face-Action Treasure Hunt (25 chars; English everywhere in the store. The French in-game UI shows "Face-Action Chasse au Trésor")
 **Category:** Games → Arcade · **Tags:** casual, arcade, endless
 **Contains ads:** No · **In-app purchases:** No (v1)
 **Privacy policy URL:** https://haitialways-pixel.github.io/face-action/privacy.html
@@ -14,9 +14,9 @@ Blink, smile and turn your head to hunt treasure. A fun facial workout game!
 ## Full description (≤4000 chars)
 Hunt treasure with your face!
 
-Face-Action is an endless arcade game you play with your expressions. Your phone's front camera reads your face, and the game turns blinks, smiles, mouth movements and head turns into action.
+Face-Action Treasure Hunt is an endless arcade game you play with touch or with your expressions. Your phone's front camera reads your face, and the game turns blinks, smiles, mouth movements and head turns into action.
 
-🤠 HOW YOU PLAY
+⛑️ HOW YOU PLAY
 • Turn your head to move your treasure hunter
 • Blink to strike incoming guardians
 • Open your mouth to vacuum up treasure
@@ -36,11 +36,20 @@ Short relaxation breaks every few stages keep play comfortable.
 Face tracking runs entirely on your device. Video is never recorded or uploaded, and the app collects no data. No accounts, no ads.
 
 👆 TOUCH MODE
-Prefer buttons? Play with on-screen touch controls anytime.
+Prefer buttons? Play with on-screen touch controls anytime. The camera is only requested if you choose face mode.
+
+📅 DAILY CHALLENGE & STREAKS
+A new seeded challenge every day. Keep your 🔥 streak alive to unlock helmet styles and treasure boosts.
+
+📖 CHAPTERS & COLLECTION
+Complete chapter missions, earn badges and collect helmet skins. Share a card when you set a new record.
+
+♿ COMFORT OPTIONS
+Relaxed speed and shape outlines for colorblind players.
 
 A fun facial workout game: get your face moving and have a blast.
 
-Face-Action is for entertainment only and is not a medical, fitness or cosmetic product.
+Face-Action Treasure Hunt is for entertainment only and is not a medical, fitness or cosmetic product.
 
 ## What not to say
 Avoid "improves appearance", "anti-aging", "tones/firms your face", "reduces wrinkles", "exercise therapy" or any health outcome. Play policy and FTC rules require evidence for those claims.

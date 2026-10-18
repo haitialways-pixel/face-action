@@ -6,43 +6,78 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Face-Action">
+<meta name="apple-mobile-web-app-title" content="FA Treasure">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
-<title>Face-Action</title>
+<title>Face-Action Treasure Hunt</title>
 <style>
 html,body{margin:0;height:100%;background:#05030c;color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
 #cam.off{opacity:0;pointer-events:none}
 #camNote{position:fixed;right:4px;top:calc(env(safe-area-inset-top) + 124px);width:90px;font-size:9px;line-height:1.2;text-align:right;opacity:.7;z-index:3}
-#howto{justify-content:flex-start;overflow-y:auto;background:#05030c;z-index:8;padding:calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 16px)}
-#howto h2{margin:4px 0;color:#ffd54a;font-size:26px}
-.hrow{display:flex;align-items:center;gap:12px;width:100%;max-width:440px;text-align:left;background:#1a1430;border:2px solid #ffd54a55;border-radius:12px;padding:8px 10px}
-.hrow .ic{font-size:38px;width:48px;text-align:center;flex:none}.hrow b{color:#ffd54a;font-size:17px}.hrow div{font-size:15px;line-height:1.3;color:#fff}
-.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%;max-width:440px}
+#howto,#styles,#settings,#missions{justify-content:flex-start;overflow-y:auto;background:#05030c;z-index:8;padding:calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 16px);gap:8px}
+#howto h2,#styles h2,#settings h2,#missions h2,#styles h3{margin:4px 0;color:#ffd54a;font-size:24px}
+.hrow{display:flex;align-items:center;gap:12px;width:100%;max-width:440px;text-align:left;background:#1a1430;border:2px solid #ffd54a55;border-radius:12px;padding:7px 10px;box-sizing:border-box;flex:none}
+.hrow .ic{font-size:32px;width:46px;text-align:center;flex:none}.hrow b{color:#ffd54a;font-size:16px}.hrow div{font-size:14px;line-height:1.3;color:#fff}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%;max-width:440px;flex:none}
 .tgrid div{background:#1a1430;border-radius:10px;padding:6px;font-size:15px}.tgrid span{font-size:30px;display:block}
 #game{position:fixed;inset:0;width:100vw;height:100dvh;display:block}
 #cam{position:fixed;right:8px;top:calc(env(safe-area-inset-top) + 48px);width:54px;height:72px;object-fit:cover;transform:scaleX(-1);border-radius:10px;border:2px solid #ffd54a;opacity:.8;z-index:3}
-.ov{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:rgba(20,10,40,.92);z-index:5;gap:12px}
+.ov{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:rgba(20,10,40,.94);z-index:5;gap:12px}
 .hide{display:none!important}
-button{font-size:18px;padding:14px 22px;border:0;border-radius:14px;background:#ffd54a;color:#2a1600;font-weight:700;min-width:220px}
+button{font-size:18px;padding:14px 22px;border:0;border-radius:14px;background:#ffd54a;color:#2a1600;font-weight:700;min-width:220px;font-family:inherit}
 button.sec{background:#5b4a8a;color:#fff}
+h1{margin:0;font-size:34px;color:#ffd54a;text-shadow:0 0 18px #ffd54a88;line-height:1.1}
+h1 small{display:block;font-size:22px;color:#fff;text-shadow:0 0 12px #00e5ff;opacity:1;margin-top:4px}
+.play{width:min(84vw,330px);min-width:0;font-size:22px;padding:16px 10px;border-radius:18px;color:#fff;font-weight:800;border:2px solid rgba(255,255,255,.35);text-shadow:0 1px 3px rgba(0,0,0,.55)}
+.pTouch{background:linear-gradient(135deg,#ff1493,#ffb300);box-shadow:0 0 22px rgba(255,20,147,.5)}
+.pFace{background:linear-gradient(135deg,#00e5ff,#2962ff);box-shadow:0 0 22px rgba(0,176,255,.5)}
+.daily{width:min(84vw,330px);min-width:0;background:linear-gradient(135deg,#2a1d4a,#1a1430);border:2px solid #ffd54a77;color:#fff;border-radius:16px;padding:10px 14px;display:flex;flex-direction:column;gap:3px;text-align:left;font-weight:600}
+.daily.on{border-color:#ffd54a;box-shadow:0 0 20px #ffd54aaa;background:linear-gradient(135deg,#4a3410,#2a1d0a)}
+.daily .dTop{display:flex;justify-content:space-between;align-items:center;font-size:17px;color:#ffd54a;gap:8px}
+.daily .dSub{font-size:14px;color:#fff;opacity:.92}
+.pill{font-size:12px;background:#ffd54a;color:#2a1600;border-radius:10px;padding:2px 8px;white-space:nowrap}
+.daily:not(.on) .pill{background:#3b2f63;color:#fff}
+.chap{min-width:0;font-size:14px;padding:7px 14px;background:#12301f;color:#b9f6ca;border:1px solid #00e67666;border-radius:12px}
+.mini{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:420px}
+.mini button{min-width:0;font-size:14px;padding:9px 10px;border-radius:12px}
+.tog{min-width:64px;padding:8px 10px;font-size:14px;flex:none}.tog.off{background:#3b2f63;color:#fff}
+.mrow .bar{height:8px;background:#333;border-radius:4px;overflow:hidden;margin-top:4px}.mrow .bar i{display:block;height:100%;background:#00e676}
+.stylegrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:400px;flex:none}
+.stylegrid button{min-width:0;padding:10px;display:flex;flex-direction:column;align-items:center;gap:6px;background:#1a1430;color:#fff;border:2px solid #ffd54a33;font-size:15px}
+.stylegrid button.sel{border-color:#ffd54a;box-shadow:0 0 14px #ffd54a88}
+.stylegrid button:disabled{opacity:.45}
+.stylegrid canvas{width:90px;height:90px}
+.badge{background:#1a1430;border:2px solid #ffd54a33;border-radius:12px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:13px;text-align:center}
+.badge .bi{font-size:30px}.badge.lock .bi{filter:grayscale(1);opacity:.35}.badge.got{border-color:#ffd54a;box-shadow:0 0 10px #ffd54a55}.badge b{color:#ffd54a}
 #touch{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 10px);display:flex;justify-content:space-around;z-index:4}
-#touch button{min-width:0;width:22vw;height:22vw;max-width:90px;max-height:90px;border-radius:50%;font-size:26px;opacity:.8;padding:0}
+#touch button{min-width:0;width:15vw;height:15vw;max-width:76px;max-height:76px;border-radius:50%;font-size:24px;opacity:.85;padding:0}
+#touch button.cd{opacity:.35}
+#oMeta{font-size:15px;line-height:1.45;margin:0;max-width:360px}
 small{opacity:.75}
 </style></head><body>
 <canvas id="game"></canvas>
 <video id="cam" playsinline muted autoplay class="hide"></video>
 <div id="start" class="ov">
-  <h1>💎 Face-Action</h1>
-  <p data-h="intro"></p>
-  <button id="bFace" data-t="playFace"></button>
-  <button id="bHow" class="sec" data-t="howBtn"></button>
-  <button id="bRecalStart" class="sec" data-t="recalFace"></button>
-  <button id="bTouch" class="sec" data-t="playTouch"></button>
-  <p id="best"></p><p><a href="privacy.html" style="color:#9cf;font-size:13px" data-t="privacy"></a> · <a href="#" id="bLang" style="color:#9cf;font-size:13px"></a><br><small style="opacity:.6;font-size:11px" data-t="copy"></small></p><p id="msg"><small></small></p>
+  <h1>💎 Face-Action<small data-t="sub"></small></h1>
+  <p data-h="intro" style="max-width:360px;margin:0;font-size:15px"></p>
+  <button id="bTouch" class="play pTouch" data-t="playTouch"></button>
+  <button id="bFace" class="play pFace" data-t="playFace"></button>
+  <button id="bDaily" class="daily"><span class="dTop" id="dTop"></span><span class="dSub" id="dSub"></span></button>
+  <button id="bChapter" class="chap"></button>
+  <div class="mini"><button id="bStyle" class="sec" data-t="collectBtn"></button><button id="bSet" class="sec" data-t="setBtn"></button><button id="bHow" class="sec" data-t="howBtn"></button></div>
+  <p id="best" style="margin:0;font-size:14px"></p><p style="margin:0"><a href="privacy.html" style="color:#9cf;font-size:13px" data-t="privacy"></a> · <a href="#" id="bLang" style="color:#9cf;font-size:13px"></a><br><small style="opacity:.6;font-size:11px" data-t="copy"></small></p><p id="msg" style="margin:0"><small></small></p>
 </div>
+<div id="camEx" class="ov hide" style="z-index:9"><div style="font-size:56px">📷</div><h2 data-t="camExT" style="margin:0;color:#7df"></h2>
+  <div class="hrow"><span class="ic">😀</span><div data-t="camEx1"></div></div><div class="hrow"><span class="ic">🔒</span><div data-t="camEx2"></div></div><div class="hrow"><span class="ic">👆</span><div data-t="camEx3"></div></div>
+  <button id="bCamGo" class="play pFace" data-t="camExGo"></button><button id="bCamBack" class="sec" data-t="back"></button></div>
+<div id="settings" class="ov hide"><h2 data-t="setTitle"></h2>
+  <div class="hrow"><span class="ic">🔷</span><div><b data-t="cbL"></b><br><span data-t="cbD"></span></div><button id="tCb" class="tog"></button></div>
+  <div class="hrow"><span class="ic">🐢</span><div><b data-t="relaxL"></b><br><span data-t="relaxD"></span></div><button id="tRelax" class="tog"></button></div>
+  <button id="bRecalStart" class="sec" data-t="recalFace"></button><button id="bSetOk" data-t="done"></button></div>
+<div id="missions" class="ov hide"><h2 id="mTitle"></h2><p data-t="chapP" style="margin:0;font-size:14px;max-width:400px"></p><div id="mList" style="display:flex;flex-direction:column;gap:8px;width:100%;align-items:center"></div><p id="mTotal" style="margin:0;font-size:13px;opacity:.75"></p><button id="bMisOk" data-t="done"></button></div>
+<div id="styles" class="ov hide"><h2 data-t="collTitle"></h2><p id="collStreak" style="margin:0;font-size:14px"></p><h3 data-t="skinTitle" style="font-size:18px"></h3><p data-t="skinP" style="margin:0;font-size:13px"></p><div class="stylegrid" id="styleGrid"></div><h3 data-t="badgesH" style="font-size:18px"></h3><div class="stylegrid" id="badgeGrid"></div><button id="bStyleOk" data-t="done" style="flex:none"></button></div>
 <div id="howto" class="ov hide">
  <h2 data-t="howTitle"></h2>
  <div class="hrow"><span class="ic">↔️</span><div data-h="hMove"></div></div>
@@ -52,15 +87,18 @@ small{opacity:.75}
  <div class="hrow"><span class="ic">😤</span><div data-h="hBlk"></div></div>
  <h2 style="font-size:20px" data-t="tPts"></h2>
  <div class="tgrid"><div><span>🪙</span>5</div><div><span>💍</span>10</div><div><span>🏺</span>20</div><div><span>👑</span>40</div><div><span>💎</span>70</div><div><span>🏆</span>100</div></div>
+ <div class="hrow"><span class="ic">📅</span><div data-h="hProg"></div></div>
  <div class="hrow"><span class="ic">💡</span><div data-h="hTip"></div></div>
- <button id="bHowOk" data-t="gotIt"></button>
+ <button id="bHowOk" data-t="gotIt" style="flex:none"></button>
  <small style="opacity:.6;font-size:11px" data-t="copy"></small>
 </div>
-<div id="pause" class="ov hide"><h2 data-t="paused"></h2><button id="bResume" data-t="resume"></button><button id="bHowP" class="sec" data-t="howBtn"></button></div>
+<div id="pause" class="ov hide"><h2 data-t="paused"></h2><button id="bResume" data-t="resume"></button><button id="bHowP" class="sec" data-t="howBtn"></button><button id="bQuit" class="sec" data-t="menu"></button></div>
 <button id="bPause" class="hide" style="position:fixed;right:152px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6">⏸</button>
-<div id="calib" class="ov hide"><h2 id="cTitle" data-t="calibrating"></h2><p id="cText"></p><div style="font-size:64px" id="cIcon">😐</div><div style="width:70%;height:12px;background:#333;border-radius:6px;overflow:hidden"><div id="cBar" style="height:100%;width:0;background:#ffd54a"></div></div><div id="cCount" style="font-size:28px;font-weight:700"></div><small id="cStep"></small></div>
+<div id="calib" class="ov hide"><h2 id="cTitle" data-t="calibrating"></h2><p id="cText"></p><div style="font-size:64px" id="cIcon">😐</div><div style="width:70%;height:12px;background:#333;border-radius:6px;overflow:hidden"><div id="cBar" style="height:100%;width:0;background:#ffd54a"></div></div><div id="cCount" style="font-size:28px;font-weight:700"></div><small id="cStep"></small><p id="cLight" class="hide" data-t="dark" style="margin:0;background:#5d4037;border:2px solid #ffb300;border-radius:12px;padding:8px 12px;max-width:340px;font-weight:700"></p></div>
 <div id="rest" class="ov hide"><h2 data-t="restT"></h2><p data-t="restP"></p><p id="restT" style="font-size:48px"></p><button id="bSkip" class="sec" data-t="skip"></button></div>
-<div id="over" class="ov hide"><h2 data-t="ouch"></h2><p id="oScore"></p><button id="bAgain" data-t="again"></button></div>
+<div id="cont" class="ov hide" style="z-index:7"><div style="font-size:60px">💔</div><h2 data-t="contT" style="margin:0;font-size:32px;color:#ff6ec7"></h2><p data-t="contP" style="margin:0;font-size:17px;max-width:320px"></p><p id="contScore" style="margin:0;font-size:20px;color:#ffd54a;font-weight:700"></p><button id="bContYes" class="play pTouch" data-t="contYes"></button><button id="bContNo" class="sec" data-t="contNo"></button></div>
+<div id="ad" class="ov hide" style="z-index:9;background:#000"><small style="opacity:.6">TODO: AdMob rewarded ad</small><h2 data-t="adPh" style="margin:0"></h2><p data-t="adP" style="margin:0;opacity:.7"></p><div id="adN" style="font-size:72px;font-weight:800;color:#ffd54a"></div></div>
+<div id="over" class="ov hide"><h2 data-t="ouch" style="font-size:28px;color:#ffd54a;margin:0"></h2><p id="oScore" style="font-size:18px;line-height:1.5;margin:0"></p><p id="oHook" style="font-size:20px;font-weight:700;color:#ff6ec7;margin:0"></p><p id="oMeta"></p><img id="oCard" class="hide" alt="" style="max-height:28vh;max-width:60vw;border-radius:12px;border:2px solid #ffd54a;box-shadow:0 0 20px #ffd54a66"><button id="bShare" class="sec hide" data-t="share" style="background:#ff1493"></button><small id="oShareMsg"></small><button id="bAgain" class="play pTouch" data-t="again"></button><button id="bMenu" class="sec" data-t="menu"></button></div>
 <button id="bHud" style="position:fixed;left:auto;right:8px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6">🐞</button>
 <div id="sensBox" class="hide" style="position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top) + 150px);z-index:6;background:rgba(0,0,0,.7);padding:6px;border-radius:8px;font-size:13px"><span data-t="sensL"></span> <input id="sens" type="range" min="0.4" max="1.6" step="0.05" style="width:100%"> <button id="bRecal" class="sec" style="min-width:0;font-size:13px;padding:6px 10px" data-t="recal"></button></div>
 <button id="bVol" style="position:fixed;right:104px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6" data-ti="sound">🔊</button>
@@ -70,14 +108,14 @@ small{opacity:.75}
 <div id="camInd" class="hide" style="position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 6px);z-index:6;background:rgba(0,0,0,.6);padding:3px 8px;border-radius:10px;font-size:12px"><span style="color:#f33">●</span> <span data-t="camOn"></span></div>
 <button id="camResume" class="hide" style="position:fixed;left:50%;top:40%;transform:translateX(-50%);z-index:6"><span data-t="camResume"></span></button>
 <div id="touch" class="hide">
- <button data-k="left">⬅️</button><button data-k="attack">⚔️</button><button data-k="vac">🌀</button><button data-k="special">✨</button><button data-k="right">➡️</button>
+ <button data-k="left">⬅️</button><button data-k="attack">⚔️</button><button data-k="vac">🌀</button><button data-k="shield">🛡️</button><button data-k="special">✨</button><button data-k="right">➡️</button>
 </div>
 <script type="module">
 const $=id=>document.getElementById(id);
 const L={en:{intro:'Defeat guardians and grab treasure using only your face.<br><small>A fun facial workout. Camera stays on your device; nothing is uploaded.</small>',
 playFace:'😀 Play with Face',howBtn:'❓ How to Play',recalFace:'🎯 Recalibrate face',playTouch:'👆 Play with Touch',privacy:'Privacy policy',copy:'© 2026 Steeve J. All rights reserved.',
-howTitle:'How to Play',hMove:'<b>Move</b><br>Turn your head left / right (eyes work as a backup)',hAtk:'<b>Attack</b><br>Quick blink with both eyes',hCol:'<b>Collect treasure</b><br>Open your mouth and hold',hSp:'<b>Special move</b><br>Big smile held ~0.5 s when the meter is full',hBlk:'<b>Block</b><br>Puff cheeks or raise eyebrows (4 s cooldown)',
-hTip:"Keep your face centered and well lit, about an arm's length away.<br>Use <b>🎯</b> to recalibrate and the <b>🐞</b> sensitivity slider if gestures feel off.",tPts:'Treasure points',gotIt:'Got it!',
+howTitle:'How to Play',hMove:'<b>Move</b><br>Turn your head left / right (eyes work as a backup)',hAtk:'<b>Attack</b><br>Quick blink with both eyes',hCol:'<b>Collect treasure</b><br>Open your mouth and hold',hSp:'<b>Special move</b><br>Big smile held ~0.5 s when the meter is full',hBlk:'<b>Block</b><br>Puff cheeks or raise eyebrows (4 s cooldown). Touch: hold 🛡️',
+hTip:"Keep your face centered and well lit, about an arm's length away.<br>Use <b>⚙️ → 🎯</b> to recalibrate and the <b>🐞</b> sensitivity slider if gestures feel off.",tPts:'Treasure points',gotIt:'Got it!',
 paused:'⏸ Paused',resume:'▶️ Resume',calibrating:'Calibrating…',restT:'😌 Face break',restP:'Relax your face, look into the distance, blink gently.',skip:'Skip',ouch:'Ouch! Out of hearts',again:'Play again',
 sensL:'Sensitivity (left = easier)',recal:'Recalibrate',sound:'Sound',prevT:'Show/hide camera preview',camNote:'🔒 Video stays on your device, never recorded or uploaded.',noFaceRecal:"Can't see your face. Recalibrate?",camOn:'camera on',camResume:'📷 Tap to resume camera',
 faceBest:'🙂 Face best',touchBest:'👆 Touch best',faceL:'🙂 Face',touchL:'👆 Touch',overLine:'{m} mode · Score {s} · Stage {g}',newBest:'🏆 New {m} best!',bestIs:'{m} best {b}',
@@ -91,8 +129,8 @@ combo:'Combo x',comboUp:'COMBO x',nova:'💥 TREASURE NOVA!',magnet:'Magnet!',sl
 dCam:'cam',dModel:'model',dFace:'face',yes:'YES',no:'NO',dSens:'sens',dBlink:'blink',dMouth:'mouth',dSmile:'smile',dPuff:'puff',dBrow:'brow',dMove:'move',langBtn:'Français'},
 fr:{intro:'Battez les gardiens et ramassez les trésors avec votre visage seulement.<br><small>Un exercice facial amusant. La caméra reste sur votre appareil ; rien n\'est envoyé.</small>',
 playFace:'😀 Jouer avec le visage',howBtn:'❓ Comment jouer',recalFace:'🎯 Recalibrer le visage',playTouch:'👆 Jouer en tactile',privacy:'Politique de confidentialité',copy:'© 2026 Steeve J. Tous droits réservés.',
-howTitle:'Comment jouer',hMove:'<b>Se déplacer</b><br>Tournez la tête à gauche / à droite (les yeux servent de secours)',hAtk:'<b>Attaquer</b><br>Clignez rapidement des deux yeux',hCol:'<b>Ramasser les trésors</b><br>Ouvrez la bouche et maintenez',hSp:'<b>Coup spécial</b><br>Grand sourire tenu ~0,5 s quand la jauge est pleine',hBlk:'<b>Bloquer</b><br>Gonflez les joues ou levez les sourcils (recharge de 4 s)',
-hTip:'Gardez le visage centré et bien éclairé, à environ une longueur de bras.<br>Utilisez <b>🎯</b> pour recalibrer et le curseur de sensibilité <b>🐞</b> si les gestes répondent mal.',tPts:'Points des trésors',gotIt:'Compris !',
+howTitle:'Comment jouer',hMove:'<b>Se déplacer</b><br>Tournez la tête à gauche / à droite (les yeux servent de secours)',hAtk:'<b>Attaquer</b><br>Clignez rapidement des deux yeux',hCol:'<b>Ramasser les trésors</b><br>Ouvrez la bouche et maintenez',hSp:'<b>Coup spécial</b><br>Grand sourire tenu ~0,5 s quand la jauge est pleine',hBlk:'<b>Bloquer</b><br>Gonflez les joues ou levez les sourcils (recharge de 4 s). Tactile : maintenez 🛡️',
+hTip:'Gardez le visage centré et bien éclairé, à environ une longueur de bras.<br>Utilisez <b>⚙️ → 🎯</b> pour recalibrer et le curseur de sensibilité <b>🐞</b> si les gestes répondent mal.',tPts:'Points des trésors',gotIt:'Compris !',
 paused:'⏸ Pause',resume:'▶️ Reprendre',calibrating:'Calibrage…',restT:'😌 Pause visage',restP:'Détendez votre visage, regardez au loin, clignez doucement.',skip:'Passer',ouch:'Aïe ! Plus de cœurs',again:'Rejouer',
 sensL:'Sensibilité (gauche = plus facile)',recal:'Recalibrer',sound:'Son',prevT:'Afficher/masquer l\'aperçu caméra',camNote:'🔒 La vidéo reste sur votre appareil, jamais enregistrée ni envoyée.',noFaceRecal:'Visage introuvable. Recalibrer ?',camOn:'caméra active',camResume:'📷 Touchez pour réactiver la caméra',
 faceBest:'🙂 Record Visage ',touchBest:'👆 Record Tactile ',faceL:'🙂 Visage',touchL:'👆 Tactile',overLine:'Mode {m} · Score {s} · Niveau {g}',newBest:'🏆 Nouveau record {m} !',bestIs:'Record {m} : {b}',
@@ -117,17 +155,57 @@ function applyLang(){document.documentElement.lang=LANG;
   if(msgState)$('msg').innerHTML=t(msgState[0],msgState[1]);
   if(overState)renderOver();
   if(calState.text)$('cText').textContent=t(calState.text);if(calState.step)$('cStep').textContent=t('stepOf',calState.step);
-  showBest()}
+  showBest();syncDaily();buildSettings();if(!$('styles').classList.contains('hide')){buildSkins();buildBadges()}if(!$('missions').classList.contains('hide'))buildMissions();if(S&&S.offer)$('contScore').textContent=t('contScore',{s:S.score})}
+// ---------- v1.1 strings (Treasure Hunt) ----------
+Object.assign(L.en,{sub:'Treasure Hunt',intro:'Defeat guardians and grab treasure. Tap to play, or go hands-free with your face!<br><small>A fun facial workout. Camera stays on your device; nothing is uploaded.</small>',
+menu:'🏠 Menu',ouch:'Ouch! Out of hearts',again:'▶️ Play again',near:'So close! Only {n} points from your best!',
+dailyT:'📅 Daily Challenge · {d}',dailyBest:'Best today: <b>{b}</b>',dailyNone:'Not played yet today',dailyOnP:'✓ ON',dailyOffP:'Tap to select',dailyHint:'✓ Selected: choose Touch or Face above',dailyL:'📅 Daily challenge {d}',
+streakN:'🔥 {n} day{s}',streakKeep:'🔥 {n} day{s}: play today to keep it!',streak0:'Play daily to start a 🔥 streak',
+streakRew:'🔥 {n}-day streak!',rewBoost:'⚡ Treasure boost next game',rewSkin:'⛑️ {s} helmet unlocked',streakUp:'🔥 Daily streak: {n} day{s}',
+chapBtn:'📖 Chapter {n} · {d}/3 missions',chapTitle:'📖 Chapter {n}',chapP:'Complete all 3 missions to reach the next chapter. Reward: ⚡ treasure boost next game.',
+mKill:'Defeat {n} guardians',mIdol:'Collect {n} golden idol{s} (🏆 100 pts)',mNova:'Use Treasure Nova {n} time{s}',mBlock:'Block {n} attack{s}',mStage:'Reach stage {n} in one game',mScore:'Score {n} in one game',mCombo:'Reach a x{n} kill combo',mBoss:'Defeat {n} dragon{s}',mTreasure:'Collect {n} treasures',
+mDone:'✅ Mission complete: {m}',chapDone:'CHAPTER {n} COMPLETE!',chapRewOver:'📖 Chapter {n} complete! ⚡ Treasure boost next game',chapTotal:'Chapters completed: {n}',boostOn:'⚡ Treasure boost: full special meter + rarer treasure!',colon:': ',
+collectBtn:'🏆 Collection',collTitle:'🏆 Collection',skinTitle:'⛑️ Hunter helmets',skinP:'Unlock with score milestones or daily streaks.',badgesH:'🏅 Badges',needPts:'🔒 {n} pts',needStreak:'or 🔥 {n} days',bestStreak:'🔥 Best daily streak: {n} day{s}',
+kGold:'Gold',kRuby:'Ruby',kJade:'Jade',kCosmic:'Cosmic',
+b_dragon:'Dragon Slayer',d_dragon:'Defeat a dragon boss',b_hunter:'Guardian Hunter',d_hunter:'Defeat 200 guardians',b_idol:'Idol Collector',d_idol:'Collect 10 golden idols',b_wall:'Iron Wall',d_wall:'Block 25 attacks',
+b_s3:'On a Roll',d_s3:'3-day daily streak',b_s7:'Week Warrior',d_s7:'7-day daily streak',b_s14:'Two-Week Titan',d_s14:'14-day daily streak',b_s30:'Monthly Legend',d_s30:'30-day daily streak',badgeGot:'🏅 Badge: {b}!',
+setBtn:'⚙️ Settings',setTitle:'⚙️ Settings',cbL:'Shape outlines',cbD:'Bold outlines + shape markers: guardians ✖ spiky, treasure ◆ ★ with point value, power-ups ■.',relaxL:'Relaxed speed',relaxD:'Slower guardians and treasure, gentler ramp.',on:'ON',off:'OFF',recalFace:'🎯 Recalibrate face',done:'Done',
+contT:'Continue?',contP:'Watch a short ad for +1 ❤️ and keep going. Once per game.',contScore:'Score so far: {s}',contYes:'▶️ Watch ad (+1 ❤️)',contNo:'No thanks',adPh:'Ad placeholder',adP:'A rewarded ad will play here.',contGo:'+1 ❤️ KEEP GOING!',
+camExT:'Face mode',camEx1:'Uses your front camera to read your expressions (head turn, blink, mouth, smile).',camEx2:'Video stays on this phone. Nothing is recorded or uploaded.',camEx3:'You can switch back to Touch any time.',camExGo:'📷 Turn on camera',back:'⬅️ Back',
+dark:'💡 It\'s too dark here: find better light (face a window or a lamp).',relaxHud:'🐢',
+hype5:'NICE!',hype10:'ON FIRE! 🔥',hype15:'UNSTOPPABLE!',hype20:'LEGENDARY!',jackpot:'JACKPOT!',stageClr:'STAGE CLEAR!',bossKill:'DRAGON DEFEATED!',record:'NEW RECORD!',
+share:'📤 Share my record',shareText:'New record: {s} points in Face-Action Treasure Hunt! Can you beat it?',cardRecord:'🏆 NEW RECORD!',cardLine:'Stage {g}',saved:'Image saved ✓',
+hProg:'<b>📅 Daily challenge</b>: the same guardians and treasure for everyone today. Play it every day for a 🔥 streak and rewards · <b>📖 Chapters</b>: 3 quick missions each · <b>🏆 Collection</b>: helmets and badges · ⚙️ shape outlines and relaxed speed.'});
+Object.assign(L.fr,{sub:'Chasse au Trésor',intro:'Battez les gardiens et ramassez les trésors. Jouez au doigt, ou sans les mains avec votre visage !<br><small>Un exercice facial amusant. La caméra reste sur votre appareil ; rien n\'est envoyé.</small>',
+menu:'🏠 Menu',ouch:'Aïe ! Plus de cœurs',again:'▶️ Rejouer',near:'Presque ! Plus que {n} points pour votre record !',
+dailyT:'📅 Défi du jour · {d}',dailyBest:'Record du jour : <b>{b}</b>',dailyNone:'Pas encore joué aujourd\'hui',dailyOnP:'✓ ACTIF',dailyOffP:'Touchez pour choisir',dailyHint:'✓ Choisi : jouez en tactile ou avec le visage',dailyL:'📅 Défi du jour {d}',
+streakN:'🔥 {n} jour{s}',streakKeep:'🔥 {n} jour{s} : jouez aujourd\'hui pour la garder !',streak0:'Jouez chaque jour pour lancer une série 🔥',
+streakRew:'🔥 Série de {n} jours !',rewBoost:'⚡ Bonus trésor à la prochaine partie',rewSkin:'⛑️ Casque {s} débloqué',streakUp:'🔥 Série quotidienne : {n} jour{s}',
+chapBtn:'📖 Chapitre {n} · {d}/3 missions',chapTitle:'📖 Chapitre {n}',chapP:'Réussissez les 3 missions pour passer au chapitre suivant. Récompense : ⚡ bonus trésor à la prochaine partie.',
+mKill:'Battez {n} gardiens',mIdol:'Ramassez {n} idole{s} dorée{s} (🏆 100 pts)',mNova:'Utilisez la Treasure Nova {n} fois',mBlock:'Bloquez {n} attaque{s}',mStage:'Atteignez le niveau {n} en une partie',mScore:'Marquez {n} en une partie',mCombo:'Atteignez un combo x{n}',mBoss:'Battez {n} dragon{s}',mTreasure:'Ramassez {n} trésors',
+mDone:'✅ Mission réussie : {m}',chapDone:'CHAPITRE {n} TERMINÉ !',chapRewOver:'📖 Chapitre {n} terminé ! ⚡ Bonus trésor à la prochaine partie',chapTotal:'Chapitres terminés : {n}',boostOn:'⚡ Bonus trésor : jauge spéciale pleine + trésors rares !',colon:' : ',
+collectBtn:'🏆 Collection',collTitle:'🏆 Collection',skinTitle:'⛑️ Casques de chasseur',skinP:'Débloquez-les avec des paliers de score ou des séries quotidiennes.',badgesH:'🏅 Badges',needPts:'🔒 {n} pts',needStreak:'ou 🔥 {n} jours',bestStreak:'🔥 Meilleure série : {n} jour{s}',
+kGold:'Or',kRuby:'Rubis',kJade:'Jade',kCosmic:'Cosmique',
+b_dragon:'Tueur de dragon',d_dragon:'Battez un dragon',b_hunter:'Chasseur de gardiens',d_hunter:'Battez 200 gardiens',b_idol:'Collectionneur d\'idoles',d_idol:'Ramassez 10 idoles dorées',b_wall:'Mur de fer',d_wall:'Bloquez 25 attaques',
+b_s3:'Sur la lancée',d_s3:'Série de 3 jours',b_s7:'Guerrier de la semaine',d_s7:'Série de 7 jours',b_s14:'Titan des deux semaines',d_s14:'Série de 14 jours',b_s30:'Légende du mois',d_s30:'Série de 30 jours',badgeGot:'🏅 Badge : {b} !',
+setBtn:'⚙️ Réglages',setTitle:'⚙️ Réglages',cbL:'Contours de formes',cbD:'Contours épais + repères de forme : gardiens ✖ à pointes, trésors ◆ ★ avec leur valeur, bonus ■.',relaxL:'Vitesse détente',relaxD:'Gardiens et trésors plus lents, progression plus douce.',on:'OUI',off:'NON',recalFace:'🎯 Recalibrer le visage',done:'OK',
+contT:'Continuer ?',contP:'Regardez une courte pub pour +1 ❤️ et continuez. Une fois par partie.',contScore:'Score actuel : {s}',contYes:'▶️ Voir la pub (+1 ❤️)',contNo:'Non merci',adPh:'Emplacement publicitaire',adP:'Une pub récompensée sera diffusée ici.',contGo:'+1 ❤️ ON CONTINUE !',
+camExT:'Mode visage',camEx1:'Utilise la caméra avant pour lire vos expressions (tête, clignement, bouche, sourire).',camEx2:'La vidéo reste sur ce téléphone. Rien n\'est enregistré ni envoyé.',camEx3:'Vous pouvez revenir au tactile à tout moment.',camExGo:'📷 Activer la caméra',back:'⬅️ Retour',
+dark:'💡 Il fait trop sombre : trouvez un meilleur éclairage (face à une fenêtre ou une lampe).',relaxHud:'🐢',
+hype5:'BIEN JOUÉ !',hype10:'EN FEU ! 🔥',hype15:'IMPARABLE !',hype20:'LÉGENDAIRE !',jackpot:'JACKPOT !',stageClr:'NIVEAU RÉUSSI !',bossKill:'DRAGON VAINCU !',record:'NOUVEAU RECORD !',
+share:'📤 Partager mon record',shareText:'Nouveau record : {s} points à Face-Action Chasse au Trésor ! Tu peux faire mieux ?',cardRecord:'🏆 NOUVEAU RECORD !',cardLine:'Niveau {g}',saved:'Image enregistrée ✓',
+hProg:'<b>📅 Défi du jour</b> : les mêmes gardiens et trésors pour tout le monde aujourd\'hui. Jouez chaque jour pour une série 🔥 et des récompenses · <b>📖 Chapitres</b> : 3 missions rapides chacun · <b>🏆 Collection</b> : casques et badges · ⚙️ contours de formes et vitesse détente.'});
+const tp=(k,n,v={})=>t(k,{n,s:n>1?'s':'',...v});
 
-const cv=$('game'),ctx=cv.getContext('2d'),video=$('cam');
-let W,H,DPR;function resize(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize);resize();
-const BEST_KEYS={face:'fa_best_face',touch:'fa_best_touch'};const getBest=m=>+localStorage.getItem(BEST_KEYS[m])||0;function showBest(){$('best').innerHTML=t('faceBest')+': <b>'+getBest('face')+'</b> &nbsp;·&nbsp; '+t('touchBest')+': <b>'+getBest('touch')+'</b>'}applyLang();
+const cv=$('game'),video=$('cam');let ctx=cv.getContext('2d');
+let W,H,DPR;function resize(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize);
+const BEST_KEYS={face:'fa_best_face',touch:'fa_best_touch'};const getBest=m=>+localStorage.getItem(BEST_KEYS[m])||0;function showBest(){$('best').innerHTML=t('faceBest')+': <b>'+getBest('face')+'</b> &nbsp;·&nbsp; '+t('touchBest')+': <b>'+getBest('touch')+'</b>'}
 $('bLang').onclick=e=>{e.preventDefault();LANG=LANG==='fr'?'en':'fr';localStorage.setItem('fa_lang',LANG);applyLang()};
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 
 // ---------- Input layer: face or touch both write to `inp` ----------
 const inp={x:0,attack:false,vac:false,special:false,shield:false};
-const touch={left:false,right:false,attack:false,vac:false,special:false};
+const touch={left:false,right:false,attack:false,vac:false,special:false,shield:false};
 let mode='touch',landmarker=null,base={},lastVT=-1,lastTs=0,faceSeen=false,faceFps=0,camStatus='off',modelStatus='not loaded',yaw=0,yaw0=0,moveSign=1,moveRange=.25,faceLoopOn=false,frames=0,fpsT=0;
 let sens=+(localStorage.getItem('ftq_sens')||1); // 0.5 = very sensitive … 1.5 = strict
 // Pinned, known-good MediaPipe build
@@ -201,7 +279,7 @@ function updateInput(dt){
   }else{
     inp.x=(touch.right?1:0)-(touch.left?1:0);
     if(touch.attack){inp.attack=true;touch.attack=false}
-    inp.vac=touch.vac; if(touch.special){inp.special=true;touch.special=false}
+    inp.vac=touch.vac;inp.shield=touch.shield; if(touch.special){inp.special=true;touch.special=false}
   }
 }
 // ---------- Debug HUD ----------
@@ -224,8 +302,8 @@ function drawHud(){
 document.querySelectorAll('#touch button').forEach(b=>{const k=b.dataset.k;
   const on=e=>{e.preventDefault();touch[k]=true},off=e=>{e.preventDefault();if(k!=='attack'&&k!=='special')touch[k]=false};
   b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointerleave',off);b.addEventListener('pointercancel',off)});
-addEventListener('keydown',e=>{if(e.key==='ArrowLeft')touch.left=true;if(e.key==='ArrowRight')touch.right=true;if(e.key===' ')touch.attack=true;if(e.key==='v')touch.vac=true;if(e.key==='s')touch.special=true});
-addEventListener('keyup',e=>{if(e.key==='ArrowLeft')touch.left=false;if(e.key==='ArrowRight')touch.right=false;if(e.key==='v')touch.vac=false});
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft')touch.left=true;if(e.key==='ArrowRight')touch.right=true;if(e.key===' ')touch.attack=true;if(e.key==='v')touch.vac=true;if(e.key==='s')touch.special=true;if(e.key==='b')touch.shield=true});
+addEventListener('keyup',e=>{if(e.key==='ArrowLeft')touch.left=false;if(e.key==='ArrowRight')touch.right=false;if(e.key==='v')touch.vac=false;if(e.key==='b')touch.shield=false});
 
 
 // ---------- Sound: synthesized with Web Audio (no files) ----------
@@ -260,6 +338,12 @@ const sfx={
   over:()=>[392,330,262,196].forEach((f,i)=>tone(f,.3,{type:'triangle',vol:.22,delay:i*.22})),
   nova:()=>{noise(.5,{vol:.3,hp:100});tone(110,.6,{type:'sawtooth',vol:.2,slide:4})},
   beep:hi=>tone(hi?1320:880,hi?.25:.08,{type:'sine',vol:.2}),
+  unlock:()=>[523,659,784,1047,784,1047].forEach((f,i)=>tone(f,.15,{type:'square',vol:.1,delay:i*.09})),
+  sting:n=>{const k=Math.pow(2,(n-1)*2/12);[523,659,784,1047].forEach((f,i)=>tone(f*k,.14+i*.02,{type:'square',vol:.09,delay:i*.045}));tone(1047*k*2,.3,{type:'sine',vol:.08,delay:.2});noise(.15,{vol:.08,hp:3000,delay:.18})},
+  triumph:()=>{[[523,659,784],[587,740,880],[659,831,988,1319]].forEach((ch,i)=>ch.forEach(f=>tone(f,i===2?.7:.18,{type:i===2?'triangle':'square',vol:.07,delay:i*.16})))},
+  fanfare:()=>{[[392,0],[523,.12],[659,.24],[784,.36],[659,.56],[784,.66],[1047,.8]].forEach(([f,d])=>tone(f,d>.7?.6:.16,{type:'square',vol:.1,delay:d}));[523,659,784].forEach(f=>tone(f,.7,{type:'triangle',vol:.07,delay:.8}))},
+  coin:()=>tone(1568,.06,{type:'square',vol:.05,slide:1.3}),
+  pop:()=>{noise(.25,{vol:.12,hp:600});tone(900+Math.random()*600,.2,{type:'sine',vol:.06,slide:.5})},
 };
 // light background loop (pentatonic arpeggio), only while actively playing
 const MEL=[0,3,5,7,10,7,5,3],BASS=[0,0,-5,-2];
@@ -280,23 +364,31 @@ const GUARDS=[
  {id:'dragon',e:'🐉',hp:8,sp:.4,boss:true,from:5}];
 const POWER=[{e:'❤️',k:'heart'},{e:'🧲',k:'magnet'},{e:'⏳',k:'slow'},{e:'🛡️',k:'shield'}];
 const NTW=8;
-let S;
-function newGame(){S={score:0,hearts:3,stage:0,combo:0,comboT:0,special:0,x:0.5,ents:[],shots:[],fx:[],t:0,stageT:0,spawnT:0,kills:0,need:0,banner:'',bannerT:0,pw:{},playT:0,ended:false,shieldCd:0};nextStage()}
-// Difficulty: gentle logarithmic-ish ramp, capped
-const diff=s=>({speed:60*(1+0.08*Math.min(s-1,15)+0.02*Math.max(0,s-16)),spawn:Math.max(0.55,1.6*Math.pow(0.94,s-1)),kills:6+Math.floor(s*1.5)});
-function nextStage(){S.stage++;if(S.stage>1)sfx.stage();S.kills=0;S.need=diff(S.stage).kills;S.stageT=0;
+let S,FAKE_DAY=null,daily=false;
+const today=()=>{if(FAKE_DAY)return FAKE_DAY;const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let x=Math.imul(a^a>>>15,1|a);x=x+Math.imul(x^x>>>7,61|x)^x;return((x^x>>>14)>>>0)/4294967296}}
+const hashStr=s=>{let h=2166136261;for(const c of s)h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0};
+function newGame(){S={score:0,hearts:3,stage:0,combo:0,comboT:0,special:0,x:0.5,ents:[],shots:[],fx:[],parts:[],coins:[],t:0,stageT:0,spawnT:0,kills:0,need:0,banner:'',bannerT:0,pw:{},playT:0,ended:false,shieldCd:0,
+  daily,day:today(),rng:daily?mulberry(hashStr('fa-'+today())):Math.random,relax:OPT.relax,boost:false,contUsed:false,offer:false,
+  hype:null,hypeLast:-9,flash:null,shake:0,freezeT:0,fireQ:[],prevBest:getBest(mode),recordHit:false,scorePulse:0,maxCombo:0,newBadges:[],chapDone:[]};nextStage()}
+// Difficulty: gentle ramp, capped (v1.1: unchanged per-stage curve; Relaxed = 75% speed, 20% slower spawns, half the ramp)
+const diff=s=>{const r=S&&S.relax,k=r?.5:1;return {speed:60*(r?.75:1)*(1+0.08*k*Math.min(s-1,15)+0.02*k*Math.max(0,s-16)),spawn:Math.max(r?.7:.55,(r?1.6:1.35)*Math.pow(r?.965:.93,s-1)),kills:5+s}};
+function nextStage(){const cleared=S.stage;S.stage++;S.kills=0;S.need=diff(S.stage).kills;S.stageT=0;
   const st=S.stage;S.banner=()=>{const tw=st<NTW?t('tw')[st-1]:t('tw2')[st%4];return t('stage')+' '+st+(tw?' — '+tw:'')};S.bannerT=3;S.bossOut=false;
-  if(S.stage>1&&(S.stage-1)%3===0)startRest();}
-function pick(arr){let t=arr.reduce((a,b)=>a+b.w,0)*Math.random();for(const a of arr){t-=a.w;if(t<=0)return a}return arr[0]}
+  if(cleared>=1){stageCelebrate(cleared);ev('stage',S.stage)}
+  // face break every 3 stages (face mode only; touch players don't need it)
+  if(mode==='face'&&S.stage>1&&(S.stage-1)%3===0)setTimeout(()=>{if(running&&S&&!S.ended&&!S.offer)startRest()},1300)}
+function pick(arr){const w=a=>a.w*(S.boost&&a.p>=40?2.2:1);let t=arr.reduce((a,b)=>a+w(b),0)*S.rng();for(const a of arr){t-=w(a);if(t<=0)return a}return arr[0]}
 function spawn(){
-  const d=diff(S.stage),pool=GUARDS.filter(g=>g.from<=S.stage&&!g.boss);
+  const d=diff(S.stage),pool=GUARDS.filter(g=>g.from<=S.stage&&!g.boss),R=S.rng;
   if(S.stage%5===0&&!S.bossOut&&S.kills>=S.need-1){S.bossOut=true;const b=GUARDS[5];S.ents.push({t:'g',...b,x:.5,y:-40,hpL:b.hp+Math.floor(S.stage/5),sp:b.sp,ph:0});return}
-  const r=Math.random();
-  if(r<0.62){const g=pool[Math.floor(Math.random()*pool.length)];S.ents.push({t:'g',...g,x:.1+Math.random()*.8,y:-30,hpL:g.hp+(S.stage>10&&Math.random()<.3?1:0),ph:Math.random()*6})}
-  else if(r<0.95){const tr=pick(TREASURES);S.ents.push({t:'t',...tr,x:.1+Math.random()*.8,y:-30,ph:0})}
-  else{const p=POWER[Math.floor(Math.random()*4)];S.ents.push({t:'p',...p,x:.1+Math.random()*.8,y:-30,ph:0})}
+  const r=R();
+  if(r<0.62){const g=pool[Math.floor(R()*pool.length)];S.ents.push({t:'g',...g,x:.1+R()*.8,y:-30,hpL:g.hp+(S.stage>10&&R()<.3?1:0),ph:R()*6})}
+  else if(r<0.95){const tr=pick(TREASURES);S.ents.push({t:'t',...tr,x:.1+R()*.8,y:-30,ph:0})}
+  else{const p=R()<.14?POWER[0]:POWER[1+Math.floor(R()*3)]; // v1.1: heart drops ~half as often (shorter sessions)
+   S.ents.push({t:'p',...p,x:.1+R()*.8,y:-30,ph:0})}
 }
-function fx(x,y,txt,col){S.fx.push({x,y,txt,col,t:1})}
+function fx(x,y,txt,col,size=18){S.fx.push({x,y,txt,col,t:1,size})}
 function startRest(){paused=true;camStop();let n=15;$('rest').classList.remove('hide');$('restT').textContent=n;clearInterval(restI);restI=setInterval(()=>{n--;$('restT').textContent=n;if(n<=0)endRest()},1000)}
 let restI,paused=false;function endRest(){clearInterval(restI);$('rest').classList.add('hide');paused=false;last=performance.now();camResume()}
 $('bSkip').onclick=endRest;
@@ -304,95 +396,302 @@ $('bSkip').onclick=endRest;
 // ---------- Loop ----------
 let last=performance.now(),running=false;
 function step(now){requestAnimationFrame(step);const dt=Math.min(.05,(now-last)/1000);last=now;
-  if(!running)return;updateInput(dt);if(!paused&&!S.ended)update(dt);draw()}
+  if(!running)return;updateInput(dt);if(!paused&&!S.ended)update(dt);if(running||S.ended)draw()}
 function update(dt){
-  S.t+=dt;S.stageT+=dt;S.shieldCd-=dt;S.bannerT-=dt;S.comboT-=dt;if(S.comboT<=0)S.combo=0;
+  if(S.offer)return; // waiting on the Continue? offer
+  celebUpdate(dt);const frozen=S.freezeT>0;
+  S.t+=dt;S.bannerT-=dt;S.shake=Math.max(0,S.shake-dt);
+  const pd=frozen?dt*.5:dt;for(const p of S.parts){p.t-=pd;if(p.conf){p.vx*=1-pd*1.5;p.vy=p.vy*(1-pd*1.5)+260*pd;p.rot+=p.vr*pd}else p.vy+=(p.spark?160:500)*pd;p.x+=p.vx*pd;p.y+=p.vy*pd}S.parts=S.parts.filter(p=>p.t>0);
+  if(S.parts.length>MAXPARTS)S.parts.splice(0,S.parts.length-MAXPARTS); // cap for phone performance
+  for(const f of S.fx){f.t-=dt;f.y-=40*dt}S.fx=S.fx.filter(f=>f.t>0);
+  if(frozen)return; // new-record moment: everything holds still for ~1 s
+  S.stageT+=dt;S.shieldCd-=dt;S.comboT-=dt;if(S.comboT<=0)S.combo=0;
   for(const k in S.pw)if((S.pw[k]-=dt)<=0)delete S.pw[k];
   const d=diff(S.stage),slow=S.pw.slow?.5:1;
   S.x=Math.max(.06,Math.min(.94,S.x+inp.x*dt*0.9));
   const px=S.x*W,py=H*0.78;
   if(inp.attack){inp.attack=false;S.shots.push({x:px,y:py-30});sfx.shot()}
-  if(inp.special){inp.special=false;if(S.special>=100){S.special=0;sfx.nova();fx(px,py-60,t('nova'),'#ffd54a');
-    for(const e of S.ents)if(e.t==='g'&&!e.boss){e.dead=true;addScore(10,e.x*W,e.y)}else if(e.boss)e.hpL-=3;}}
-  S.spawnT-=dt;if(S.spawnT<=0){S.spawnT=d.spawn*(0.7+Math.random()*.6);spawn();if(S.stage>=8&&S.stage%4===3)spawn()}
+  if(inp.special){inp.special=false;if(S.special>=100){S.special=0;sfx.nova();fx(px,py-60,t('nova'),'#ffd54a',22);screenFlash('#ffd54a',.35,.3);S.shake=.25;ev('nova');
+    for(const e of S.ents)if(e.t==='g'&&!e.boss){e.dead=true;addScore(10,e.x*W,e.y);ev('kill')}else if(e.boss)e.hpL-=3;}}
+  S.spawnT-=dt;if(S.spawnT<=0){S.spawnT=d.spawn*(0.7+S.rng()*.6);spawn();if(S.stage>=8&&S.stage%4===3)spawn()}
   for(const s of S.shots)s.y-=520*dt;S.shots=S.shots.filter(s=>s.y>-20&&!s.hit);
   const vac=inp.vac;
   for(const e of S.ents){
-    e.ph+=dt;e.y+=d.speed*e.sp*slow*dt*(e.t==='g'?1:0.8);
+    e.ph+=dt;e.y+=d.speed*(e.sp??1)*slow*dt*(e.t==='g'?1:0.8); // v1.1 fix: treasure/power-ups had no sp -> NaN y, so they never appeared
     if(e.zig)e.x+=Math.sin(e.ph*4)*0.25*dt;
     const ex=e.x*W;
     if(e.t!=='g'&&(vac||S.pw.magnet)){const dx=px-ex,dy=py-e.y,dd=Math.hypot(dx,dy);if(dd<(S.pw.magnet?W:W*.45)){e.x+=dx/dd*1.2*dt;e.y+=dy/dd*260*dt}}
     if(e.t==='g'){
       const solid=!e.phase||Math.sin(e.ph*2)>-.2;
-      for(const s of S.shots)if(!s.hit&&solid&&Math.abs(s.x-ex)<U()*28&&Math.abs(s.y-e.y)<U()*28){s.hit=true;e.hpL--;fx(ex,e.y,'⚔️');if(e.hpL>0)sfx.hit();if(e.hpL<=0){e.dead=true;S.kills++;S.combo++;sfx.kill();if(S.combo>1&&S.combo%5===0){sfx.combo(S.combo);fx(ex,e.y-30,t('comboUp')+S.combo,'#ff0')}S.comboT=3;S.special=Math.min(100,S.special+8);addScore((e.boss?150:10)*(1+Math.min(S.combo,10)*0.1),ex,e.y)}}
+      for(const s of S.shots)if(!s.hit&&solid&&Math.abs(s.x-ex)<U()*28&&Math.abs(s.y-e.y)<U()*28){s.hit=true;e.hpL--;fx(ex,e.y,'⚔️');if(e.hpL>0)sfx.hit();
+        if(e.hpL<=0){e.dead=true;S.kills++;S.combo++;S.maxCombo=Math.max(S.maxCombo,S.combo);sfx.kill();ev('kill');ev('combo',S.combo);
+          if(S.combo>=5&&S.combo%5===0)hypeCombo(S.combo);
+          S.comboT=3;S.special=Math.min(100,S.special+8);addScore((e.boss?150:10)*(1+Math.min(S.combo,10)*0.1),ex,e.y);
+          if(e.boss){ev('boss');bossCelebrate(ex,e.y)}}}
       if(!e.dead&&e.y>py-20&&Math.abs(ex-px)<40){e.dead=true;hurt()}
       if(e.y>H+30){e.dead=true}
     }else{
       if(Math.hypot(ex-px,e.y-py)<(vac?60:38)){e.dead=true;
         if(e.t==='t'){const guarded=S.ents.some(o=>o.t==='g'&&!o.dead&&!o.boss&&Math.abs(o.y-e.y)<120&&Math.abs(o.x-e.x)<.2);
-          const mult=1+Math.min(S.combo,10)*0.1;addScore(e.p*mult*(guarded?0.5:1),ex,e.y);sfx.treasure(e.p);S.special=Math.min(100,S.special+3)}
+          const mult=1+Math.min(S.combo,10)*0.1;addScore(e.p*mult*(guarded?0.5:1),ex,e.y);sfx.treasure(e.p);S.special=Math.min(100,S.special+3);ev('treasure');
+          if(e.p===100){ev('idol');if(!guarded)jackpotPop(ex,e.y)}}
         else powerup(e.k,ex,e.y)}
       if(e.y>H+30)e.dead=true}
+    if(S.offer||S.ended)return;
   }
   S.ents=S.ents.filter(e=>!e.dead);
   if(S.kills>=S.need&&!S.ents.some(e=>e.boss))nextStage();
-  for(const f of S.fx){f.t-=dt;f.y-=40*dt}S.fx=S.fx.filter(f=>f.t>0);
 }
-function addScore(p,x,y){p=Math.round(p);S.score+=p;fx(x,y,'+'+p,'#ffd54a')}
+function addScore(p,x,y){p=Math.round(p);S.score+=p;fx(x,y,'+'+p,'#ffd54a');checkRecord();ev('score',S.score)}
 function powerup(k,x,y){sfx.power();if(k==='heart')S.hearts=Math.min(5,S.hearts+1);else S.pw[k]=k==='shield'?8:6;fx(x,y,(k==='heart'?'+❤️':t(k)),'#7cf')}
-function hurt(){if(S.pw.shield||inp.shield&&S.shieldCd<=0){fx(S.x*W,H*.7,t('blocked'),'#7cf');S.shieldCd=4;return}
-  S.hearts--;S.combo=0;sfx.hurt();navigator.vibrate&&navigator.vibrate(120);if(S.hearts<=0)gameOver()}
-function gameOver(){S.ended=true;sfx.over();camStop();const m=mode==='face'?'face':'touch',prev=getBest(m),b=Math.max(S.score,prev);localStorage.setItem(BEST_KEYS[m],b);showBest();
-  overState={m,s:S.score,g:S.stage,nb:S.score>prev,b};renderOver();$('over').classList.remove('hide')}
-function renderOver(){const o=overState,lbl=t(o.m+'L');$('oScore').innerHTML=t('overLine',{m:lbl,s:o.s,g:o.g})+'<br>'+(o.nb?t('newBest',{m:lbl}):t('bestIs',{m:lbl,b:o.b}))}
-$('bAgain').onclick=()=>{$('over').classList.add('hide');newGame();camResume()};
+function hurt(){if(S.pw.shield||inp.shield&&S.shieldCd<=0){fx(S.x*W,H*.7,t('blocked'),'#7cf');if(!S.pw.shield)S.shieldCd=4;ev('block');parts(S.x*W,H*.74,'#7cf',14,160);return}
+  S.hearts--;S.combo=0;sfx.hurt();S.shake=.3;navigator.vibrate&&navigator.vibrate(120);if(S.hearts<=0){S.hearts=0;endOrOffer()}}
+function parts(x,y,col,n=16,sp=220){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=sp*(.3+Math.random());S.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-80,t:.6+Math.random()*.5,col,s:2+Math.random()*4})}}
+function gameOver(){S.ended=true;running=false;sfx.over();camStop();$('bPause').classList.add('hide');$('touch').classList.add('hide');
+  const m=mode==='face'?'face':'touch',prev=getBest(m),b=Math.max(S.score,prev);localStorage.setItem(BEST_KEYS[m],b);localStorage.setItem('fa_top',Math.max(topScore(),S.score));showBest();
+  let streak=null;if(S.daily){const dk='fa_daily_'+S.day+'_'+m;localStorage.setItem(dk,Math.max(+localStorage.getItem(dk)||0,S.score));streak=recordDaily()}
+  STATS.games++;LS.set('fa_stats',STATS);checkBadges(false);
+  overState={m,s:S.score,g:S.stage,nb:S.score>prev&&S.score>0,b,prev,daily:S.daily?S.day:null,date:new Date(),streak,badges:[...S.newBadges],chapDone:[...S.chapDone],secs:Math.round(S.t)};renderOver();$('over').classList.remove('hide');draw()}
+function renderOver(){const o=overState,lbl=t(o.m+'L');
+  $('oScore').innerHTML=(o.daily?t('dailyL',{d:o.daily})+'<br>':'')+t('overLine',{m:lbl,s:'<b>'+o.s+'</b>',g:o.g})+'<br>'+(o.nb?t('newBest',{m:lbl}):t('bestIs',{m:lbl,b:o.b}));
+  const gap=o.prev-o.s;$('oHook').innerHTML=!o.nb&&gap>0&&gap<=Math.max(60,o.prev*.25)?t('near',{n:gap}):'';
+  const meta=[];if(o.streak&&!o.streak.same){meta.push(tp('streakUp',o.streak.n));if(o.streak.milestone)meta.push(t('streakRew',{n:o.streak.n})+' '+t('rewBoost')+(o.streak.skin?' · '+t('rewSkin',{s:t(SKINS.find(x=>x.k===o.streak.skin).n)}):''))}
+  for(const c of o.chapDone)meta.push(t('chapRewOver',{n:c}));for(const b of o.badges)meta.push(t('badgeGot',{b:t('b_'+b)}));
+  const ms=chapterMissions(PROG.ch);meta.push('<a href="#" id="oChap" style="color:#b9f6ca">'+t('chapTitle',{n:PROG.ch})+t('colon')+ms.map((x,i)=>(PROG.p[i]>=x[1]?'✅ ':'⬜ ')+mText(x[0],x[1])+(PROG.p[i]<x[1]&&x[1]>1&&MT[x[0]].cum?' ('+PROG.p[i]+'/'+x[1]+')':'')).join('<br>')+'</a>');
+  $('oMeta').innerHTML=meta.join('<br>');$('oChap').onclick=e=>{e.preventDefault();buildMissions();$('missions').classList.remove('hide')};
+  $('oShareMsg').textContent='';if(o.nb)showCard(o);else{$('oCard').classList.add('hide');$('bShare').classList.add('hide')}}
+$('bAgain').onclick=()=>{$('over').classList.add('hide');overState=null;begin(true)};
+$('bMenu').onclick=()=>{$('over').classList.add('hide');overState=null;toMenu()};
+function toMenu(){running=false;paused=false;camStop();['pause','bPause','touch'].forEach(i=>$(i).classList.add('hide'));$('start').classList.remove('hide');showBest();syncDaily();newGame();draw()}
+$('bQuit').onclick=toMenu;
 const U=()=>Math.min(W,H)/400;
 const COL={goblin:['#e53935','G'],bat:['#d500f9','B'],golem:['#ff6d00','R'],ghost:['#00e5ff','?'],mimic:['#ff1744','M'],dragon:['#ff1744','D'],
  heart:['#ff4081','+'],magnet:['#2979ff','U'],slow:['#00e676','S'],shield:['#18ffff','O']};
 const TCOL={5:'#ffd600',10:'#e0e0e0',20:'#ff9100',40:'#ffea00',70:'#40c4ff',100:'#ffd740'};
-function shape(kind,x,y,r,fill,stroke){ctx.save();ctx.shadowColor=fill;ctx.shadowBlur=r*.9;ctx.fillStyle=fill;ctx.strokeStyle=stroke;ctx.lineWidth=Math.max(3,r*.18);ctx.beginPath();
+function shapePath(kind,x,y,r){ctx.beginPath();
  if(kind==='circle')ctx.arc(x,y,r,0,Math.PI*2);
  else if(kind==='spike'){for(let i=0;i<16;i++){const a=i*Math.PI/8,rr=i%2?r*.7:r;ctx.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}ctx.closePath()}
  else if(kind==='diamond'){ctx.moveTo(x,y-r);ctx.lineTo(x+r,y);ctx.lineTo(x,y+r);ctx.lineTo(x-r,y);ctx.closePath()}
  else if(kind==='star'){for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.45:r;ctx.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}ctx.closePath()}
- else {ctx.rect(x-r,y-r,2*r,2*r)}
- ctx.fill();ctx.shadowBlur=0;ctx.stroke();ctx.restore()}
+ else ctx.rect(x-r,y-r,2*r,2*r)}
+function shape(kind,x,y,r,fill,stroke){ctx.save();ctx.shadowColor=fill;ctx.shadowBlur=r*.9;ctx.fillStyle=fill;ctx.strokeStyle=stroke;ctx.lineWidth=Math.max(3,r*.18);shapePath(kind,x,y,r);
+ ctx.fill();ctx.shadowBlur=0;ctx.stroke();
+ if(OPT.cb){ctx.lineWidth=2.5;ctx.strokeStyle='#000';shapePath(kind,x,y,r+Math.max(3,r*.18)/2+1.5);ctx.stroke()} // high-contrast outline
+ ctx.restore()}
+// shape-outline aid: a marker that tells guardians / treasure / power-ups apart without relying on color
+function cbMark(kind,x,y,r){if(!OPT.cb)return;ctx.save();ctx.font='bold '+Math.round(r*.62)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=3;ctx.strokeStyle='#000';ctx.fillStyle='#fff';
+ const m=kind==='g'?'✖':kind==='t'?'◆':'■',mx=x+r*.95,my=y-r*.85;ctx.strokeText(m,mx,my);ctx.fillText(m,mx,my);ctx.restore()}
 function drawEnt(e){const x=e.x*W,y=e.y,u=U();let label,emoji=e.e;
  ctx.globalAlpha=e.phase?(Math.sin(e.ph*2)>-.2?1:.35):1;
  if(e.t==='g'){const disguised=e.mimic&&e.y<H*.4;const r=u*(e.boss?40:22);
-   if(disguised){shape('star',x,y,r,TCOL[20],'#fff');emoji='🏺';label='$'}
-   else{const[c,l]=COL[e.id];shape('spike',x,y,r,c,'#ffffff');label=l}
+   if(disguised){shape('star',x,y,r,TCOL[20],'#fff');emoji='🏺';label='$';cbMark('t',x,y,r)}
+   else{const[c,l]=COL[e.id];shape('spike',x,y,r,c,'#ffffff');label=l;cbMark('g',x,y,r)}
    if(e.hpL>1){ctx.fillStyle='#fff';ctx.font='bold '+Math.round(u*12)+'px sans-serif';ctx.fillText(t('hp')+' '+e.hpL,x,y+r+u*12)}}
- else if(e.t==='t'){const r=u*(14+e.p/10);shape(e.p>=70?'diamond':'star',x,y,r,TCOL[e.p],'#ffffff');label=e.p}
- else{const[c,l]=COL[e.k];shape('square',x,y,u*16,c,'#ffffff');label=l}
+ else if(e.t==='t'){const r=u*(14+e.p/10);shape(e.p>=70?'diamond':'star',x,y,r,TCOL[e.p],'#ffffff');label=e.p;cbMark('t',x,y,r)}
+ else{const[c,l]=COL[e.k];shape('square',x,y,u*16,c,'#ffffff');label=l;cbMark('p',x,y,u*16)}
  // readable text label in solid black (never inherits a dark fill), emoji overlaid on top if the font has it
  ctx.fillStyle='#000';ctx.font='bold '+Math.round(u*14)+'px sans-serif';ctx.fillText(String(label),x,y+1);
  ctx.font=Math.round(u*16)+'px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';ctx.fillStyle='#fff';ctx.globalAlpha*=.9;ctx.fillText(emoji,x,y-u*20);
  ctx.globalAlpha=1}
+// helmeted treasure hunter (race-neutral: the visor covers the face); helmet color = selected skin
+function drawHero(x,y,r,k){const sk=SKINS.find(s=>s.k===k)||SKINS[0];ctx.save();
+ ctx.fillStyle='#3e2723';ctx.beginPath();ctx.ellipse(x,y+r*.95,r*1.05,r*.55,0,Math.PI,0);ctx.fill(); // shoulders
+ let fill=sk.c;if(sk.grad){const g=ctx.createLinearGradient(x-r,y-r,x+r,y+r);sk.grad.forEach((c,i)=>g.addColorStop(i/(sk.grad.length-1),c));fill=g}
+ ctx.shadowColor=sk.glow||sk.c;ctx.shadowBlur=r*.8;ctx.fillStyle=fill;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();ctx.shadowBlur=0;
+ ctx.lineWidth=Math.max(2,r*.12);ctx.strokeStyle='#fff';ctx.stroke();if(OPT.cb){ctx.lineWidth=2.5;ctx.strokeStyle='#000';ctx.beginPath();ctx.arc(x,y,r+r*.06+1.5,0,7);ctx.stroke()}
+ ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(x-r*.98,y-r*.12,r*1.96,r*.16); // brim line
+ ctx.fillStyle='#10163a';rrect(x-r*.72,y+r*.02,r*1.44,r*.56,r*.26);ctx.fill(); // visor
+ ctx.fillStyle='rgba(140,220,255,.55)';rrect(x-r*.55,y+r*.1,r*.5,r*.12,r*.06);ctx.fill(); // glint
+ ctx.fillStyle='#fff59d';ctx.shadowColor='#fff59d';ctx.shadowBlur=r*.7;ctx.beginPath();ctx.arc(x,y-r*.62,r*.2,0,7);ctx.fill();ctx.shadowBlur=0; // headlamp
+ ctx.restore()}
+function rrect(x,y,w,h,r){r=Math.min(r,h/2,w/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 function draw(){
-  const gr=ctx.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#05030c');gr.addColorStop(1,'#120a04');ctx.fillStyle=gr;ctx.fillRect(0,0,W,H);
+  ctx.save();if(S.shake>0)ctx.translate((Math.random()-.5)*S.shake*18,(Math.random()-.5)*S.shake*12);
+  const gr=ctx.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#05030c');gr.addColorStop(1,'#120a04');ctx.fillStyle=gr;ctx.fillRect(-20,-20,W+40,H+40);
   ctx.textAlign='center';ctx.textBaseline='middle';
   for(const e of S.ents)drawEnt(e);
   ctx.globalAlpha=1;ctx.fillStyle='#ffd54a';for(const s of S.shots){ctx.beginPath();ctx.arc(s.x,s.y,U()*7,0,7);ctx.fill()}
   const px=S.x*W,py=H*.78;
   if(inp.vac){ctx.strokeStyle='rgba(120,200,255,.5)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(px,py,55+Math.sin(S.t*20)*5,0,7);ctx.stroke()}
-  if(S.pw.shield){ctx.strokeStyle='#7cf';ctx.lineWidth=4;ctx.beginPath();ctx.arc(px,py,42,0,7);ctx.stroke()}
-  {const r=U()*26;shape('circle',px,py,r,'#ffb300','#ffffff');ctx.fillStyle='#000';ctx.font='bold '+Math.round(r*1.1)+'px sans-serif';ctx.fillText('🤠',px,py+1)}
-  for(const f of S.fx){ctx.globalAlpha=Math.max(0,f.t);ctx.fillStyle=f.col||'#fff';ctx.font='bold 18px sans-serif';ctx.fillText(f.txt,f.x,f.y)}ctx.globalAlpha=1;
+  if(S.pw.shield||inp.shield&&S.shieldCd<=0){ctx.strokeStyle=S.pw.shield?'#7cf':'rgba(124,204,255,.6)';ctx.lineWidth=4;ctx.beginPath();ctx.arc(px,py,42,0,7);ctx.stroke()}
+  drawHero(px,py,U()*26,skin);
+  for(const p of S.parts){ctx.globalAlpha=Math.max(0,Math.min(1,p.t*1.5));ctx.fillStyle=p.col;if(p.conf){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore()}else ctx.fillRect(p.x-p.s/2,p.y-p.s/2,p.s,p.s)}ctx.globalAlpha=1;
+  for(const f of S.fx){ctx.globalAlpha=Math.max(0,f.t);ctx.fillStyle=f.col||'#fff';ctx.font='bold '+(f.size||18)+'px sans-serif';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.6)';ctx.strokeText(f.txt,f.x,f.y);ctx.fillText(f.txt,f.x,f.y)}ctx.globalAlpha=1;
+  ctx.restore();
   const top=(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat'))||0)+14;
-  ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font='bold 18px sans-serif';
-  ctx.fillText('💰 '+S.score,12,top+10);ctx.fillText('❤️'.repeat(Math.max(0,S.hearts)),12,top+36);
-  ctx.fillText(t('stage')+' '+S.stage+'  '+S.kills+'/'+S.need,12,top+62);
-  if(S.combo>1){ctx.fillStyle='#ffd54a';ctx.fillText(t('combo')+S.combo,12,top+88)}
+  ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font='bold '+Math.round(18*(1+S.scorePulse*.8))+'px sans-serif';ctx.shadowColor='#ffd54a';ctx.shadowBlur=S.scorePulse*40;
+  ctx.fillText('💰 '+S.score,12,top+10);ctx.shadowBlur=0;ctx.font='bold 18px sans-serif';ctx.fillText('❤️'.repeat(Math.max(0,S.hearts)),12,top+36);
+  ctx.fillText(t('stage')+' '+S.stage+'  '+S.kills+'/'+S.need+(S.relax?'  '+t('relaxHud'):'')+(S.boost?'  ⚡':''),12,top+62);
+  let hy=top+88;if(S.combo>1){ctx.fillStyle='#ffd54a';ctx.fillText(t('combo')+S.combo,12,hy);hy+=24}
+  if(S.daily){ctx.fillStyle='#9cf';ctx.font='12px sans-serif';ctx.fillText('📅 '+S.day,12,hy)}
   ctx.fillStyle='#333';ctx.fillRect(12,H*.86,W*.4,10);ctx.fillStyle=S.special>=100?'#ffd54a':'#a58';ctx.fillRect(12,H*.86,W*.4*S.special/100,10);
   ctx.fillStyle='#fff';ctx.font='12px sans-serif';ctx.fillText(S.special>=100?(mode==='face'?t('smileNova'):t('ready')):t('special'),12,H*.86-8);
-  if(S.bannerT>0){ctx.textAlign='center';ctx.globalAlpha=Math.min(1,S.bannerT);ctx.font='bold 20px sans-serif';ctx.fillStyle='#ffd54a';ctx.fillText(typeof S.banner==='function'?S.banner():S.banner,W/2,H*.35);ctx.globalAlpha=1}
+  if(S.bannerT>0){ctx.textAlign='center';ctx.globalAlpha=Math.min(1,S.bannerT);let bf=20;const bt=typeof S.banner==='function'?S.banner():S.banner;ctx.font='bold 20px sans-serif';while(bf>12&&ctx.measureText(bt).width>W-24){bf--;ctx.font='bold '+bf+'px sans-serif'}ctx.fillStyle='#ffd54a';ctx.fillText(bt,W/2,H*.35);ctx.globalAlpha=1}
+  drawCelebrations();
   drawHud();
-  if(mode==='face'&&!faceSeen){ctx.textAlign='center';ctx.fillStyle='#f88';ctx.font='14px sans-serif';ctx.fillText(t('noFace'),W/2,H*.45)}
+  if(mode==='face'&&running&&!faceSeen){ctx.textAlign='center';ctx.fillStyle='#f88';ctx.font='14px sans-serif';ctx.fillText(t('noFace'),W/2,H*.45)}
+  if(mode==='touch'&&running){const c=S.shieldCd>0&&!S.pw.shield;$('touch').querySelector('[data-k=shield]').classList.toggle('cd',c)}
 }
 document.documentElement.style.setProperty('--sat','env(safe-area-inset-top)');
 
+// ---------- Celebrations: hype banners, stage clear / boss party, personal best ----------
+const MAXPARTS=260;
+const HYPECOL={5:'#7cf',10:'#ff9100',15:'#ff1493',20:'#ffd54a'};
+const ease=x=>1-Math.pow(1-x,3);
+// big short banner in the middle of the cavern (above the hero, below the stage banner), throttled
+function hype(txt,col,{dur=.9,force=false,size=40}={}){if(!force&&S.t-S.hypeLast<1.1)return false;S.hypeLast=S.t;S.hype={txt,col,t:0,dur,size};return true}
+function screenFlash(col,dur=.3,a=.35){S.flash={col,t:dur,dur,a}}
+function hypeCombo(n){const k=n>=20?20:n;if(hype(t('hype'+k),HYPECOL[k],{size:n>=20?44:40})){screenFlash(HYPECOL[k],.3,.28);sfx.sting(Math.min(4,n/5));navigator.vibrate&&navigator.vibrate(30)}else sfx.combo(n)}
+function jackpotPop(x,y){fx(Math.max(80,Math.min(W-80,x)),y-50,t('jackpot'),'#fff59d',24);screenFlash('#ffffff',.2,.2);confetti(x,y,'#ffd740',24)}
+function confetti(x,y,col,n){const cols=[col,'#ffffff',col,'#ffd54a'];for(let i=0;i<n;i++){const a=-Math.PI/2+(Math.random()-.5)*1.6,v=320+Math.random()*380;
+  S.parts.push({x:x+(Math.random()-.5)*30,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:1.2+Math.random()*.6,col:cols[i%4],s:5+Math.random()*4,conf:1,rot:Math.random()*6,vr:(Math.random()-.5)*14})}}
+function coinShower(n,x,y){for(let k=0;k<n;k++)S.coins.push({x0:x+(Math.random()-.5)*W*.5,y0:y-Math.random()*60,t:-k*.05,dur:.75+Math.random()*.2,wob:(Math.random()-.5)*160})}
+function stageCelebrate(st){hype(t('stageClr'),'#00e676',{dur:1.1,size:40});confetti(W*.15,H*.8,'#00e676',22);confetti(W*.85,H*.8,'#ffd54a',22);coinShower(10,W/2,H*.6);sfx.triumph();S.shake=Math.max(S.shake,.25)}
+function bossCelebrate(x,y){hype(t('bossKill'),'#ff1744',{dur:1.4,force:true,size:38});screenFlash('#ff9100',.4,.35);S.shake=.45;sfx.fanfare();coinShower(16,x,y);
+  S.fireQ.push(...[0,.25,.5].map(d=>({d,x:W*(.2+Math.random()*.6),y:H*(.18+Math.random()*.3)})))}
+function fireworks(x,y){const cols=['#ff1744','#ffd600','#00e676','#2979ff','#ff1493','#ffffff'];const c=cols[Math.floor(Math.random()*cols.length)];
+  for(let k=0;k<34;k++){const a=k/34*Math.PI*2,v=150+Math.random()*90;S.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:.9+Math.random()*.4,col:k%5?c:'#fff',s:3,spark:1})}sfx.pop()}
+function checkRecord(){if(S.recordHit||S.prevBest<=0||S.score<=S.prevBest)return;S.recordHit=true;
+  S.freezeT=1;hype(t('record'),'#ffd54a',{dur:1.3,force:true,size:42});screenFlash('#ffd54a',.4,.3);sfx.fanfare();navigator.vibrate&&navigator.vibrate([40,40,80]);
+  S.fireQ=[0,.22,.45,.7,.95].map(d=>({d,x:W*(.2+Math.random()*.6),y:H*(.15+Math.random()*.35)}))}
+function celebUpdate(dt){
+  S.freezeT=Math.max(0,S.freezeT-dt);
+  if(S.hype){S.hype.t+=dt;if(S.hype.t>=S.hype.dur)S.hype=null}
+  if(S.flash){S.flash.t-=dt;if(S.flash.t<=0)S.flash=null}
+  for(const f of S.fireQ){f.d-=dt;if(f.d<=0&&!f.done){f.done=1;fireworks(f.x,f.y)}}S.fireQ=S.fireQ.filter(f=>!f.done);
+  S.scorePulse=Math.max(0,S.scorePulse-dt);
+  let arrived=0;for(const c of S.coins){c.t+=dt;if(c.t>=c.dur&&!c.done){c.done=1;arrived++}}S.coins=S.coins.filter(c=>!c.done);
+  if(arrived){S.scorePulse=.25;if(S.t-(S.coinT||0)>.07){S.coinT=S.t;sfx.coin()}}}
+function drawCelebrations(){
+  const sp={x:40,y:(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat'))||0)+24};
+  for(const c of S.coins){if(c.t<0)continue;const p=ease(Math.min(1,c.t/c.dur)),x=c.x0+(sp.x-c.x0)*p+Math.sin(p*Math.PI)*c.wob,y=c.y0+(sp.y-c.y0)*p-Math.sin(p*Math.PI)*90,r=9-p*3;
+    ctx.save();ctx.fillStyle='#ffc400';ctx.shadowColor='#ffd54a';ctx.shadowBlur=8;ctx.beginPath();ctx.ellipse(x,y,r*Math.abs(Math.cos(c.t*12))+1.5,r,0,0,7);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='#fff59d';ctx.lineWidth=1.5;ctx.stroke();ctx.restore()}
+  if(S.hype){const h=S.hype,p=h.t/h.dur,sc=h.t<.12?1.6-4*h.t:1,a=p>.7?Math.max(0,(1-p)/.3):1,y=H*.52;
+    ctx.save();ctx.globalAlpha=a;ctx.translate(W/2,y);ctx.scale(sc,sc);ctx.textAlign='center';ctx.textBaseline='middle';let fs=h.size;ctx.font='900 italic '+fs+'px sans-serif';
+    while(fs>20&&ctx.measureText(h.txt).width>W-24){fs-=2;ctx.font='900 italic '+fs+'px sans-serif'}
+    ctx.lineWidth=7;ctx.strokeStyle='rgba(0,0,0,.8)';ctx.strokeText(h.txt,0,0);ctx.fillStyle=h.col;ctx.shadowColor=h.col;ctx.shadowBlur=24;ctx.fillText(h.txt,0,0);
+    ctx.shadowBlur=0;ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText(h.txt,0,-2);ctx.restore()}
+  if(S.freezeT>0){ctx.save();ctx.strokeStyle='rgba(255,213,74,'+(.5*S.freezeT)+')';ctx.lineWidth=8;ctx.strokeRect(4,4,W-8,H-8);ctx.restore()}
+  if(S.flash){const f=S.flash;ctx.save();ctx.globalAlpha=f.a*(f.t/f.dur);ctx.fillStyle=f.col;ctx.fillRect(0,0,W,H);ctx.restore()}}
+
+// ---------- Shareable score card (rendered locally; nothing is uploaded) ----------
+let cardFile=null,cardURL=null,cardText='';
+function makeCard(o){const c=document.createElement('canvas');c.width=1080;c.height=1350;const g=c.getContext('2d'),O=ctx;ctx=g;
+  try{const bg=g.createLinearGradient(0,0,0,1350);bg.addColorStop(0,'#1b1033');bg.addColorStop(.6,'#05030c');bg.addColorStop(1,'#1a0f05');g.fillStyle=bg;g.fillRect(0,0,1080,1350);
+    g.strokeStyle='#ffd54a';g.lineWidth=14;rrect(30,30,1020,1290,60);g.stroke();
+    g.textAlign='center';g.textBaseline='middle';
+    g.font='110px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif';['🪙','💎','👑','🏆'].forEach((e,i)=>g.fillText(e,210+i*220,170+(i%2)*40));
+    drawHero(540,345,95,skin);
+    g.font='900 92px sans-serif';g.fillStyle='#ffd54a';g.shadowColor='#ffd54a';g.shadowBlur=30;g.fillText('Face-Action',540,530);
+    g.font='bold 62px sans-serif';g.fillStyle='#fff';g.shadowColor='#00e5ff';g.fillText(t('sub'),540,615);
+    g.font='900 72px sans-serif';g.fillStyle='#ff6ec7';g.shadowColor='#ff1493';g.fillText(t('cardRecord'),540,735);
+    g.font='900 210px sans-serif';g.fillStyle='#ffd54a';g.shadowColor='#ffd54a';g.shadowBlur=40;g.fillText(String(o.s),540,915);g.shadowBlur=0;
+    g.font='bold 52px sans-serif';g.fillStyle='#fff';g.fillText(t(o.m+'L')+' · '+t('cardLine',{g:o.g}),540,1055);
+    g.font='42px sans-serif';g.fillStyle='#bbb';g.fillText((o.daily?'📅 ':'')+o.date.toLocaleDateString(LANG==='fr'?'fr-FR':'en-US',{year:'numeric',month:'long',day:'numeric'}),540,1125);
+    g.font='bold 44px sans-serif';g.fillStyle='#9cf';g.fillText('haitialways-pixel.github.io/face-action',540,1205);
+    g.font='30px sans-serif';g.fillStyle='#888';g.fillText(t('copy'),540,1268)}finally{ctx=O}
+  return c}
+function showCard(o){const c=makeCard(o);cardURL=c.toDataURL('image/png');$('oCard').src=cardURL;$('oCard').classList.remove('hide');$('bShare').classList.remove('hide');
+  cardFile=null;c.toBlob(b=>{if(b)cardFile=new File([b],'face-action-record.png',{type:'image/png'})},'image/png');cardText=t('shareText',{s:o.s})+' https://haitialways-pixel.github.io/face-action/'}
+$('bShare').onclick=async()=>{
+  if(cardFile&&navigator.canShare&&navigator.canShare({files:[cardFile]})){try{await navigator.share({files:[cardFile],title:'Face-Action Treasure Hunt',text:cardText});return}catch(e){if(e&&e.name==='AbortError')return}}
+  const a=document.createElement('a');a.href=cardURL;a.download='face-action-record.png';document.body.appendChild(a);a.click();a.remove();$('oShareMsg').textContent=t('saved')};
+
+// ---------- Meta: settings, daily streak, chapters & missions, badges, helmets, continue offer ----------
+const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let OPT=Object.assign({cb:true,relax:false},LS.get('fa_opts',{}));
+function buildSettings(){for(const [id,k] of [['tCb','cb'],['tRelax','relax']]){const b=$(id);b.textContent=OPT[k]?t('on'):t('off');b.classList.toggle('off',!OPT[k])}}
+function setOpt(k,v){OPT[k]=v;LS.set('fa_opts',OPT);buildSettings()}
+$('tCb').onclick=()=>setOpt('cb',!OPT.cb);$('tRelax').onclick=()=>setOpt('relax',!OPT.relax);
+$('bSet').onclick=()=>{buildSettings();$('settings').classList.remove('hide')};$('bSetOk').onclick=()=>$('settings').classList.add('hide');
+// ----- hunter helmets (skins) -----
+const SKINS=[{k:'gold',n:'kGold',c:'#ffb300',need:0},{k:'ruby',n:'kRuby',c:'#e53935',need:1500},{k:'jade',n:'kJade',c:'#00c853',need:4000},{k:'cosmic',n:'kCosmic',c:'#7c4dff',grad:['#7c4dff','#00e5ff','#ff4081'],glow:'#b388ff',need:8000}];
+const topScore=()=>Math.max(+localStorage.getItem('fa_top')||0,getBest('face'),getBest('touch'));
+const skinOK=s=>topScore()>=s.need||LS.get('fa_unlocks',[]).includes(s.k);
+let skin=localStorage.getItem('fa_skin')||'gold';if(!SKINS.some(s=>s.k===skin&&skinOK(s)))skin='gold';
+function buildSkins(){const g=$('styleGrid');g.innerHTML='';
+  for(const s of SKINS){const bt=document.createElement('button'),c=document.createElement('canvas');c.width=180;c.height=180;bt.appendChild(c);
+    const ok=skinOK(s),sk=Object.keys(STREAK_REW).find(n=>STREAK_REW[n]===s.k),lb=document.createElement('span');lb.textContent=ok?t(s.n):t(s.n)+' '+t('needPts',{n:s.need})+(sk?' '+t('needStreak',{n:sk}):'');bt.appendChild(lb);
+    bt.disabled=!ok;if(skin===s.k)bt.classList.add('sel');bt.onclick=()=>{skin=s.k;localStorage.setItem('fa_skin',skin);buildSkins()};g.appendChild(bt);
+    const c2=c.getContext('2d'),o=ctx;ctx=c2;try{drawHero(90,80,52,s.k)}finally{ctx=o}}}
+$('bStyle').onclick=()=>{buildSkins();buildBadges();$('styles').classList.remove('hide');$('styles').scrollTop=0};$('bStyleOk').onclick=()=>$('styles').classList.add('hide');
+// ----- dates & daily streak -----
+const dayNum=s=>{const [y,m,d]=s.split('-').map(Number);return Math.round(Date.UTC(y,m-1,d)/864e5)};
+function streakInfo(){const s=LS.get('fa_streak',{});if(!s.last)return {n:0,state:'none'};const d=dayNum(today())-dayNum(s.last);
+  return d<=0?{n:s.n,state:'today'}:d===1?{n:s.n,state:'keep'}:{n:0,state:'broken'}}
+const STREAK_REW={3:null,7:'ruby',14:'jade',30:'cosmic'}; // every milestone also gives a treasure boost
+const getBoost=()=>+localStorage.getItem('fa_boost')||0,addBoost=n=>localStorage.setItem('fa_boost',Math.max(0,getBoost()+n));
+function recordDaily(){const s=LS.get('fa_streak',{n:0,best:0}),td=today();if(s.last===td)return {n:s.n,same:true};
+  const d=s.last?dayNum(td)-dayNum(s.last):99;s.n=d===1?s.n+1:1;s.last=td;s.best=Math.max(s.best||0,s.n);LS.set('fa_streak',s);
+  const r={n:s.n};if(s.n in STREAK_REW||(s.n>30&&s.n%30===0)){r.milestone=true;addBoost(1);const k=STREAK_REW[s.n];
+    if(k){const u=LS.get('fa_unlocks',[]);const already=skinOK(SKINS.find(x=>x.k===k));if(!u.includes(k))u.push(k);LS.set('fa_unlocks',u);if(!already)r.skin=k}}
+  return r}
+function syncDaily(){const d=today(),b=Math.max(+localStorage.getItem('fa_daily_'+d+'_touch')||0,+localStorage.getItem('fa_daily_'+d+'_face')||0),si=streakInfo();
+  const ds=new Date(d+'T12:00:00').toLocaleDateString(LANG==='fr'?'fr-FR':'en-US',{weekday:'short',month:'short',day:'numeric'});
+  $('dTop').innerHTML='<span>'+t('dailyT',{d:ds})+'</span><span class="pill">'+(daily?t('dailyOnP'):t('dailyOffP'))+'</span>';
+  $('dSub').innerHTML=(daily?t('dailyHint')+'<br>':'')+(b?t('dailyBest',{b}):t('dailyNone'))+' · '+(si.state==='today'?tp('streakN',si.n):si.state==='keep'?tp('streakKeep',si.n):t('streak0'));
+  $('bDaily').classList.toggle('on',daily);syncChapter()}
+$('bDaily').onclick=()=>{daily=!daily;syncDaily()};
+// ----- chapters & missions -----
+const MT={kill:{k:'mKill',cum:1},idol:{k:'mIdol',cum:1},nova:{k:'mNova',cum:1},block:{k:'mBlock',cum:1},stage:{k:'mStage',cum:0},score:{k:'mScore',cum:0},combo:{k:'mCombo',cum:0},boss:{k:'mBoss',cum:1},treasure:{k:'mTreasure',cum:1}};
+const MICON={kill:'⚔️',idol:'🏆',nova:'💥',block:'🛡️',stage:'🗺️',score:'🎯',combo:'🔥',boss:'🐉',treasure:'💰'};
+function chapterMissions(ch){
+  if(ch===1)return [['kill',15],['idol',1],['nova',1]];
+  if(ch===2)return [['kill',40],['block',3],['stage',4]];
+  const r=mulberry(ch*7919+29),pool=Object.keys(MT),out=[];
+  while(out.length<3){const k=pool[Math.floor(r()*pool.length)];if(!out.some(o=>o[0]===k))out.push([k,{kill:30+ch*15,idol:1+Math.floor(ch/3),nova:2+Math.floor(ch/2),block:3+ch,stage:Math.min(12,3+Math.floor(ch/2)),score:1500+ch*400,combo:Math.min(25,10+ch),boss:1+Math.floor(ch/4),treasure:20+ch*6}[k]])}
+  return out}
+let PROG=Object.assign({ch:1,p:[0,0,0]},LS.get('fa_prog',{}));
+const mText=(ty,n)=>tp(MT[ty].k,n);
+function syncChapter(){const ms=chapterMissions(PROG.ch),d=ms.filter((m,i)=>PROG.p[i]>=m[1]).length;$('bChapter').textContent=t('chapBtn',{n:PROG.ch,d})+' '+ms.map((m,i)=>PROG.p[i]>=m[1]?'✅':'⬜').join('')}
+function buildMissions(){const ms=chapterMissions(PROG.ch);$('mTitle').textContent=t('chapTitle',{n:PROG.ch});
+  $('mList').innerHTML=ms.map(([ty,n],i)=>{const v=Math.min(n,PROG.p[i]),ok=v>=n;return '<div class="hrow mrow"><span class="ic">'+(ok?'✅':MICON[ty])+'</span><div style="flex:1"><b>'+mText(ty,n)+'</b> <span style="float:right">'+v+'/'+n+'</span><div class="bar"><i style="width:'+(v/n*100)+'%"></i></div></div></div>'}).join('');
+  $('mTotal').textContent=t('chapTotal',{n:PROG.ch-1})}
+$('bChapter').onclick=()=>{buildMissions();$('missions').classList.remove('hide')};$('bMisOk').onclick=()=>$('missions').classList.add('hide');
+// ----- lifetime stats & badges -----
+let STATS=Object.assign({kills:0,bosses:0,idols:0,blocks:0,novas:0,treasures:0,games:0},LS.get('fa_stats',{}));
+const BADGES=[{k:'dragon',ic:'🐉',st:'bosses',n:1},{k:'hunter',ic:'⚔️',st:'kills',n:200},{k:'idol',ic:'🏆',st:'idols',n:10},{k:'wall',ic:'🛡️',st:'blocks',n:25},
+  {k:'s3',ic:'🔥',st:'streak',n:3},{k:'s7',ic:'📅',st:'streak',n:7},{k:'s14',ic:'💪',st:'streak',n:14},{k:'s30',ic:'👑',st:'streak',n:30}];
+const badgeVal=b=>b.st==='streak'?(LS.get('fa_streak',{}).best||0):STATS[b.st]||0;
+let BGOT=LS.get('fa_badges',[]);
+function checkBadges(live){const nb=[];for(const b of BADGES)if(!BGOT.includes(b.k)&&badgeVal(b)>=b.n){BGOT.push(b.k);nb.push(b.k);
+    if(live&&S&&running&&!S.ended){S.banner=t('badgeGot',{b:t('b_'+b.k)});S.bannerT=2.4;sfx.unlock()}}
+  if(nb.length){LS.set('fa_badges',BGOT);if(S)(S.newBadges=S.newBadges||[]).push(...nb)}return nb}
+function buildBadges(){$('badgeGrid').innerHTML=BADGES.map(b=>{const got=BGOT.includes(b.k),v=Math.min(b.n,badgeVal(b));return '<div class="badge '+(got?'got':'lock')+'"><span class="bi">'+b.ic+'</span><b>'+t('b_'+b.k)+'</b><span>'+t('d_'+b.k)+'</span><small>'+(got?'✅':'🔒 '+v+'/'+b.n)+'</small></div>'}).join('');
+  $('collStreak').textContent=tp('bestStreak',LS.get('fa_streak',{}).best||0)}
+// one entry point for game events: lifetime stats, badges and chapter missions (stats are saved in batches)
+const STATK={kill:'kills',boss:'bosses',idol:'idols',block:'blocks',nova:'novas',treasure:'treasures'};
+let statsDirty=false;setInterval(()=>{if(statsDirty){statsDirty=false;LS.set('fa_stats',STATS)}},2000);
+function ev(type,val=1){if(STATK[type]){STATS[STATK[type]]=(STATS[STATK[type]]||0)+val;statsDirty=true;checkBadges(true)}
+  const ms=chapterMissions(PROG.ch);let ch=false;
+  ms.forEach(([ty,n],i)=>{if(ty!==type||PROG.p[i]>=n)return;PROG.p[i]=Math.min(n,MT[ty].cum?PROG.p[i]+val:Math.max(PROG.p[i],val));ch=true;
+    if(PROG.p[i]>=n&&S&&running){S.banner=t('mDone',{m:mText(ty,n)});S.bannerT=2.4;sfx.unlock()}});
+  if(!ch)return;
+  if(ms.every((m,i)=>PROG.p[i]>=m[1])){const done=PROG.ch;PROG={ch:done+1,p:[0,0,0]};addBoost(1);if(S){(S.chapDone=S.chapDone||[]).push(done);if(running&&!S.ended){hype(t('chapDone',{n:done}),'#00e676',{dur:1.5,force:true,size:30});screenFlash('#00e676',.4,.3);sfx.fanfare()}}}
+  LS.set('fa_prog',PROG)}
+// ----- "Continue?" offer: once per game, rewarded ad for +1 heart -----
+// TODO(AdMob): replace the body of showRewardedAd() with the real rewarded-ad call (e.g. Capacitor AdMob plugin:
+// load + show a RewardedAd, resolve(true) only on the "reward earned" callback, resolve(false) on dismiss/failure).
+// Placeholder for now: a 3-second "Ad placeholder" countdown that always grants the reward.
+function showRewardedAd(){return new Promise(res=>{const o=$('ad');o.classList.remove('hide');let n=3;$('adN').textContent=n;
+  const iv=setInterval(()=>{n--;$('adN').textContent=n;if(n<=0){clearInterval(iv);o.classList.add('hide');res(true)}},1000)})}
+function endOrOffer(){if(!S.contUsed&&S.score>0){S.contUsed=true;S.offer=true;camStop();$('touch').classList.add('hide');$('bPause').classList.add('hide');$('contScore').textContent=t('contScore',{s:S.score});$('cont').classList.remove('hide')}else gameOver()}
+function continueGame(){S.offer=false;S.hearts=1;S.ents=S.ents.filter(e=>e.t!=='g'||e.boss);for(const e of S.ents)if(e.boss)e.y=Math.min(e.y,H*.2);S.pw.shield=Math.max(S.pw.shield||0,2.5);S.combo=0;paused=false;last=performance.now();
+  for(const k in touch)touch[k]=false;inp.attack=inp.special=false;
+  $('touch').classList.toggle('hide',mode!=='touch');$('bPause').classList.remove('hide');hype(t('contGo'),'#ff6ec7',{force:true,size:32,dur:1.2});sfx.power();camResume()}
+$('bContNo').onclick=()=>{$('cont').classList.add('hide');S.offer=false;gameOver()};
+$('bContYes').onclick=async()=>{$('cont').classList.add('hide');const ok=await showRewardedAd();if(ok)continueGame();else{S.offer=false;gameOver()}};
+// ----- camera explainer before the permission prompt (camera is never requested at app open) -----
+function askFace(){if(localStorage.getItem('fa_cam_ok')==='1')startFace();else $('camEx').classList.remove('hide')}
+$('bCamGo').onclick=()=>{$('camEx').classList.add('hide');startFace()};$('bCamBack').onclick=()=>$('camEx').classList.add('hide');
+// ----- calibration light check: average brightness of a tiny downscaled video frame (in memory only) -----
+const lightC=document.createElement('canvas');lightC.width=32;lightC.height=24;const lightG=lightC.getContext('2d',{willReadFrequently:true});
+const DARK_LUMA=60;let lightI=null;
+function luma(src){try{if(src.tagName==='VIDEO'&&src.readyState<2)return -1;lightG.clearRect(0,0,32,24);lightG.drawImage(src,0,0,32,24);const d=lightG.getImageData(0,0,32,24).data;let s=0;for(let i=0;i<d.length;i+=4)s+=.299*d[i]+.587*d[i+1]+.114*d[i+2];return s/(d.length/4)}catch(e){return -1}}
+function lightWatch(on,src=video){clearInterval(lightI);$('cLight').classList.add('hide');if(!on)return;let lows=0;
+  lightI=setInterval(()=>{const l=luma(src);if(l<0)return;lows=l<DARK_LUMA?Math.min(3,lows+1):Math.max(0,lows-1);$('cLight').classList.toggle('hide',lows<2)},400)}
 // ---------- Start / calibration ----------
+resize();applyLang();
 const SECURE=window.isSecureContext&&location.protocol!=='file:';
 if(!SECURE){setMsg('needHttps',{p:location.protocol})}
 async function startFace(){
@@ -402,9 +701,9 @@ async function startFace(){
   if(!await camStart(true))return;
   try{
     const t=setInterval(()=>{msgState=null;$('msg').innerHTML='<small>'+t('loadingModel')+' ('+modelStatus+')</small>'},200);
-    await initFace();clearInterval(t);
-  }catch(e){setMsg('loadFail',{e:e.message});return}
-  mode='face';faceLoopOn=true;faceLoop();$('start').classList.add('hide');if(forceCal||!loadCal())await calibrate();forceCal=false;begin();
+    try{await initFace()}finally{clearInterval(t)}
+  }catch(e){setMsg('loadFail',{e:e.message});camStop();return}
+  mode='face';faceLoopOn=true;faceLoop();$('start').classList.add('hide');if(forceCal||!loadCal())await calibrate();forceCal=false;begin(false);
 }
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 // ---------- Camera lifecycle: camera only on while actively playing ----------
@@ -419,7 +718,7 @@ async function camStart(first){
     video.muted=true;video.setAttribute('playsinline','');video.srcObject=stream;video.classList.remove('hide');
     await video.play();
     if(video.readyState<2)await new Promise(r=>video.addEventListener('loadeddata',r,{once:true}));
-    camStatus='playing';camWanted=true;lastVT=-1;
+    camStatus='playing';camWanted=true;lastVT=-1;localStorage.setItem('fa_cam_ok','1');
     if(landmarker&&!faceLoopOn){faceLoopOn=true;faceLoop()}
     updInd();return true;
   }catch(e){stream=null;camStatus='error '+e.name;
@@ -436,7 +735,7 @@ function saveCal(){try{localStorage.setItem(CAL_KEY,JSON.stringify({v:1,base,yaw
 function loadCal(){try{const c=JSON.parse(localStorage.getItem(CAL_KEY)||'null');if(!c||c.v!==1||!c.base)return false;
   base=c.base;yaw0=c.yaw0||0;moveSign=c.moveSign||1;moveRange=c.moveRange||.25;if(c.sens)sens=c.sens;$('sens').value=sens;return true}catch(e){return false}}
 async function calibrate(){
-  $('calib').classList.remove('hide');const T=$('cText'),I=$('cIcon');
+  $('calib').classList.remove('hide');lightWatch(true);const T=$('cText'),I=$('cIcon');
   I.textContent='😐';calState={text:'findFace'};T.textContent=t('findFace');
   const t0=performance.now();while(!faceSeen&&performance.now()-t0<8000)await wait(100);
   if(!faceSeen){calState={text:'noFaceCal'};T.textContent=t('noFaceCal');await wait(2500)}
@@ -453,10 +752,12 @@ async function calibrate(){
   await stepRun('c4','😮');
   await stepRun('c5','😁');
   $('cCount').textContent='';$('cStep').textContent='';calState={};
-  saveCal();$('calib').classList.add('hide');
+  saveCal();lightWatch(false);$('calib').classList.add('hide');
 }
-function begin(){$('start').classList.add('hide');$('bPause').classList.remove('hide');if(mode==='touch')$('touch').classList.remove('hide');newGame();running=true;last=performance.now()}
-$('bFace').onclick=startFace;
+function begin(again){$('start').classList.add('hide');$('bPause').classList.remove('hide');$('touch').classList.toggle('hide',mode!=='touch');
+  newGame();if(!daily&&getBoost()>0){S.boost=true;addBoost(-1);S.special=100;S.banner=t('boostOn');S.bannerT=2.6}
+  for(const k in touch)touch[k]=false;running=true;paused=false;last=performance.now();if(again)camResume()}
+$('bFace').onclick=askFace;
 const HOW_KEY='fa_howto_v1';
 function showHow(){$('howto').classList.remove('hide');$('howto').scrollTop=0}
 $('bHow').onclick=showHow;$('bHowP').onclick=showHow;
@@ -469,14 +770,15 @@ $('bVol').textContent=volIcon();$('bVol').onclick=e=>{e.stopPropagation();cycleV
 const sl=$('sens');sl.value=sens;sl.oninput=()=>{sens=+sl.value;localStorage.setItem('ftq_sens',sens);if(localStorage.getItem(CAL_KEY))saveCal()};
 function syncHud(){$('sensBox').classList.toggle('hide',!hudOn)}syncHud();
 $('bHud').onclick=()=>{hudOn=!hudOn;localStorage.setItem('ftq_hud',hudOn?'1':'0');syncHud()};
-$('bRecalStart').onclick=()=>{forceCal=true;startFace()};
+$('bRecalStart').onclick=()=>{$('settings').classList.add('hide');forceCal=true;askFace()};
 $('bRecalAuto').onclick=async()=>{$('bRecalAuto').classList.add('hide');noFaceT=0;paused=true;await calibrate();paused=false;last=performance.now()};
 $('bRecal').onclick=async()=>{if(mode!=='face')return;paused=true;await calibrate();paused=false;last=performance.now()};
-$('bTouch').onclick=()=>{mode='touch';begin()};
-document.addEventListener('visibilitychange',()=>{if(document.hidden){camStop();if(running)paused=true}else{if($('rest').classList.contains('hide')&&$('calib').classList.contains('hide')&&$('pause').classList.contains('hide'))paused=false;last=performance.now();camResume()}updInd()});
+$('bTouch').onclick=()=>{mode='touch';begin(false)};
+document.addEventListener('visibilitychange',()=>{if(document.hidden){camStop();if(running)paused=true}else{if($('rest').classList.contains('hide')&&$('calib').classList.contains('hide')&&$('pause').classList.contains('hide')&&!(S&&S.offer))paused=false;last=performance.now();camResume()}updInd()});
 addEventListener('pagehide',camStop);addEventListener('pageshow',e=>{if(e.persisted)camResume()});
 $('camResume').onclick=()=>camStart();
 $('bPrev').onclick=()=>{prevOn=!prevOn;localStorage.setItem('ftq_prev',prevOn?'1':'0');updInd()};
 newGame();requestAnimationFrame(step);
-window.__ft={sfx,SND,startRest,endRest,gameOver,get stream(){return stream},get S(){return S},begin,inp,update,draw,get bs(){return bs},get st(){return {camStatus,modelStatus,faceSeen,faceFps,mode}}};
+window.__ft={sfx,SND,startRest,endRest,gameOver,get stream(){return stream},get S(){return S},begin,inp,touch,update,draw,get bs(){return bs},get st(){return {camStatus,modelStatus,faceSeen,faceFps,mode}},
+  setMode:m=>{mode=m},setBs:v=>{bs=v;faceSeen=true},setYaw:v=>{yaw=v},updateInput,setDay:d=>{FAKE_DAY=d;syncDaily()},recordDaily,syncDaily,get PROG(){return PROG},ev,get STATS(){return STATS},get BGOT(){return BGOT},showRewardedAd,lightWatch,luma,get OPT(){return OPT},endOrOffer,diff,get running(){return running},nextStage,setSkin:k=>{skin=k},get W(){return W},get H(){return H}};
 </script></body></html>
