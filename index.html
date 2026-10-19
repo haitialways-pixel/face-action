@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#170b24">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -98,6 +98,7 @@ small{opacity:.75}
 .thFA #best{color:#f1dcb0}
 @media (max-height:780px){.thFA .heroArt{width:96px;height:96px;padding:4px}.thFA .faT1{font-size:36px}}
 @media (max-height:660px){.thFA .heroArt{width:70px;height:70px}.thFA .faT1{font-size:32px}.thFA [data-h="intro"] small{display:none}}
+html,body,button,canvas{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}html,body,canvas{touch-action:none}input,textarea,select{-webkit-user-select:text;user-select:text}
 </style></head><body>
 <canvas id="game"></canvas>
 <video id="cam" playsinline muted autoplay class="hide"></video>
@@ -937,4 +938,17 @@ function navBack(){
 addEventListener('keydown',e=>{if(e.key==='Escape')navBack()});
 window.__nav={navBack,goHome,askQuit,vis};
 applyLang();
+</script><script>
+/* anti-zoom guard */
+(function(){var vm=document.querySelector('meta[name=viewport]'),V='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover';
+var pd=function(e){e.preventDefault()},isIn=function(t){return t&&t.closest&&t.closest('input,textarea,select,[contenteditable]')};
+['gesturestart','gesturechange','gestureend'].forEach(function(n){document.addEventListener(n,pd,{passive:false})});
+document.addEventListener('dblclick',function(e){if(!isIn(e.target))e.preventDefault()},{passive:false});
+var last=0;document.addEventListener('touchend',function(e){var n=Date.now();if(n-last<300&&!isIn(e.target)&&e.changedTouches.length===1){e.preventDefault();var b=e.target.closest&&e.target.closest('button,[role=button],a');if(b&&!b.disabled)b.click()}last=n},{passive:false});
+document.addEventListener('touchmove',function(e){if(e.touches.length>1)e.preventDefault()},{passive:false});
+document.addEventListener('touchstart',function(e){if(e.touches.length>1)e.preventDefault()},{passive:false});
+window.addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault()},{passive:false});
+document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&/^[+=\-0]$/.test(e.key))e.preventDefault()});
+var busy=false;function fix(){var vv=window.visualViewport;if(!vv||busy||vv.scale<=1.01)return;busy=true;vm.setAttribute('content',V.replace('initial-scale=1,','initial-scale=1.0001,'));setTimeout(function(){vm.setAttribute('content',V);window.scrollTo(0,0);busy=false},60)}
+if(window.visualViewport){visualViewport.addEventListener('resize',fix);}setInterval(fix,1000);})();
 </script></body></html>
