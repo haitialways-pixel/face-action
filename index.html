@@ -55,6 +55,13 @@ h1 small{display:block;font-size:22px;color:#fff;text-shadow:0 0 12px #00e5ff;op
 #touch{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 10px);display:flex;justify-content:space-around;z-index:4}
 #touch button{min-width:0;width:15vw;height:15vw;max-width:76px;max-height:76px;border-radius:50%;font-size:24px;opacity:.85;padding:0}
 #touch button.cd{opacity:.35}
+#touch button[data-k=special]{position:relative;overflow:hidden;width:18vw;height:18vw;max-width:90px;max-height:90px;font-size:32px;opacity:1;border:3px solid #3a1d00;background:linear-gradient(160deg,#fff3a0,#ffc400 45%,#ff7a00);box-shadow:0 0 0 2px #fff8,0 3px 8px #0009;filter:saturate(.7) brightness(.9);align-self:center}
+#touch button[data-k=special] .sf{position:absolute;left:0;right:0;bottom:0;height:var(--f,0%);background:#ffffff55;pointer-events:none}
+#touch button[data-k=special] .si{position:relative;z-index:1}
+#touch button[data-k=special] .sr{position:absolute;left:0;right:0;bottom:6px;font:bold 10px sans-serif;color:#3a1d00;z-index:1;display:none}
+#touch button[data-k=special].rdy{filter:none;animation:spPulse .9s ease-in-out infinite}
+#touch button[data-k=special].rdy .sr{display:block}
+@keyframes spPulse{0%,100%{box-shadow:0 0 0 2px #fff,0 0 10px 3px #ffd54a}50%{box-shadow:0 0 0 3px #fff,0 0 26px 10px #ff9a00;transform:scale(1.08)}}
 #oMeta{font-size:15px;line-height:1.45;margin:0;max-width:360px}
 small{opacity:.75}
 /* ===== Treasure Hunt start-screen identity: night cavern, carved gold, torches ===== */
@@ -180,7 +187,7 @@ window.__startBg={get running(){return !!raf},get count(){return typeof count===
 <div id="camInd" class="hide" style="position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 6px);z-index:6;background:rgba(0,0,0,.6);padding:3px 8px;border-radius:10px;font-size:12px"><span style="color:#f33">●</span> <span data-t="camOn"></span></div>
 <button id="camResume" class="hide" style="position:fixed;left:50%;top:40%;transform:translateX(-50%);z-index:6"><span data-t="camResume"></span></button>
 <div id="touch" class="hide">
- <button data-k="left">⬅️</button><button data-k="attack">⚔️</button><button data-k="vac">🌀</button><button data-k="shield">🛡️</button><button data-k="special">✨</button><button data-k="right">➡️</button>
+ <button data-k="attack">⚔️</button><button data-k="vac">🌀</button><button data-k="shield">🛡️</button><button data-k="special"><span class="sf"></span><span class="si">✨</span><span class="sr" data-t="spReady"></span></button><button data-k="left">⬅️</button><button data-k="right">➡️</button>
 </div>
 <script type="module">
 const $=id=>document.getElementById(id);
@@ -197,7 +204,7 @@ loadFail:'<b style="color:#f66">{e}</b><br><small>Check internet / try another b
 findFace:'Finding your face…',noFaceCal:'No face found — hold the phone at eye level in good light. Continuing anyway; open 🐞 to debug.',stepOf:'Step {i} of {n}',
 c1:'Relax your face and look straight at the screen. Hold still.',c2:'Turn your head to YOUR LEFT and hold it there.',c3:'Face the screen again. Blink a few times: each blink = attack!',c4:'Open your mouth wide: this vacuums up treasure.',c5:'Give a big smile and hold it: this fires your special move.',
 stage:'Stage',tw:['','Bats zig-zag!','Golems take 3 hits','Ghosts fade in & out — hit them when solid','Mimics look like treasure!','Boss: Dragon','Fog: shorter view','Double treasure rain'],tw2:['Faster guardians','Mixed horde','Treasure frenzy','Boss rematch'],
-combo:'Combo x',comboUp:'COMBO x',nova:'💥 TREASURE NOVA!',magnet:'Magnet!',slow:'Slow-mo!',shield:'Shield!',blocked:'Blocked!',hp:'HP',smileNova:'SMILE for Nova!',ready:'✨ ready!',special:'Special',noFace:'Face not found — hold phone at eye level',
+combo:'Combo x',comboUp:'COMBO x',nova:'💥 TREASURE NOVA!',magnet:'Magnet!',slow:'Slow-mo!',shield:'Shield!',blocked:'Blocked!',hp:'HP',smileNova:'SMILE for Nova!',ready:'✨ ready!',spReady:'READY',special:'Special',noFace:'Face not found — hold phone at eye level',
 dCam:'cam',dModel:'model',dFace:'face',yes:'YES',no:'NO',dSens:'sens',dBlink:'blink',dMouth:'mouth',dSmile:'smile',dPuff:'puff',dBrow:'brow',dMove:'move',langBtn:'Français'},
 fr:{intro:'Battez les gardiens et ramassez les trésors avec votre visage seulement.<br><small>Un exercice facial amusant. La caméra reste sur votre appareil ; rien n\'est envoyé.</small>',
 playFace:'😀 Jouer avec le visage',howBtn:'❓ Comment jouer',recalFace:'🎯 Recalibrer le visage',playTouch:'👆 Jouer en tactile',privacy:'Politique de confidentialité',copy:'© 2026 Steeve J. Tous droits réservés.',
@@ -212,7 +219,7 @@ loadFail:'<b style="color:#f66">{e}</b><br><small>Vérifiez votre connexion ou e
 findFace:'Recherche de votre visage…',noFaceCal:'Aucun visage détecté — tenez le téléphone à hauteur des yeux, dans un endroit bien éclairé. On continue quand même ; ouvrez 🐞 pour diagnostiquer.',stepOf:'Étape {i} sur {n}',
 c1:'Détendez votre visage et regardez l\'écran bien en face. Ne bougez pas.',c2:'Tournez la tête vers VOTRE GAUCHE et restez ainsi.',c3:'Regardez de nouveau l\'écran. Clignez des yeux plusieurs fois : chaque clignement = attaque !',c4:'Ouvrez grand la bouche : cela aspire les trésors.',c5:'Faites un grand sourire et tenez-le : cela déclenche votre coup spécial.',
 stage:'Niveau',tw:['','Les chauves-souris zigzaguent !','Les golems encaissent 3 coups','Les fantômes apparaissent et disparaissent — frappez-les quand ils sont visibles','Les mimiques ressemblent à des trésors !','Boss : Dragon','Brouillard : vue réduite','Pluie de trésors doublée'],tw2:['Gardiens plus rapides','Horde mixte','Frénésie de trésors','Revanche du boss'],
-combo:'Combo x',comboUp:'COMBO x',nova:'💥 TREASURE NOVA !',magnet:'Aimant !',slow:'Ralenti !',shield:'Bouclier !',blocked:'Bloqué !',hp:'PV',smileNova:'SOURIEZ pour la Nova !',ready:'✨ prêt !',special:'Spécial',noFace:'Visage introuvable — tenez le téléphone à hauteur des yeux',
+combo:'Combo x',comboUp:'COMBO x',nova:'💥 TREASURE NOVA !',magnet:'Aimant !',slow:'Ralenti !',shield:'Bouclier !',blocked:'Bloqué !',hp:'PV',smileNova:'SOURIEZ pour la Nova !',ready:'✨ prêt !',spReady:'PRÊT',special:'Spécial',noFace:'Visage introuvable — tenez le téléphone à hauteur des yeux',
 dCam:'caméra',dModel:'modèle',dFace:'visage',yes:'OUI',no:'NON',dSens:'sens.',dBlink:'cligner',dMouth:'bouche',dSmile:'sourire',dPuff:'joues',dBrow:'sourcils',dMove:'bouger',langBtn:'English'}};
 const detectLang=()=>{const s=localStorage.getItem('fa_lang');if(s==='en'||s==='fr')return s;const ls=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'en']);return String(ls[0]||'').toLowerCase().startsWith('fr')?'fr':'en'};
 let LANG=detectLang();
@@ -277,7 +284,7 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(
 
 // ---------- Input layer: face or touch both write to `inp` ----------
 const inp={x:0,attack:false,vac:false,special:false,shield:false};
-const touch={left:false,right:false,attack:false,vac:false,special:false,shield:false};
+let SPB=null;const touch={left:false,right:false,attack:false,vac:false,special:false,shield:false};
 let mode='touch',landmarker=null,base={},lastVT=-1,lastTs=0,faceSeen=false,faceFps=0,camStatus='off',modelStatus='not loaded',yaw=0,yaw0=0,moveSign=1,moveRange=.25,faceLoopOn=false,frames=0,fpsT=0;
 let sens=+(localStorage.getItem('ftq_sens')||1); // 0.5 = very sensitive … 1.5 = strict
 // Pinned, known-good MediaPipe build
@@ -582,9 +589,37 @@ function drawHero(x,y,r,k){const sk=SKINS.find(s=>s.k===k)||SKINS[0];ctx.save();
  ctx.fillStyle='#fff59d';ctx.shadowColor='#fff59d';ctx.shadowBlur=r*.7;ctx.beginPath();ctx.arc(x,y-r*.62,r*.2,0,7);ctx.fill();ctx.shadowBlur=0; // headlamp
  ctx.restore()}
 function rrect(x,y,w,h,r){r=Math.min(r,h/2,w/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+
+// ---- Jungle parallax background (pre-rendered tiles, scrolls toward the player) ----
+let JG=null;
+function mkL(w,h){const c=document.createElement('canvas');c.width=w*DPR|0;c.height=h*DPR|0;const x=c.getContext('2d');x.setTransform(DPR,0,0,DPR,0,0);return [c,x]}
+function jRnd(seed){return()=>{seed=(seed*16807)%2147483647;return seed/2147483647}}
+function buildJungle(){const w=Math.ceil(W),h=Math.ceil(H),r=jRnd(7);
+  const [b,bx]=mkL(w,h);let gr=bx.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#0a1a14');gr.addColorStop(.55,'#08140e');gr.addColorStop(1,'#050b07');bx.fillStyle=gr;bx.fillRect(0,0,w,h);
+  bx.globalCompositeOperation='lighter';for(let i=0;i<4;i++){const x0=w*(.1+i*.27);gr=bx.createLinearGradient(x0,0,x0+w*.1,h*.8);gr.addColorStop(0,'rgba(170,220,150,.07)');gr.addColorStop(1,'rgba(170,220,150,0)');bx.fillStyle=gr;bx.beginPath();bx.moveTo(x0,0);bx.lineTo(x0+w*.08,0);bx.lineTo(x0+w*.32,h*.85);bx.lineTo(x0+w*.12,h*.85);bx.fill()}bx.globalCompositeOperation='source-over';
+  const wrap=(x,f)=>{f(0);f(-h);f(h)};
+  // far: misty tree crowns
+  const [f,fx]=mkL(w,h);for(let i=0;i<26;i++){const cx=r()*w,cy=r()*h,rr=30+r()*60,c=`rgba(${20+r()*15|0},${50+r()*25|0},${38+r()*15|0},.55)`;wrap(0,o=>{fx.fillStyle=c;fx.beginPath();fx.arc(cx,cy+o,rr,0,7);fx.arc(cx+rr*.7,cy+o+rr*.3,rr*.7,0,7);fx.arc(cx-rr*.7,cy+o+rr*.3,rr*.7,0,7);fx.fill()})}
+  fx.fillStyle='rgba(10,26,20,.45)';fx.fillRect(0,0,w,h);
+  // mid: trunks near sides + hanging vines
+  const [m,mx]=mkL(w,h);for(let i=0;i<7;i++){const side=i%2,tx=side?w-(r()*w*.22):r()*w*.22,tw=10+r()*16,ty=r()*h,tl=h*(.35+r()*.4);wrap(0,o=>{mx.fillStyle='#162016';mx.fillRect(tx-tw/2,ty+o,tw,tl);mx.fillStyle='#1e2c1c';mx.fillRect(tx-tw/2,ty+o,tw*.3,tl)})}
+  mx.strokeStyle='#1d3a22';mx.lineWidth=2;for(let i=0;i<12;i++){const vx=r()*w,vy=r()*h,vl=60+r()*140;wrap(0,o=>{mx.beginPath();mx.moveTo(vx,vy+o);mx.quadraticCurveTo(vx+(r()-.5)*30,vy+o+vl/2,vx+(r()-.5)*10,vy+o+vl);mx.stroke();mx.fillStyle='#24482a';for(let k=0;k<vl;k+=18){mx.beginPath();mx.ellipse(vx+4,vy+o+k,5,2.5,.6,0,7);mx.fill()}})}
+  // near: big fern leaves hugging the edges
+  const [n,nx]=mkL(w,h);const leaf=(x,y,a,L)=>{nx.save();nx.translate(x,y);nx.rotate(a);nx.fillStyle='#0f2a16';nx.beginPath();nx.moveTo(0,0);nx.quadraticCurveTo(L*.5,-L*.22,L,0);nx.quadraticCurveTo(L*.5,L*.22,0,0);nx.fill();nx.strokeStyle='#1b4426';nx.lineWidth=1.5;nx.beginPath();nx.moveTo(0,0);nx.lineTo(L,0);nx.stroke();nx.restore()};
+  for(let i=0;i<16;i++){const side=i%2,y=r()*h,L=50+r()*60,a=side?Math.PI+(r()-.5)*.9:(r()-.5)*.9,x=side?w+8:-8;wrap(0,o=>{leaf(x,y+o,a,L);leaf(x,y+o+20,a+(side?-.4:.4),L*.8)})}
+  const ff=[];for(let i=0;i<14;i++)ff.push({x:r()*w,y:r()*h,p:r()*7,s:.3+r()*.7});
+  JG={w,h,b,f,m,n,ff}}
+function drawJungle(){if(!JG||JG.w!==Math.ceil(W)||JG.h!==Math.ceil(H))buildJungle();
+  const sp=(matchMedia("(prefers-reduced-motion: reduce)").matches?.25:1)*(S&&S.relax?.6:1),tt=(S?S.t:0)*sp;
+  ctx.drawImage(JG.b,0,0,W,H);
+  const lay=(c,v)=>{const o=(tt*v)%H;ctx.drawImage(c,0,o,W,H);ctx.drawImage(c,0,o-H,W,H)};
+  lay(JG.f,10);lay(JG.m,28);
+  ctx.fillStyle='#d8ff7a';for(const f of JG.ff){const a=.25+.35*Math.sin(S.t*2*f.s+f.p);ctx.globalAlpha=a;const y=(f.y+tt*18)%H;ctx.fillRect(f.x+Math.sin(S.t*f.s+f.p)*12,y,2.5,2.5)}ctx.globalAlpha=1;
+  lay(JG.n,60);
+  ctx.fillStyle='rgba(0,0,0,.18)';ctx.fillRect(0,0,W,H)}
 function draw(){
   ctx.save();if(S.shake>0)ctx.translate((Math.random()-.5)*S.shake*18,(Math.random()-.5)*S.shake*12);
-  const gr=ctx.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#05030c');gr.addColorStop(1,'#120a04');ctx.fillStyle=gr;ctx.fillRect(-20,-20,W+40,H+40);
+  drawJungle();
   ctx.textAlign='center';ctx.textBaseline='middle';
   for(const e of S.ents)drawEnt(e);
   ctx.globalAlpha=1;ctx.fillStyle='#ffd54a';for(const s of S.shots){ctx.beginPath();ctx.arc(s.x,s.y,U()*7,0,7);ctx.fill()}
@@ -601,6 +636,7 @@ function draw(){
   ctx.fillText(t('stage')+' '+S.stage+'  '+S.kills+'/'+S.need+(S.relax?'  '+t('relaxHud'):'')+(S.boost?'  ⚡':''),12,top+62);
   let hy=top+88;if(S.combo>1){ctx.fillStyle='#ffd54a';ctx.fillText(t('combo')+S.combo,12,hy);hy+=24}
   if(S.daily){ctx.fillStyle='#9cf';ctx.font='12px sans-serif';ctx.fillText('📅 '+S.day,12,hy)}
+  {const sb=SPB||(SPB=document.querySelector('#touch button[data-k=special]'));if(sb){sb.style.setProperty('--f',S.special+'%');sb.classList.toggle('rdy',S.special>=100)}}
   ctx.fillStyle='#333';ctx.fillRect(12,H*.86,W*.4,10);ctx.fillStyle=S.special>=100?'#ffd54a':'#a58';ctx.fillRect(12,H*.86,W*.4*S.special/100,10);
   ctx.fillStyle='#fff';ctx.font='12px sans-serif';ctx.fillText(S.special>=100?(mode==='face'?t('smileNova'):t('ready')):t('special'),12,H*.86-8);
   if(S.bannerT>0){ctx.textAlign='center';ctx.globalAlpha=Math.min(1,S.bannerT);let bf=20;const bt=typeof S.banner==='function'?S.banner():S.banner;ctx.font='bold 20px sans-serif';while(bf>12&&ctx.measureText(bt).width>W-24){bf--;ctx.font='bold '+bf+'px sans-serif'}ctx.fillStyle='#ffd54a';ctx.fillText(bt,W/2,H*.35);ctx.globalAlpha=1}
