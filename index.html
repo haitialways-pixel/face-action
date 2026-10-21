@@ -700,10 +700,9 @@ function makeCard(o){const c=document.createElement('canvas');c.width=1080;c.hei
     g.font='bold 62px sans-serif';g.fillStyle='#fff';g.shadowColor='#00e5ff';g.fillText(t('sub'),540,615);
     g.font='900 72px sans-serif';g.fillStyle='#ff6ec7';g.shadowColor='#ff1493';g.fillText(t('cardRecord'),540,735);
     g.font='900 210px sans-serif';g.fillStyle='#ffd54a';g.shadowColor='#ffd54a';g.shadowBlur=40;g.fillText(String(o.s),540,915);g.shadowBlur=0;
-    g.font='bold 52px sans-serif';g.fillStyle='#fff';g.fillText(t(o.m+'L')+' · '+t('cardLine',{g:o.g}),540,1055);
-    g.font='42px sans-serif';g.fillStyle='#bbb';g.fillText((o.daily?'📅 ':'')+o.date.toLocaleDateString(LANG==='fr'?'fr-FR':'en-US',{year:'numeric',month:'long',day:'numeric'}),540,1125);
-    g.font='bold 44px sans-serif';g.fillStyle='#9cf';g.fillText('haitialways-pixel.github.io/face-action',540,1205);
-    g.font='30px sans-serif';g.fillStyle='#888';g.fillText(t('copy'),540,1268)}finally{ctx=O}
+    g.font='bold 52px sans-serif';g.fillStyle='#fff';g.fillText(t(o.m+'L')+' · '+t('cardLine',{g:o.g}),540,1080);
+    g.font='42px sans-serif';g.fillStyle='#bbb';g.fillText((o.daily?'📅 ':'')+o.date.toLocaleDateString(LANG==='fr'?'fr-FR':'en-US',{year:'numeric',month:'long',day:'numeric'}),540,1165);
+    g.font='30px sans-serif';g.fillStyle='#888';g.fillText(t('copy'),540,1255)}finally{ctx=O}
   return c}
 function showCard(o){const c=makeCard(o);cardURL=c.toDataURL('image/png');$('oCard').src=cardURL;$('oCard').classList.remove('hide');$('bShare').classList.remove('hide');
   cardFile=null;c.toBlob(b=>{if(b)cardFile=new File([b],'face-action-record.png',{type:'image/png'})},'image/png');cardText=t('shareText',{s:o.s})+' https://haitialways-pixel.github.io/face-action/'}
