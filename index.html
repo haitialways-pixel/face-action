@@ -705,7 +705,7 @@ function makeCard(o){const c=document.createElement('canvas');c.width=1080;c.hei
     g.font='30px sans-serif';g.fillStyle='#888';g.fillText(t('copy'),540,1255)}finally{ctx=O}
   return c}
 function showCard(o){const c=makeCard(o);cardURL=c.toDataURL('image/png');$('oCard').src=cardURL;$('oCard').classList.remove('hide');$('bShare').classList.remove('hide');
-  cardFile=null;c.toBlob(b=>{if(b)cardFile=new File([b],'face-action-record.png',{type:'image/png'})},'image/png');cardText=t('shareText',{s:o.s})+' https://haitialways-pixel.github.io/face-action/'}
+  cardFile=null;c.toBlob(b=>{if(b)cardFile=new File([b],'face-action-record.png',{type:'image/png'})},'image/png');cardText=t('shareText',{s:o.s})}
 $('bShare').onclick=async()=>{
   if(cardFile&&navigator.canShare&&navigator.canShare({files:[cardFile]})){try{await navigator.share({files:[cardFile],title:'Face-Action Treasure Hunt',text:cardText});return}catch(e){if(e&&e.name==='AbortError')return}}
   const a=document.createElement('a');a.href=cardURL;a.download='face-action-record.png';document.body.appendChild(a);a.click();a.remove();$('oShareMsg').textContent=t('saved')};
