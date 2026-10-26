@@ -1266,11 +1266,11 @@ async function lbFetch(path,opt){const r=await fetch(LB_API+path,{...opt,headers
 /** Resolve nickname: localStorage, then #lbName field (typed but unsaved), never rely on window.prompt (blocked on many phones). */
 function resolveLbName(){let name=faName();if(!name){const el=$('lbName');if(el&&el.value)name=setFaName(el.value)}return name}
 async function submitScore(o){try{const score=(o&&(o.score!=null?o.score:o.s))|0,stage=(o&&(o.stage!=null?o.stage:o.g))|0||1;if(!(score>0))return null;let name=resolveLbName();if(!name){name=await askLbName();if(!name)return null}
-  const body={playerId:faPlayerId(),name,score,stage,mode:o.m==='face'?'face':'touch',secs:o.secs|0||0};
+  const body={playerId:faPlayerId(),name,score,stage,mode:o.m==='face'?'face':'touch',game:'treasure',secs:o.secs|0||0};
   return await lbFetch('/submit',{method:'POST',body:JSON.stringify(body)})}catch(e){return null}}
 /** Post local personal bests under the saved nickname (Save button + first-time name). secs=0 skips PPS gate. */
 async function publishLocalBests(name){name=setFaName(name||faName());if(!name)return null;const pid=faPlayerId();const modes=['touch','face'];const out=[];
-  for(const mode of modes){const score=getBest(mode)|0;if(score<=0)continue;try{out.push(await lbFetch('/submit',{method:'POST',body:JSON.stringify({playerId:pid,name,score,stage:(+localStorage.getItem(BEST_KEYS[mode]+'_stage')|0),mode,secs:0})}))}catch(e){out.push(null)}}
+  for(const mode of modes){const score=getBest(mode)|0;if(score<=0)continue;try{out.push(await lbFetch('/submit',{method:'POST',body:JSON.stringify({playerId:pid,name,score,stage:(+localStorage.getItem(BEST_KEYS[mode]+'_stage')|0),mode,game:'treasure',secs:0})}))}catch(e){out.push(null)}}
   return out}
 function askLbName(){return new Promise(resolve=>{let ov=$('lbAsk');if(!ov){ov=document.createElement('div');ov.id='lbAsk';ov.className='ov thHall hide';ov.innerHTML='<h2 data-t="lbName"></h2><p style="margin:0;font-size:14px;opacity:.85">'+escLb(t('lbP'))+'</p><input id="lbAskIn" maxlength="16" style="width:min(280px,80vw);padding:10px 12px;border-radius:10px;border:1px solid #ffd54a66;background:#1a1430;color:#fff;font-size:16px"><button id="lbAskOk" class="play pTouch" data-t="lbSave"></button>';document.body.appendChild(ov)}
   const inp=$('lbAskIn');inp.value=faName()||($('lbName')&&$('lbName').value)||'';ov.classList.remove('hide');try{inp.focus();inp.select()}catch(e){}
@@ -1280,7 +1280,7 @@ function lbRowHtml(r){const n=r.rank|0;const medal=n===1?'🥇':n===2?'🥈':n==
 function buildLb(){const nameEl=$('lbName');if(nameEl&&document.activeElement!==nameEl)nameEl.value=faName();$('lbStatus').textContent=t('lbLoading');$('lbTop').innerHTML='';$('lbRest').innerHTML='';$('lbRest').style.display='none';$('lbYou').textContent='';
   if($('lbTabTouch'))$('lbTabTouch').classList.toggle('on',lbMode==='touch');
   if($('lbTabFace'))$('lbTabFace').classList.toggle('on',lbMode==='face');
-  lbFetch('/board?mode='+lbMode+'&playerId='+encodeURIComponent(faPlayerId())).then(data=>{
+  lbFetch('/board?game=treasure&mode='+lbMode+'&playerId='+encodeURIComponent(faPlayerId())).then(data=>{
     $('lbWeek').textContent=(data.week||'')+' · '+(lbMode==='face'?t('lbFace'):t('lbTouch'))+(data.resetsAt?' · reset '+String(data.resetsAt).replace('T00:00:00-04:00',' (Mon)'):'');
     const rows=(data.rows||[]).slice(0,10);
     if(!rows.length){$('lbTop').innerHTML='<p style="opacity:.75;margin:0">'+t('lbEmpty')+'</p>'}
