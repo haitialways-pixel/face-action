@@ -60,7 +60,7 @@ h1 small{display:block;font-size:22px;color:#fff;text-shadow:0 0 12px #00e5ff;op
 .stylegrid button{min-width:0;padding:10px;display:flex;flex-direction:column;align-items:center;gap:6px;background:#1a1430;color:#fff;border:2px solid #ffd54a33;font-size:15px}
 .stylegrid button.sel{border-color:#ffd54a;box-shadow:0 0 14px #ffd54a88}
 .stylegrid button:disabled{opacity:.45}
-.stylegrid canvas{width:90px;height:90px}
+.stylegrid canvas{width:90px;height:110px}
 .badge{background:#1a1430;border:2px solid #ffd54a33;border-radius:12px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:13px;text-align:center}
 .badge .bi{font-size:30px}.badge.lock .bi{filter:grayscale(1);opacity:.35}.badge.got{border-color:#ffd54a;box-shadow:0 0 10px #ffd54a55}.badge b{color:#ffd54a}
 #touch{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 10px);display:flex;justify-content:space-around;z-index:4}
@@ -201,7 +201,7 @@ window.__startBg={get running(){return !!raf},get count(){return typeof count===
   <p id="lbStatus" style="margin:0;font-size:12px;opacity:.7"></p>
   <button id="bLbOk" data-t="done"></button></div>
 <div id="missions" class="ov hide"><h2 id="mTitle"></h2><p data-t="chapP" style="margin:0;font-size:14px;max-width:400px"></p><div id="mList" style="display:flex;flex-direction:column;gap:8px;width:100%;align-items:center"></div><p id="mTotal" style="margin:0;font-size:13px;opacity:.75"></p><button id="bMisOk" data-t="done"></button></div>
-<div id="styles" class="ov hide"><h2 data-t="collTitle"></h2><p id="collStreak" style="margin:0;font-size:14px"></p><h3 data-t="skinTitle" style="font-size:18px"></h3><p data-t="skinP" style="margin:0;font-size:13px"></p><div class="stylegrid" id="styleGrid"></div><h3 data-t="badgesH" style="font-size:18px"></h3><div class="stylegrid" id="badgeGrid"></div><button id="bStyleOk" data-t="done" style="flex:none"></button></div>
+<div id="styles" class="ov hide"><h2 data-t="collTitle"></h2><p id="collCoins" style="margin:0;font-size:15px;color:#ffd54a;font-weight:700"></p><p id="collStreak" style="margin:0;font-size:14px"></p><h3 data-t="skinTitle" style="font-size:18px"></h3><p data-t="skinP" style="margin:0;font-size:13px"></p><div class="stylegrid" id="styleGrid"></div><h3 data-t="badgesH" style="font-size:18px"></h3><div class="stylegrid" id="badgeGrid"></div><button id="bStyleOk" data-t="done" style="flex:none"></button></div>
 <div id="howto" class="ov hide">
  <h2 data-t="howTitle"></h2>
  <div class="hrow"><span class="ic">↔️</span><div data-h="hMove"></div></div>
@@ -284,12 +284,12 @@ Object.assign(L.en,{sub:'Treasure Hunt',intro:'Defeat guardians and grab treasur
 menu:'🏠 Menu',ouch:'Ouch! Out of hearts',again:'▶️ Play again',near:'So close! Only {n} points from your best!',
 dailyT:'📅 Daily Challenge · {d}',dailyBest:'Best today: <b>{b}</b>',dailyNone:'Not played yet today',dailyOnP:'✓ ON',dailyOffP:'Tap to select',dailyHint:'✓ Selected: choose Touch or Face above',dailyL:'📅 Daily challenge {d}',
 streakN:'🔥 {n} day{s}',streakKeep:'🔥 {n} day{s}: play today to keep it!',streak0:'Play daily to start a 🔥 streak',
-streakRew:'🔥 {n}-day streak!',rewBoost:'⚡ Treasure boost next game',rewSkin:'⛑️ {s} helmet unlocked',streakUp:'🔥 Daily streak: {n} day{s}',
+streakRew:'🔥 {n}-day streak!',rewBoost:'⚡ Treasure boost next game',rewSkin:'',streakUp:'🔥 Daily streak: {n} day{s}',
 chapBtn:'📖 Chapter {n} · {d}/3 missions',chapTitle:'📖 Chapter {n}',chapP:'Complete all 3 missions to reach the next chapter. Reward: ⚡ treasure boost next game.',
 mKill:'Defeat {n} guardians',mIdol:'Collect {n} golden idol{s} (🏆 100 pts)',mNova:'Use Treasure Nova {n} time{s}',mBlock:'Block {n} attack{s}',mStage:'Reach stage {n} in one game',mScore:'Score {n} in one game',mCombo:'Reach a x{n} kill combo',mBoss:'Defeat {n} dragon{s}',mTreasure:'Collect {n} treasures',
 mDone:'✅ Mission complete: {m}',chapDone:'CHAPTER {n} COMPLETE!',chapRewOver:'📖 Chapter {n} complete! ⚡ Treasure boost next game',chapTotal:'Chapters completed: {n}',boostOn:'⚡ Treasure boost: full special meter + rarer treasure!',colon:': ',
-collectBtn:'🏆 Collection',collTitle:'🏆 Collection',skinTitle:'⛑️ Hunter helmets',skinP:'Unlock with score milestones or daily streaks.',badgesH:'🏅 Badges',needPts:'🔒 {n} pts',needStreak:'or 🔥 {n} days',bestStreak:'🔥 Best daily streak: {n} day{s}',
-kGold:'Gold',kRuby:'Ruby',kJade:'Jade',kCosmic:'Cosmic',
+collectBtn:'🏆 Collection',collTitle:'🏆 Collection',skinTitle:'⚔️ Hunters',skinP:'Buy hunters with coins, then tap to equip. Each has a unique ability.',badgesH:'🏅 Badges',needPts:'🔒 {n} pts',needStreak:'or 🔥 {n} days',bestStreak:'🔥 Best daily streak: {n} day{s}',
+hScout:'Scout',hScoutA:'Classic cavern hunter',hBlade:'Blade',hBladeA:'Twin shots · +15% special from kills',hWarden:'Warden',hWardenA:'Faster shield · +2s start shield',hRelic:'Relic',hRelicA:'+20% treasure · stronger magnet',buyHunter:'🪙 Buy · {c}',hunterEq:'✓ Equipped',hunterOwn:'Owned — tap to equip',
 b_dragon:'Dragon Slayer',d_dragon:'Defeat a dragon boss',b_hunter:'Guardian Hunter',d_hunter:'Defeat 200 guardians',b_idol:'Idol Collector',d_idol:'Collect 10 golden idols',b_wall:'Iron Wall',d_wall:'Block 25 attacks',
 b_s3:'On a Roll',d_s3:'3-day daily streak',b_s7:'Week Warrior',d_s7:'7-day daily streak',b_s14:'Two-Week Titan',d_s14:'14-day daily streak',b_s30:'Monthly Legend',d_s30:'30-day daily streak',badgeGot:'🏅 Badge: {b}!',
 setBtn:'⚙️ Settings',setTitle:'⚙️ Settings',cbL:'Shape outlines',cbD:'Bold outlines + shape markers: guardians ✖ spiky, treasure ◆ ★ with point value, power-ups ■.',relaxL:'Relaxed speed',relaxD:'Slower guardians and treasure, gentler ramp.',on:'ON',off:'OFF',recalFace:'🎯 Recalibrate face',done:'Done',
@@ -298,17 +298,17 @@ camExT:'Face mode',camEx1:'Uses your front camera to read your expressions (head
 dark:'💡 It\'s too dark here: find better light (face a window or a lamp).',relaxHud:'🐢',
 hype5:'NICE!',hype10:'ON FIRE! 🔥',hype15:'UNSTOPPABLE!',hype20:'LEGENDARY!',jackpot:'JACKPOT!',stageClr:'STAGE CLEAR!',bossKill:'DRAGON DEFEATED!',record:'NEW RECORD!',
 share:'📤 Share my record',shareText:'New record: {s} points in Face-Action Treasure Hunt! Can you beat it?',cardRecord:'🏆 NEW RECORD!',cardLine:'Stage {g}',saved:'Image saved ✓',
-hProg:'<b>📅 Daily challenge</b>: the same guardians and treasure for everyone today. Play it every day for a 🔥 streak and rewards · <b>📖 Chapters</b>: 3 quick missions each · <b>🏆 Collection</b>: helmets and badges · ⚙️ shape outlines and relaxed speed.'});
+hProg:'<b>📅 Daily challenge</b>: the same guardians and treasure for everyone today. Play it every day for a 🔥 streak and rewards · <b>📖 Chapters</b>: 3 quick missions each · <b>🏆 Collection</b>: hunters and badges · ⚙️ shape outlines and relaxed speed.'});
 Object.assign(L.fr,{sub:'Chasse au Trésor',intro:'Battez les gardiens et ramassez les trésors. Jouez au doigt, ou sans les mains avec votre visage !<br><small>Un exercice facial amusant. La caméra reste sur votre appareil ; rien n\'est envoyé.</small>',
 menu:'🏠 Menu',ouch:'Aïe ! Plus de cœurs',again:'▶️ Rejouer',near:'Presque ! Plus que {n} points pour votre record !',
 dailyT:'📅 Défi du jour · {d}',dailyBest:'Record du jour : <b>{b}</b>',dailyNone:'Pas encore joué aujourd\'hui',dailyOnP:'✓ ACTIF',dailyOffP:'Touchez pour choisir',dailyHint:'✓ Choisi : jouez en tactile ou avec le visage',dailyL:'📅 Défi du jour {d}',
 streakN:'🔥 {n} jour{s}',streakKeep:'🔥 {n} jour{s} : jouez aujourd\'hui pour la garder !',streak0:'Jouez chaque jour pour lancer une série 🔥',
-streakRew:'🔥 Série de {n} jours !',rewBoost:'⚡ Bonus trésor à la prochaine partie',rewSkin:'⛑️ Casque {s} débloqué',streakUp:'🔥 Série quotidienne : {n} jour{s}',
+streakRew:'🔥 Série de {n} jours !',rewBoost:'⚡ Bonus trésor à la prochaine partie',rewSkin:'',streakUp:'🔥 Série quotidienne : {n} jour{s}',
 chapBtn:'📖 Chapitre {n} · {d}/3 missions',chapTitle:'📖 Chapitre {n}',chapP:'Réussissez les 3 missions pour passer au chapitre suivant. Récompense : ⚡ bonus trésor à la prochaine partie.',
 mKill:'Battez {n} gardiens',mIdol:'Ramassez {n} idole{s} dorée{s} (🏆 100 pts)',mNova:'Utilisez la Treasure Nova {n} fois',mBlock:'Bloquez {n} attaque{s}',mStage:'Atteignez le niveau {n} en une partie',mScore:'Marquez {n} en une partie',mCombo:'Atteignez un combo x{n}',mBoss:'Battez {n} dragon{s}',mTreasure:'Ramassez {n} trésors',
 mDone:'✅ Mission réussie : {m}',chapDone:'CHAPITRE {n} TERMINÉ !',chapRewOver:'📖 Chapitre {n} terminé ! ⚡ Bonus trésor à la prochaine partie',chapTotal:'Chapitres terminés : {n}',boostOn:'⚡ Bonus trésor : jauge spéciale pleine + trésors rares !',colon:' : ',
-collectBtn:'🏆 Collection',collTitle:'🏆 Collection',skinTitle:'⛑️ Casques de chasseur',skinP:'Débloquez-les avec des paliers de score ou des séries quotidiennes.',badgesH:'🏅 Badges',needPts:'🔒 {n} pts',needStreak:'ou 🔥 {n} jours',bestStreak:'🔥 Meilleure série : {n} jour{s}',
-kGold:'Or',kRuby:'Rubis',kJade:'Jade',kCosmic:'Cosmique',
+collectBtn:'🏆 Collection',collTitle:'🏆 Collection',skinTitle:'⚔️ Chasseurs',skinP:'Achetez des chasseurs avec des pièces, puis touchez pour équiper. Chacun a une capacité unique.',badgesH:'🏅 Badges',needPts:'🔒 {n} pts',needStreak:'ou 🔥 {n} jours',bestStreak:'🔥 Meilleure série : {n} jour{s}',
+hScout:'Éclaireur',hScoutA:'Chasseur classique de cavernes',hBlade:'Lame',hBladeA:'Tirs doubles · +15 % spécial aux kills',hWarden:'Gardien',hWardenA:'Bouclier plus rapide · +2 s au départ',hRelic:'Relique',hRelicA:'+20 % trésor · aimant plus fort',buyHunter:'🪙 Acheter · {c}',hunterEq:'✓ Équipé',hunterOwn:'Possédé — toucher pour équiper',
 b_dragon:'Tueur de dragon',d_dragon:'Battez un dragon',b_hunter:'Chasseur de gardiens',d_hunter:'Battez 200 gardiens',b_idol:'Collectionneur d\'idoles',d_idol:'Ramassez 10 idoles dorées',b_wall:'Mur de fer',d_wall:'Bloquez 25 attaques',
 b_s3:'Sur la lancée',d_s3:'Série de 3 jours',b_s7:'Guerrier de la semaine',d_s7:'Série de 7 jours',b_s14:'Titan des deux semaines',d_s14:'Série de 14 jours',b_s30:'Légende du mois',d_s30:'Série de 30 jours',badgeGot:'🏅 Badge : {b} !',
 setBtn:'⚙️ Réglages',setTitle:'⚙️ Réglages',cbL:'Contours de formes',cbD:'Contours épais + repères de forme : gardiens ✖ à pointes, trésors ◆ ★ avec leur valeur, bonus ■.',relaxL:'Vitesse détente',relaxD:'Gardiens et trésors plus lents, progression plus douce.',on:'OUI',off:'NON',recalFace:'🎯 Recalibrer le visage',done:'OK',
@@ -317,7 +317,7 @@ camExT:'Mode visage',camEx1:'Utilise la caméra avant pour lire vos expressions 
 dark:'💡 Il fait trop sombre : trouvez un meilleur éclairage (face à une fenêtre ou une lampe).',relaxHud:'🐢',
 hype5:'BIEN JOUÉ !',hype10:'EN FEU ! 🔥',hype15:'IMPARABLE !',hype20:'LÉGENDAIRE !',jackpot:'JACKPOT !',stageClr:'NIVEAU RÉUSSI !',bossKill:'DRAGON VAINCU !',record:'NOUVEAU RECORD !',
 share:'📤 Partager mon record',shareText:'Nouveau record : {s} points à Face-Action Chasse au Trésor ! Tu peux faire mieux ?',cardRecord:'🏆 NOUVEAU RECORD !',cardLine:'Niveau {g}',saved:'Image enregistrée ✓',
-hProg:'<b>📅 Défi du jour</b> : les mêmes gardiens et trésors pour tout le monde aujourd\'hui. Jouez chaque jour pour une série 🔥 et des récompenses · <b>📖 Chapitres</b> : 3 missions rapides chacun · <b>🏆 Collection</b> : casques et badges · ⚙️ contours de formes et vitesse détente.'});
+hProg:'<b>📅 Défi du jour</b> : les mêmes gardiens et trésors pour tout le monde aujourd\'hui. Jouez chaque jour pour une série 🔥 et des récompenses · <b>📖 Chapitres</b> : 3 missions rapides chacun · <b>🏆 Collection</b> : chasseurs et badges · ⚙️ contours de formes et vitesse détente.'});
 const tp=(k,n,v={})=>t(k,{n,s:n>1?'s':'',...v});
 
 const cv=$('game'),video=$('cam');let ctx=cv.getContext('2d');
@@ -511,6 +511,16 @@ const addCoins=n=>{if(n>0)setCoins(getCoins()+n);return n};
 const getUpgrades=()=>{const u=_lsGet('fa_upgrades',{});const o={};for(const d of UP_DEFS)o[d.k]=Math.min(d.max,Math.max(0,+u[d.k]||0));return o};
 const setUpgrade=(k,lv)=>{const u=getUpgrades();u[k]=lv;_lsSet('fa_upgrades',u)};
 const upMul=()=>{const u=getUpgrades();return{hearts:u.hearts,special:1+.15*u.special,move:1+.08*u.move,shield:u.shield,magnet:1+.3*u.magnet,maxHearts:Math.min(5,3+u.hearts)}};
+/* Hunters early so drawHero / combat hooks never hit TDZ */
+const HUNTERS=[
+  {k:'scout',n:'hScout',a:'hScoutA',cost:0,c:'#ffb300',pack:'#6d4c41',glow:'#ffd54a'},
+  {k:'blade',n:'hBlade',a:'hBladeA',cost:150,c:'#c62828',pack:'#b71c1c',glow:'#ff5252'},
+  {k:'warden',n:'hWarden',a:'hWardenA',cost:320,c:'#2e7d32',pack:'#1b5e20',glow:'#69f0ae'},
+  {k:'relic',n:'hRelic',a:'hRelicA',cost:500,c:'#7c4dff',grad:['#7c4dff','#00e5ff'],glow:'#b388ff'}
+];
+const HUNTER_MUL={scout:{},blade:{twinShot:true,specialKill:1.15},warden:{shieldCd:2.5,startShield:2},relic:{treasure:1.2,magnet:1.25}};
+let skin='scout';
+const hunterMul=()=>HUNTER_MUL[skin]||{};
 function clearRun(){try{localStorage.removeItem(RUN_KEY)}catch(e){}try{syncResumeUI()}catch(e){}}
 function loadRun(){const r=_lsGet(RUN_KEY,null);if(!r||r.v!==RUN_VER||!(r.hearts>0)||r.ended)return null;return r}
 function saveRun(){if(!S||!running||S.ended||S.offer||!(S.hearts>0))return;try{
@@ -534,10 +544,11 @@ function restoreRun(r){
     maxHearts:upMul().maxHearts};
   if(!S.need)S.need=diff(S.stage).kills;
 }
-function newGame(){const um=upMul();S={score:0,hearts:um.maxHearts,maxHearts:um.maxHearts,stage:0,combo:0,comboT:0,special:0,x:0.5,ents:[],shots:[],fx:[],parts:[],coins:[],t:0,stageT:0,spawnT:0,kills:0,need:0,banner:'',bannerT:0,pw:{},playT:0,ended:false,shieldCd:0,
+function newGame(){const um=upMul(),hm=hunterMul();S={score:0,hearts:um.maxHearts,maxHearts:um.maxHearts,stage:0,combo:0,comboT:0,special:0,x:0.5,ents:[],shots:[],fx:[],parts:[],coins:[],t:0,stageT:0,spawnT:0,kills:0,need:0,banner:'',bannerT:0,pw:{},playT:0,ended:false,shieldCd:0,
   daily,day:today(),rng:daily?mulberry(hashStr('fa-'+today())):Math.random,relax:OPT.relax,boost:false,contUsed:false,offer:false,
   hype:null,hypeLast:-9,flash:null,shake:0,freezeT:0,fireQ:[],prevBest:getBest(mode),recordHit:false,scorePulse:0,maxCombo:0,newBadges:[],chapDone:[]};
   if(um.shield>0)S.pw.shield=1.5+um.shield*1.5; // starting shield seconds
+  if(hm.startShield)S.pw.shield=(S.pw.shield||0)+hm.startShield;
   nextStage()}
 // Difficulty: gentle ramp, capped (v1.1: unchanged per-stage curve; Relaxed = 75% speed, 20% slower spawns, half the ramp)
 const diff=s=>{const r=S&&S.relax,k=r?.5:1;return {speed:60*(r?.75:1)*(1+0.08*k*Math.min(s-1,15)+0.02*k*Math.max(0,s-16)),spawn:Math.max(r?.7:.55,(r?1.6:1.35)*Math.pow(r?.965:.93,s-1)),kills:5+s}};
@@ -583,7 +594,7 @@ function update(dt){
   const d=diff(S.stage),slow=S.pw.slow?.5:1;
   S.x=Math.max(.06,Math.min(.94,S.x+inp.x*dt*0.9*upMul().move));
   const px=S.x*W,py=H*0.78;
-  if(inp.attack){inp.attack=false;S.shots.push({x:px,y:py-30});sfx.shot()}
+  if(inp.attack){inp.attack=false;const hm=hunterMul();if(hm.twinShot){S.shots.push({x:px-7,y:py-30});S.shots.push({x:px+7,y:py-30})}else S.shots.push({x:px,y:py-30});sfx.shot()}
   if(inp.special){inp.special=false;if(S.special>=100){S.special=0;sfx.nova();fx(px,py-60,t('nova'),'#ffd54a',22);screenFlash('#ffd54a',.35,.3);S.shake=.25;ev('nova');
     for(const e of S.ents)if(e.t==='g'&&!e.boss){e.dead=true;addScore(10,e.x*W,e.y);ev('kill')}else if(e.boss)e.hpL-=3;}}
   S.spawnT-=dt;if(S.spawnT<=0){S.spawnT=d.spawn*(0.7+S.rng()*.6);spawn();if(S.stage>=8&&S.stage%4===3)spawn()}
@@ -593,20 +604,20 @@ function update(dt){
     e.ph+=dt;e.y+=d.speed*(e.sp??1)*slow*dt*(e.t==='g'?1:0.8); // v1.1 fix: treasure/power-ups had no sp -> NaN y, so they never appeared
     if(e.zig)e.x+=Math.sin(e.ph*4)*0.25*dt;
     const ex=e.x*W;
-    if(e.t!=='g'&&(vac||S.pw.magnet)){const dx=px-ex,dy=py-e.y,dd=Math.hypot(dx,dy);const mp=upMul().magnet;if(dd<(S.pw.magnet?W:W*.45)){e.x+=dx/dd*1.2*mp*dt;e.y+=dy/dd*260*mp*dt}}
+    if(e.t!=='g'&&(vac||S.pw.magnet)){const dx=px-ex,dy=py-e.y,dd=Math.hypot(dx,dy);const mp=upMul().magnet*(hunterMul().magnet||1);if(dd<(S.pw.magnet?W:W*.45)){e.x+=dx/dd*1.2*mp*dt;e.y+=dy/dd*260*mp*dt}}
     if(e.t==='g'){
       const solid=!e.phase||Math.sin(e.ph*2)>-.2;
       for(const s of S.shots)if(!s.hit&&solid&&Math.abs(s.x-ex)<U()*28&&Math.abs(s.y-e.y)<U()*28){s.hit=true;e.hpL--;fx(ex,e.y,'⚔️');if(e.hpL>0)sfx.hit();
         if(e.hpL<=0){e.dead=true;S.kills++;S.combo++;S.maxCombo=Math.max(S.maxCombo,S.combo);sfx.kill();ev('kill');ev('combo',S.combo);
           if(S.combo>=5&&S.combo%5===0)hypeCombo(S.combo);
-          S.comboT=3;S.special=Math.min(100,S.special+8*upMul().special);addScore((e.boss?150:10)*(1+Math.min(S.combo,10)*0.1),ex,e.y);
+          S.comboT=3;S.special=Math.min(100,S.special+8*upMul().special*(hunterMul().specialKill||1));addScore((e.boss?150:10)*(1+Math.min(S.combo,10)*0.1),ex,e.y);
           if(e.boss){ev('boss');bossCelebrate(ex,e.y)}}}
       if(!e.dead&&e.y>py-20&&Math.abs(ex-px)<40){e.dead=true;hurt()}
       if(e.y>H+30){e.dead=true}
     }else{
       if(Math.hypot(ex-px,e.y-py)<(vac?60:38)){e.dead=true;
         if(e.t==='t'){const guarded=S.ents.some(o=>o.t==='g'&&!o.dead&&!o.boss&&Math.abs(o.y-e.y)<120&&Math.abs(o.x-e.x)<.2);
-          const mult=1+Math.min(S.combo,10)*0.1;addScore(e.p*mult*(guarded?0.5:1),ex,e.y);sfx.treasure(e.p);S.special=Math.min(100,S.special+3*upMul().special);ev('treasure');
+          const mult=1+Math.min(S.combo,10)*0.1;addScore(e.p*mult*(guarded?0.5:1)*(hunterMul().treasure||1),ex,e.y);sfx.treasure(e.p);S.special=Math.min(100,S.special+3*upMul().special);ev('treasure');
           if(e.p===100){ev('idol');if(!guarded)jackpotPop(ex,e.y)}}
         else powerup(e.k,ex,e.y)}
       if(e.y>H+30)e.dead=true}
@@ -617,7 +628,7 @@ function update(dt){
 }
 function addScore(p,x,y){p=Math.round(p);S.score+=p;fx(x,y,'+'+p,'#ffd54a');checkRecord();ev('score',S.score)}
 function powerup(k,x,y){sfx.power();if(k==='heart')S.hearts=Math.min(S.maxHearts||5,S.hearts+1);else{const base=k==='shield'?8:6;S.pw[k]=base+(k==='magnet'?1.5*(getUpgrades().magnet||0):k==='shield'?1*(getUpgrades().shield||0):0)}fx(x,y,(k==='heart'?'+❤️':t(k)),'#7cf')}
-function hurt(){if(S.pw.shield||inp.shield&&S.shieldCd<=0){fx(S.x*W,H*.7,t('blocked'),'#7cf');if(!S.pw.shield)S.shieldCd=4;ev('block');parts(S.x*W,H*.74,'#7cf',14,160);return}
+function hurt(){if(S.pw.shield||inp.shield&&S.shieldCd<=0){fx(S.x*W,H*.7,t('blocked'),'#7cf');if(!S.pw.shield)S.shieldCd=hunterMul().shieldCd??4;ev('block');parts(S.x*W,H*.74,'#7cf',14,160);return}
   S.hearts--;S.combo=0;sfx.hurt();S.shake=.3;navigator.vibrate&&navigator.vibrate(120);if(S.hearts<=0){S.hearts=0;endOrOffer()}}
 function parts(x,y,col,n=16,sp=220){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=sp*(.3+Math.random());S.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-80,t:.6+Math.random()*.5,col,s:2+Math.random()*4})}}
 function gameOver(){S.ended=true;running=false;sfx.over();camStop();$('bPause').classList.add('hide');$('touch').classList.add('hide');
@@ -632,7 +643,7 @@ function gameOver(){S.ended=true;running=false;sfx.over();camStop();$('bPause').
 function renderOver(){const o=overState,lbl=t(o.m+'L');
   $('oScore').innerHTML=(o.daily?t('dailyL',{d:o.daily})+'<br>':'')+t('overLine',{m:lbl,s:'<b>'+o.s+'</b>',g:o.g})+'<br>'+(o.nb?t('newBest',{m:lbl}):t('bestIs',{m:lbl,b:o.b}))+(o.coins?('<br><span style="color:#ffd54a">'+t('banked',{n:o.coins})+'</span>'):'');
   const gap=o.prev-o.s;$('oHook').innerHTML=!o.nb&&gap>0&&gap<=Math.max(60,o.prev*.25)?t('near',{n:gap}):'';
-  const meta=[];if(o.streak&&!o.streak.same){meta.push(tp('streakUp',o.streak.n));if(o.streak.milestone)meta.push(t('streakRew',{n:o.streak.n})+' '+t('rewBoost')+(o.streak.skin?' · '+t('rewSkin',{s:t(SKINS.find(x=>x.k===o.streak.skin).n)}):''))}
+  const meta=[];if(o.streak&&!o.streak.same){meta.push(tp('streakUp',o.streak.n));if(o.streak.milestone)meta.push(t('streakRew',{n:o.streak.n})+' '+t('rewBoost')+(o.streak.coins?' · '+t('banked',{n:o.streak.coins}):''))}
   for(const c of o.chapDone)meta.push(t('chapRewOver',{n:c}));for(const b of o.badges)meta.push(t('badgeGot',{b:t('b_'+b)}));
   const ms=chapterMissions(PROG.ch);meta.push('<a href="#" id="oChap" style="color:#b9f6ca">'+t('chapTitle',{n:PROG.ch})+t('colon')+ms.map((x,i)=>(PROG.p[i]>=x[1]?'✅ ':'⬜ ')+mText(x[0],x[1])+(PROG.p[i]<x[1]&&x[1]>1&&MT[x[0]].cum?' ('+PROG.p[i]+'/'+x[1]+')':'')).join('<br>')+'</a>');
   $('oMeta').innerHTML=meta.join('<br>');$('oChap').onclick=e=>{e.preventDefault();buildMissions();$('missions').classList.remove('hide')};
@@ -670,16 +681,33 @@ function drawEnt(e){const x=e.x*W,y=e.y,u=U();let label,emoji=e.e;
  ctx.fillStyle='#000';ctx.font='bold '+Math.round(u*14)+'px sans-serif';ctx.fillText(String(label),x,y+1);
  ctx.font=Math.round(u*16)+'px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';ctx.fillStyle='#fff';ctx.globalAlpha*=.9;ctx.fillText(emoji,x,y-u*20);
  ctx.globalAlpha=1}
-// helmeted treasure hunter (race-neutral: the visor covers the face); helmet color = selected skin
-function drawHero(x,y,r,k){const sk=SKINS.find(s=>s.k===k)||SKINS[0];ctx.save();
- ctx.fillStyle='#3e2723';ctx.beginPath();ctx.ellipse(x,y+r*.95,r*1.05,r*.55,0,Math.PI,0);ctx.fill(); // shoulders
- let fill=sk.c;if(sk.grad){const g=ctx.createLinearGradient(x-r,y-r,x+r,y+r);sk.grad.forEach((c,i)=>g.addColorStop(i/(sk.grad.length-1),c));fill=g}
- ctx.shadowColor=sk.glow||sk.c;ctx.shadowBlur=r*.8;ctx.fillStyle=fill;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();ctx.shadowBlur=0;
- ctx.lineWidth=Math.max(2,r*.12);ctx.strokeStyle='#fff';ctx.stroke();if(OPT.cb){ctx.lineWidth=2.5;ctx.strokeStyle='#000';ctx.beginPath();ctx.arc(x,y,r+r*.06+1.5,0,7);ctx.stroke()}
- ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(x-r*.98,y-r*.12,r*1.96,r*.16); // brim line
- ctx.fillStyle='#10163a';rrect(x-r*.72,y+r*.02,r*1.44,r*.56,r*.26);ctx.fill(); // visor
- ctx.fillStyle='rgba(140,220,255,.55)';rrect(x-r*.55,y+r*.1,r*.5,r*.12,r*.06);ctx.fill(); // glint
- ctx.fillStyle='#fff59d';ctx.shadowColor='#fff59d';ctx.shadowBlur=r*.7;ctx.beginPath();ctx.arc(x,y-r*.62,r*.2,0,7);ctx.fill();ctx.shadowBlur=0; // headlamp
+// full-body hunter figures (race-neutral visored face); kit = selected hunter
+function drawHero(x,y,r,k){const sk=HUNTERS.find(s=>s.k===k)||HUNTERS[0];ctx.save();
+ const hx=x,hy=y-r*.5; // head center; (x,y) ≈ torso center
+ let fill=sk.c;if(sk.grad){const g=ctx.createLinearGradient(hx-r,hy-r,hx+r,y+r);sk.grad.forEach((c,i)=>g.addColorStop(i/(sk.grad.length-1),c));fill=g}
+ // legs + boots
+ ctx.fillStyle='#3e2723';ctx.fillRect(hx-r*.32,y+r*.28,r*.24,r*.72);ctx.fillRect(hx+r*.08,y+r*.28,r*.24,r*.72);
+ ctx.fillStyle='#1a0d04';ctx.fillRect(hx-r*.36,y+r*.92,r*.3,r*.18);ctx.fillRect(hx+r*.04,y+r*.92,r*.3,r*.18);
+ // torso / armor
+ ctx.shadowColor=sk.glow||sk.c;ctx.shadowBlur=r*.45;ctx.fillStyle=fill;rrect(hx-r*.48,y-r*.42,r*.96,r*.88,r*.14);ctx.fill();ctx.shadowBlur=0;
+ if(OPT.cb){ctx.lineWidth=2.5;ctx.strokeStyle='#000';rrect(hx-r*.48,y-r*.42,r*.96,r*.88,r*.14);ctx.stroke()}
+ // kit extras
+ if(k==='scout'){ctx.fillStyle=sk.pack||'#6d4c41';rrect(hx+r*.22,y-r*.28,r*.38,r*.58,r*.08);ctx.fill(); // pack
+  ctx.strokeStyle='#90a4ae';ctx.lineWidth=Math.max(2,r*.11);ctx.lineCap='round';ctx.beginPath();ctx.moveTo(hx-r*.9,y+r*.55);ctx.lineTo(hx-r*.38,y-r*.15);ctx.stroke();
+  ctx.fillStyle='#ffb300';ctx.beginPath();ctx.moveTo(hx-r*1.12,y+r*.42);ctx.lineTo(hx-r*.72,y+r*.7);ctx.lineTo(hx-r*.95,y+r*.22);ctx.closePath();ctx.fill()} // pickaxe head
+ else if(k==='blade'){ctx.fillStyle='#eceff1';ctx.fillRect(hx+r*.58,y-r*.75,r*.11,r*1.45);ctx.fillStyle='#ffd54a';ctx.fillRect(hx+r*.48,y+r*.1,r*.3,r*.12);ctx.fillStyle='#b71c1c';rrect(hx-r*.2,y-r*.2,r*.4,r*.25,r*.06);ctx.fill()} // sword + chest plate
+ else if(k==='warden'){ctx.fillStyle='#c8e6c9';ctx.beginPath();ctx.moveTo(hx-r*1.15,y-r*.35);ctx.lineTo(hx-r*.45,y-r*.2);ctx.lineTo(hx-r*.5,y+r*.55);ctx.quadraticCurveTo(hx-r*.85,y+r*.75,hx-r*1.15,y+r*.4);ctx.closePath();ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=Math.max(1.5,r*.06);ctx.stroke();ctx.fillStyle='#00c853';ctx.beginPath();ctx.arc(hx-r*.8,y+r*.05,r*.12,0,7);ctx.fill()} // shield
+ else if(k==='relic'){const og=ctx.createRadialGradient(hx+r*.72,y,0,hx+r*.72,y,r*.32);og.addColorStop(0,'#e1f5fe');og.addColorStop(.55,'#7c4dff');og.addColorStop(1,'#00e5ff');
+  ctx.fillStyle=og;ctx.shadowColor='#00e5ff';ctx.shadowBlur=r*.5;ctx.beginPath();ctx.arc(hx+r*.72,y,r*.28,0,7);ctx.fill();ctx.shadowBlur=0; // relic orb
+  ctx.strokeStyle='rgba(0,229,255,.7)';ctx.lineWidth=Math.max(1.5,r*.05);ctx.beginPath();ctx.arc(hx+r*.72,y,r*.38,0,7);ctx.stroke()}
+ // head / visor
+ ctx.shadowColor=sk.glow||sk.c;ctx.shadowBlur=r*.35;ctx.fillStyle=fill;ctx.beginPath();ctx.arc(hx,hy,r*.52,0,7);ctx.fill();ctx.shadowBlur=0;
+ ctx.lineWidth=Math.max(2,r*.08);ctx.strokeStyle='#fff';ctx.stroke();
+ if(OPT.cb){ctx.lineWidth=2.5;ctx.strokeStyle='#000';ctx.beginPath();ctx.arc(hx,hy,r*.52+2,0,7);ctx.stroke()}
+ ctx.fillStyle='rgba(0,0,0,.28)';ctx.fillRect(hx-r*.5,hy-r*.08,r,r*.1); // brim
+ ctx.fillStyle='#10163a';rrect(hx-r*.38,hy-r*.02,r*.76,r*.3,r*.12);ctx.fill(); // visor
+ ctx.fillStyle='rgba(140,220,255,.55)';rrect(hx-r*.28,hy+r*.04,r*.28,r*.08,r*.04);ctx.fill();
+ if(k==='scout'){ctx.fillStyle='#fff59d';ctx.shadowColor='#fff59d';ctx.shadowBlur=r*.45;ctx.beginPath();ctx.arc(hx,hy-r*.38,r*.11,0,7);ctx.fill();ctx.shadowBlur=0}
  ctx.restore()}
 function rrect(x,y,w,h,r){r=Math.min(r,h/2,w/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 
@@ -787,7 +815,7 @@ function makeCard(o){const c=document.createElement('canvas');c.width=1080;c.hei
     g.strokeStyle='#ffd54a';g.lineWidth=14;rrect(30,30,1020,1290,60);g.stroke();
     g.textAlign='center';g.textBaseline='middle';
     g.font='110px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif';['🪙','💎','👑','🏆'].forEach((e,i)=>g.fillText(e,210+i*220,170+(i%2)*40));
-    drawHero(540,345,95,skin);
+    drawHero(540,380,88,skin);
     g.font='900 92px sans-serif';g.fillStyle='#ffd54a';g.shadowColor='#ffd54a';g.shadowBlur=30;g.fillText('Face-Action',540,530);
     g.font='bold 62px sans-serif';g.fillStyle='#fff';g.shadowColor='#00e5ff';g.fillText(t('sub'),540,615);
     g.font='900 72px sans-serif';g.fillStyle='#ff6ec7';g.shadowColor='#ff1493';g.fillText(t('cardRecord'),540,735);
@@ -802,14 +830,14 @@ $('bShare').onclick=async()=>{
   if(cardFile&&navigator.canShare&&navigator.canShare({files:[cardFile]})){try{await navigator.share({files:[cardFile],title:'Face-Action Treasure Hunt',text:cardText});return}catch(e){if(e&&e.name==='AbortError')return}}
   const a=document.createElement('a');a.href=cardURL;a.download='face-action-record.png';document.body.appendChild(a);a.click();a.remove();$('oShareMsg').textContent=t('saved')};
 
-// ---------- Meta: settings, daily streak, chapters & missions, badges, helmets, continue offer ----------
+// ---------- Meta: settings, daily streak, chapters & missions, badges, hunters, continue offer ----------
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let OPT=Object.assign({cb:true,relax:false},LS.get('fa_opts',{}));
 function buildSettings(){for(const [id,k] of [['tCb','cb'],['tRelax','relax']]){const b=$(id);b.textContent=OPT[k]?t('on'):t('off');b.classList.toggle('off',!OPT[k])}}
 function setOpt(k,v){OPT[k]=v;LS.set('fa_opts',OPT);buildSettings()}
 $('tCb').onclick=()=>setOpt('cb',!OPT.cb);$('tRelax').onclick=()=>setOpt('relax',!OPT.relax);
 $('bSet').onclick=()=>{buildSettings();$('settings').classList.remove('hide')};$('bSetOk').onclick=()=>$('settings').classList.add('hide');
-function syncCoinsUI(){const n=getCoins(),el=$('coinHud');if(el)el.textContent=t('upCoins',{n});const u=$('upCoins');if(u)u.textContent=t('upCoins',{n})}
+function syncCoinsUI(){const n=getCoins(),el=$('coinHud');if(el)el.textContent=t('upCoins',{n});const u=$('upCoins');if(u)u.textContent=t('upCoins',{n});const c=$('collCoins');if(c)c.textContent=t('upCoins',{n})}
 function syncResumeUI(){const btn=$('bContRun');if(!btn)return;const r=loadRun();if(r){btn.classList.remove('hide');btn.textContent=t('resumeRun',{s:r.score,g:r.stage})}else btn.classList.add('hide')}
 function buildUpgrades(){syncCoinsUI();const list=$('upList');if(!list)return;list.innerHTML='';const u=getUpgrades(),coins=getCoins();
   for(const d of UP_DEFS){const lv=u[d.k]|0,maxed=lv>=d.max,cost=maxed?0:d.costs[lv];
@@ -822,27 +850,35 @@ $('bUp').onclick=()=>{buildUpgrades();$('upgrades').classList.remove('hide');$('
 $('bUpOk').onclick=()=>$('upgrades').classList.add('hide');
 $('bContRun').onclick=()=>{const r=loadRun();if(!r)return;mode=r.mode==='face'?'face':'touch';daily=!!r.daily;if(mode==='face'){pendingResume=r;askFace()}else{pendingResume=null;begin(false,r)}};
 syncCoinsUI();syncResumeUI();
-// ----- hunter helmets (skins) -----
-const SKINS=[{k:'gold',n:'kGold',c:'#ffb300',need:0},{k:'ruby',n:'kRuby',c:'#e53935',need:1500},{k:'jade',n:'kJade',c:'#00c853',need:4000},{k:'cosmic',n:'kCosmic',c:'#7c4dff',grad:['#7c4dff','#00e5ff','#ff4081'],glow:'#b388ff',need:8000}];
+// ----- hunters collection UI + migrate old helmet unlocks -----
 const topScore=()=>Math.max(+localStorage.getItem('fa_top')||0,getBest('face'),getBest('touch'));
-const skinOK=s=>topScore()>=s.need||LS.get('fa_unlocks',[]).includes(s.k);
-let skin=localStorage.getItem('fa_skin')||'gold';if(!SKINS.some(s=>s.k===skin&&skinOK(s)))skin='gold';
-function buildSkins(){const g=$('styleGrid');g.innerHTML='';
-  for(const s of SKINS){const bt=document.createElement('button'),c=document.createElement('canvas');c.width=180;c.height=180;bt.appendChild(c);
-    const ok=skinOK(s),sk=Object.keys(STREAK_REW).find(n=>STREAK_REW[n]===s.k),lb=document.createElement('span');lb.textContent=ok?t(s.n):t(s.n)+' '+t('needPts',{n:s.need})+(sk?' '+t('needStreak',{n:sk}):'');bt.appendChild(lb);
-    bt.disabled=!ok;if(skin===s.k)bt.classList.add('sel');bt.onclick=()=>{skin=s.k;localStorage.setItem('fa_skin',skin);buildSkins()};g.appendChild(bt);
-    const c2=c.getContext('2d'),o=ctx;ctx=c2;try{drawHero(90,80,52,s.k)}finally{ctx=o}}}
+const OLD_SKIN_MAP={gold:'scout',ruby:'blade',jade:'warden',cosmic:'relic'};
+function getHunters(){let o=LS.get('fa_hunters',null);if(!Array.isArray(o)){o=['scout'];const old=LS.get('fa_unlocks',[]);for(const k of old){const nk=OLD_SKIN_MAP[k];if(nk&&!o.includes(nk))o.push(nk)}LS.set('fa_hunters',o)}if(!o.includes('scout'))o=['scout',...o.filter(x=>x!=='scout')];return o}
+function ownHunter(k){const o=getHunters();if(!o.includes(k)){o.push(k);LS.set('fa_hunters',o)}return o}
+skin=localStorage.getItem('fa_skin')||'scout';
+if(OLD_SKIN_MAP[skin]){skin=OLD_SKIN_MAP[skin];localStorage.setItem('fa_skin',skin)}
+{const owned=getHunters();if(!HUNTERS.some(h=>h.k===skin)||!owned.includes(skin)){skin='scout';localStorage.setItem('fa_skin',skin)}}
+function buildSkins(){syncCoinsUI();const g=$('styleGrid');g.innerHTML='';const owned=getHunters(),coins=getCoins();
+  for(const s of HUNTERS){const bt=document.createElement('button'),c=document.createElement('canvas');c.width=180;c.height=220;bt.appendChild(c);
+    const ok=owned.includes(s.k),nm=document.createElement('b');nm.textContent=t(s.n);bt.appendChild(nm);
+    const ab=document.createElement('small');ab.style.cssText='opacity:.85;font-size:11px;line-height:1.25;max-width:140px';ab.textContent=t(s.a);bt.appendChild(ab);
+    const lb=document.createElement('span');
+    if(ok){lb.textContent=skin===s.k?t('hunterEq'):t('hunterOwn');if(skin===s.k)bt.classList.add('sel');
+      bt.onclick=()=>{skin=s.k;localStorage.setItem('fa_skin',skin);buildSkins()}}
+    else{lb.textContent=t('buyHunter',{c:s.cost});if(coins<s.cost){bt.style.opacity='.45';bt.classList.add('cant')}
+      bt.onclick=()=>{if(getCoins()<s.cost)return;setCoins(getCoins()-s.cost);ownHunter(s.k);skin=s.k;localStorage.setItem('fa_skin',skin);sfx.unlock();buildSkins()}}
+    bt.appendChild(lb);g.appendChild(bt);
+    const c2=c.getContext('2d'),o=ctx;ctx=c2;try{drawHero(90,105,46,s.k)}finally{ctx=o}}}
 $('bStyle').onclick=()=>{buildSkins();buildBadges();$('styles').classList.remove('hide');$('styles').scrollTop=0};$('bStyleOk').onclick=()=>$('styles').classList.add('hide');
 // ----- dates & daily streak -----
 const dayNum=s=>{const [y,m,d]=s.split('-').map(Number);return Math.round(Date.UTC(y,m-1,d)/864e5)};
 function streakInfo(){const s=LS.get('fa_streak',{});if(!s.last)return {n:0,state:'none'};const d=dayNum(today())-dayNum(s.last);
   return d<=0?{n:s.n,state:'today'}:d===1?{n:s.n,state:'keep'}:{n:0,state:'broken'}}
-const STREAK_REW={3:null,7:'ruby',14:'jade',30:'cosmic'}; // every milestone also gives a treasure boost
+const STREAK_MILES=new Set([3,7,14,30]); // milestones: treasure boost + small coin bonus (no hunter unlocks)
 const getBoost=()=>+localStorage.getItem('fa_boost')||0,addBoost=n=>localStorage.setItem('fa_boost',Math.max(0,getBoost()+n));
 function recordDaily(){const s=LS.get('fa_streak',{n:0,best:0}),td=today();if(s.last===td)return {n:s.n,same:true};
   const d=s.last?dayNum(td)-dayNum(s.last):99;s.n=d===1?s.n+1:1;s.last=td;s.best=Math.max(s.best||0,s.n);LS.set('fa_streak',s);
-  const r={n:s.n};if(s.n in STREAK_REW||(s.n>30&&s.n%30===0)){r.milestone=true;addBoost(1);const k=STREAK_REW[s.n];
-    if(k){const u=LS.get('fa_unlocks',[]);const already=skinOK(SKINS.find(x=>x.k===k));if(!u.includes(k))u.push(k);LS.set('fa_unlocks',u);if(!already)r.skin=k}}
+  const r={n:s.n};if(STREAK_MILES.has(s.n)||(s.n>30&&s.n%30===0)){r.milestone=true;addBoost(1);r.coins=addCoins(25)}
   return r}
 function syncDaily(){const d=today(),b=Math.max(+localStorage.getItem('fa_daily_'+d+'_touch')||0,+localStorage.getItem('fa_daily_'+d+'_face')||0),si=streakInfo();
   const ds=new Date(d+'T12:00:00').toLocaleDateString(LANG==='fr'?'fr-FR':'en-US',{weekday:'short',month:'short',day:'numeric'});
