@@ -682,7 +682,105 @@ function drawEnt(e){const x=e.x*W,y=e.y,u=U();let label,emoji=e.e;
  ctx.font=Math.round(u*16)+'px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';ctx.fillStyle='#fff';ctx.globalAlpha*=.9;ctx.fillText(emoji,x,y-u*20);
  ctx.globalAlpha=1}
 // full-body hunter figures (race-neutral visored face); kit = selected hunter
-function drawHero(x,y,r,k){const sk=HUNTERS.find(s=>s.k===k)||HUNTERS[0];ctx.save();
+// Scout keeps the original cavern-hunter draw; blade/warden/relic use plastic action-figure path
+function figShade(x,y,w,h,rr,base,hi,lo){const g=ctx.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,hi);g.addColorStop(.45,base);g.addColorStop(1,lo);ctx.fillStyle=g;rrect(x,y,w,h,rr);ctx.fill();if(OPT.cb){ctx.lineWidth=2.2;ctx.strokeStyle='#000';rrect(x,y,w,h,rr);ctx.stroke()}}
+function figBall(cx,cy,rr,base,hi){const g=ctx.createRadialGradient(cx-rr*.35,cy-rr*.35,rr*.1,cx,cy,rr);g.addColorStop(0,hi);g.addColorStop(.55,base);g.addColorStop(1,'#1a1a1a');ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,rr,0,7);ctx.fill();if(OPT.cb){ctx.lineWidth=2;ctx.strokeStyle='#000';ctx.beginPath();ctx.arc(cx,cy,rr+1,0,7);ctx.stroke()}}
+function figLimb(x0,y0,x1,y1,th,col,hi){const a=Math.atan2(y1-y0,x1-x0),L=Math.hypot(x1-x0,y1-y0);ctx.save();ctx.translate(x0,y0);ctx.rotate(a);figShade(0,-th/2,L,th,th/2,col,hi,'#222');ctx.restore()}
+function drawActionFig(x,y,r,k){const sk=HUNTERS.find(s=>s.k===k)||HUNTERS[0];ctx.save();
+ const hx=x,hy=y-r*.52; // head; (x,y) ≈ torso center (same anchor as scout)
+ const pal=k==='blade'?{base:'#c62828',hi:'#ef5350',lo:'#7f0000',acc:'#ffd54a',metal:'#eceff1',boot:'#3e2723',glove:'#b71c1c',belt:'#212121'}
+  :k==='warden'?{base:'#2e7d32',hi:'#66bb6a',lo:'#1b5e20',acc:'#c8e6c9',metal:'#a5d6a7',boot:'#1b3a1f',glove:'#1b5e20',belt:'#33691e'}
+  :{base:'#7c4dff',hi:'#b388ff',lo:'#4a148c',acc:'#00e5ff',metal:'#e1bee7',boot:'#311b92',glove:'#651fff',belt:'#1a237e'};
+ // --- legs (chunky articulated) ---
+ const hipL=hx-r*.22,hipR=hx+r*.22,hipY=y+r*.32;
+ const knL=hx-r*.28,knR=hx+r*.3,knY=y+r*.72;
+ const ftL=hx-r*.3,ftR=hx+r*.32,ftY=y+r*1.05;
+ figLimb(hipL,hipY,knL,knY,r*.22,pal.base,pal.hi);figLimb(hipR,hipY,knR,knY,r*.22,pal.base,pal.hi);
+ figBall(hipL,hipY,r*.14,pal.base,pal.hi);figBall(hipR,hipY,r*.14,pal.base,pal.hi);
+ figLimb(knL,knY,ftL,ftY,r*.2,pal.lo,pal.base);figLimb(knR,knY,ftR,ftY,r*.2,pal.lo,pal.base);
+ figBall(knL,knY,r*.12,pal.metal,pal.acc);figBall(knR,knY,r*.12,pal.metal,pal.acc);
+ // boots
+ figShade(ftL-r*.2,ftY-r*.06,r*.4,r*.22,r*.08,pal.boot,'#5d4037','#1a0d04');
+ figShade(ftR-r*.2,ftY-r*.06,r*.4,r*.22,r*.08,pal.boot,'#5d4037','#1a0d04');
+ // --- torso armor ---
+ ctx.shadowColor=sk.glow||sk.c;ctx.shadowBlur=r*.4;
+ figShade(hx-r*.5,y-r*.48,r,r*.9,r*.16,pal.base,pal.hi,pal.lo);ctx.shadowBlur=0;
+ // chest plate panel
+ figShade(hx-r*.34,y-r*.32,r*.68,r*.42,r*.1,pal.lo,pal.hi,pal.lo);
+ // plastic highlight streak
+ ctx.fillStyle='rgba(255,255,255,.28)';rrect(hx-r*.28,y-r*.28,r*.22,r*.1,r*.05);ctx.fill();
+ // belt + buckle
+ figShade(hx-r*.52,y+r*.22,r*1.04,r*.16,r*.05,pal.belt,'#424242','#000');
+ figShade(hx-r*.12,y+r*.2,r*.24,r*.2,r*.05,pal.acc,'#fff59d',pal.acc);
+ // shoulder pads
+ figShade(hx-r*.72,y-r*.42,r*.36,r*.28,r*.12,pal.lo,pal.hi,pal.lo);
+ figShade(hx+r*.36,y-r*.42,r*.36,r*.28,r*.12,pal.lo,pal.hi,pal.lo);
+ // --- arms ---
+ const shL=hx-r*.58,shR=hx+r*.58,shY=y-r*.28;
+ const elL=hx-r*.95,elR=hx+r*.98,elY=y+r*.08;
+ const haL=hx-r*1.05,haR=hx+r*1.12,haY=y+r*.42;
+ figLimb(shL,shY,elL,elY,r*.2,pal.base,pal.hi);figLimb(shR,shY,elR,elY,r*.2,pal.base,pal.hi);
+ figBall(shL,shY,r*.15,pal.base,pal.hi);figBall(shR,shY,r*.15,pal.base,pal.hi);
+ figLimb(elL,elY,haL,haY,r*.18,pal.lo,pal.base);figLimb(elR,elY,haR,haY,r*.18,pal.lo,pal.base);
+ figBall(elL,elY,r*.11,pal.metal,pal.acc);figBall(elR,elY,r*.11,pal.metal,pal.acc);
+ // gloves
+ figBall(haL,haY,r*.14,pal.glove,pal.hi);figBall(haR,haY,r*.14,pal.glove,pal.hi);
+ // --- kit weapons / props ---
+ if(k==='blade'){
+  // twin short swords
+  const sword=(sx,sy,ang,flip)=>{ctx.save();ctx.translate(sx,sy);ctx.rotate(ang);ctx.scale(flip?-1:1,1);
+   ctx.fillStyle='#eceff1';rrect(-r*.08,-r*.95,r*.16,r*1.05,r*.04);ctx.fill();
+   ctx.fillStyle='#90a4ae';rrect(-r*.05,-r*.95,r*.05,r*1.05,r*.02);ctx.fill(); // fuller highlight
+   ctx.fillStyle='#ffd54a';rrect(-r*.14,-r*.05,r*.28,r*.14,r*.04);ctx.fill(); // guard
+   ctx.fillStyle='#5d4037';rrect(-r*.07,r*.08,r*.14,r*.28,r*.04);ctx.fill(); // grip
+   ctx.fillStyle='#b71c1c';rrect(-r*.1,r*.32,r*.2,r*.12,r*.04);ctx.fill(); // pommel
+   if(OPT.cb){ctx.lineWidth=2;ctx.strokeStyle='#000';rrect(-r*.08,-r*.95,r*.16,r*1.05,r*.04);ctx.stroke()}
+   ctx.restore()};
+  sword(haL,haY,-.55,1);sword(haR,haY,.55,0);
+  // crimson chest crest
+  ctx.fillStyle='#ff1744';ctx.beginPath();ctx.moveTo(hx,y-r*.28);ctx.lineTo(hx+r*.16,y-r*.08);ctx.lineTo(hx,y+r*.08);ctx.lineTo(hx-r*.16,y-r*.08);ctx.closePath();ctx.fill();
+ }else if(k==='warden'){
+  // big kite shield (left)
+  ctx.save();ctx.shadowColor='#69f0ae';ctx.shadowBlur=r*.35;
+  const sg=ctx.createLinearGradient(hx-r*1.35,y-r*.55,hx-r*.35,y+r*.7);sg.addColorStop(0,'#e8f5e9');sg.addColorStop(.4,'#a5d6a7');sg.addColorStop(1,'#1b5e20');
+  ctx.fillStyle=sg;ctx.beginPath();ctx.moveTo(hx-r*1.25,y-r*.5);ctx.lineTo(hx-r*.42,y-r*.35);ctx.lineTo(hx-r*.48,y+r*.45);ctx.quadraticCurveTo(hx-r*.9,y+r*.85,hx-r*1.28,y+r*.35);ctx.closePath();ctx.fill();ctx.shadowBlur=0;
+  ctx.strokeStyle='#fff';ctx.lineWidth=Math.max(2,r*.07);ctx.stroke();
+  if(OPT.cb){ctx.lineWidth=2.5;ctx.strokeStyle='#000';ctx.stroke()}
+  ctx.fillStyle='#00c853';ctx.beginPath();ctx.arc(hx-r*.88,y,r*.16,0,7);ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(hx-r*.88,y-r*.12);ctx.lineTo(hx-r*.78,y+r*.04);ctx.lineTo(hx-r*.98,y+r*.04);ctx.closePath();ctx.fill();
+  ctx.restore();
+  // bulky right pauldron extra plate
+  figShade(hx+r*.3,y-r*.5,r*.48,r*.36,r*.1,pal.lo,pal.hi,pal.lo);
+ }else if(k==='relic'){
+  // robe flaps
+  ctx.fillStyle='rgba(124,77,255,.55)';ctx.beginPath();ctx.moveTo(hx-r*.45,y+r*.15);ctx.quadraticCurveTo(hx-r*.85,y+r*.55,hx-r*.55,y+r*.95);ctx.lineTo(hx-r*.15,y+r*.35);ctx.closePath();ctx.fill();
+  ctx.fillStyle='rgba(0,229,255,.4)';ctx.beginPath();ctx.moveTo(hx+r*.45,y+r*.15);ctx.quadraticCurveTo(hx+r*.9,y+r*.6,hx+r*.55,y+r*.98);ctx.lineTo(hx+r*.12,y+r*.35);ctx.closePath();ctx.fill();
+  // staff + glowing orb (right hand)
+  ctx.strokeStyle='#b0bec5';ctx.lineWidth=Math.max(3,r*.1);ctx.lineCap='round';ctx.beginPath();ctx.moveTo(haR,haY);ctx.lineTo(haR+r*.05,y-r*.85);ctx.stroke();
+  const ox=haR+r*.05,oy=y-r*.95;
+  const og=ctx.createRadialGradient(ox,oy,0,ox,oy,r*.34);og.addColorStop(0,'#e1f5fe');og.addColorStop(.45,'#7c4dff');og.addColorStop(1,'#00e5ff');
+  ctx.fillStyle=og;ctx.shadowColor='#00e5ff';ctx.shadowBlur=r*.55;ctx.beginPath();ctx.arc(ox,oy,r*.3,0,7);ctx.fill();ctx.shadowBlur=0;
+  ctx.strokeStyle='rgba(0,229,255,.85)';ctx.lineWidth=Math.max(1.5,r*.05);ctx.beginPath();ctx.arc(ox,oy,r*.4,0,7);ctx.stroke();
+  // cosmic chest gem
+  ctx.fillStyle='#00e5ff';ctx.shadowColor='#00e5ff';ctx.shadowBlur=r*.3;ctx.beginPath();ctx.arc(hx,y-r*.1,r*.1,0,7);ctx.fill();ctx.shadowBlur=0;
+ }
+ // --- helmet / visor (race-neutral) ---
+ ctx.shadowColor=sk.glow||sk.c;ctx.shadowBlur=r*.3;
+ const hg=ctx.createRadialGradient(hx-r*.15,hy-r*.2,r*.05,hx,hy,r*.55);hg.addColorStop(0,pal.hi);hg.addColorStop(.5,pal.base);hg.addColorStop(1,pal.lo);
+ ctx.fillStyle=hg;ctx.beginPath();ctx.arc(hx,hy,r*.54,0,7);ctx.fill();ctx.shadowBlur=0;
+ ctx.lineWidth=Math.max(2,r*.08);ctx.strokeStyle='#fff';ctx.stroke();
+ if(OPT.cb){ctx.lineWidth=2.5;ctx.strokeStyle='#000';ctx.beginPath();ctx.arc(hx,hy,r*.54+2,0,7);ctx.stroke()}
+ // helmet ridge
+ figShade(hx-r*.18,hy-r*.52,r*.36,r*.18,r*.08,pal.acc,pal.hi,pal.lo);
+ ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(hx-r*.52,hy-r*.1,r*1.04,r*.12); // brim
+ ctx.fillStyle='#0a1028';rrect(hx-r*.4,hy-r*.02,r*.8,r*.32,r*.12);ctx.fill(); // visor
+ const vg=ctx.createLinearGradient(hx-r*.3,hy,hx+r*.3,hy+r*.2);vg.addColorStop(0,'rgba(140,220,255,.7)');vg.addColorStop(1,'rgba(0,229,255,.25)');
+ ctx.fillStyle=vg;rrect(hx-r*.3,hy+r*.04,r*.55,r*.12,r*.05);ctx.fill();
+ ctx.restore()}
+function drawHero(x,y,r,k){
+ if(k==='blade'||k==='warden'||k==='relic'){drawActionFig(x,y,r,k);return}
+ // --- Scout (default): original draw — do not change ---
+ const sk=HUNTERS.find(s=>s.k===k)||HUNTERS[0];ctx.save();
  const hx=x,hy=y-r*.5; // head center; (x,y) ≈ torso center
  let fill=sk.c;if(sk.grad){const g=ctx.createLinearGradient(hx-r,hy-r,hx+r,y+r);sk.grad.forEach((c,i)=>g.addColorStop(i/(sk.grad.length-1),c));fill=g}
  // legs + boots
