@@ -113,8 +113,8 @@ small{opacity:.75}
 #lb.thHall{background:radial-gradient(ellipse at 50% 0%,#4a2a12 0%,#1a0c06 45%,#080310 100%);border:0;font-family:Georgia,'DejaVu Serif',serif;gap:10px;padding:calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 16px)}
 #lb.thHall::before{content:'';position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 20% 90%,rgba(255,140,0,.12),transparent 40%),radial-gradient(ellipse at 80% 85%,rgba(0,200,255,.08),transparent 35%);z-index:0}
 #lb.thHall>*{position:relative;z-index:1}
-#lb.thHall [data-t="lbGame"]{font-family:'Cinzel',Georgia,serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#ffb74d;text-shadow:0 0 10px rgba(255,150,0,.5);margin:0}
-#lb.thHall h2{margin:2px 0 0;font-family:'Cinzel',Georgia,serif;font-size:26px;background:linear-gradient(180deg,#fff7cf,#ffd54a 40%,#b97812 70%,#ffe7a0);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 #3b2208);text-shadow:none}
+#lb.thHall [data-t="lbGame"]{font-family:'Cinzel',Georgia,serif;font-size:clamp(26px,7vw,34px);font-weight:800;letter-spacing:1px;line-height:1.15;margin:0;max-width:min(94vw,440px);background:linear-gradient(180deg,#fff7cf 0%,#ffd54a 35%,#b97812 62%,#ffe7a0 78%,#7d4d0c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 #3b2208) drop-shadow(0 0 14px rgba(255,170,40,.45));text-transform:none}
+#lb.thHall h2{margin:6px 0 0;font-family:Georgia,serif;font-size:clamp(15px,4vw,18px);font-weight:700;letter-spacing:1.5px;color:#ffcf66;text-shadow:0 0 8px rgba(255,150,0,.35);background:none;-webkit-background-clip:unset;background-clip:unset;filter:none}
 #lb.thHall [data-t="lbP"]{color:#e8d4a8;opacity:1;font-style:italic;font-size:12.5px;max-width:380px}
 #lb.thHall #lbWeek{color:#c9a66b;font-family:system-ui,sans-serif;font-size:12px;opacity:1}
 #lb.thHall .lbTabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%}
