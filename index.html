@@ -673,7 +673,7 @@ function gameOver(){S.ended=true;running=false;sfx.over();camStop();$('bPause').
   try{boardBump('games',1);boardMarkDay()}catch(e){}
   // Bank soft currency: 1 coin per 10 score points (fair drip; skill runs still pay more).
   const gained=addCoins(Math.floor((S.score||0)/10));
-  const m=mode==='face'?'face':'touch',prev=getBest(m),b=Math.max(S.score,prev);localStorage.setItem(BEST_KEYS[m],b);localStorage.setItem('fa_top',Math.max(topScore(),S.score));showBest();
+  const m=mode==='face'?'face':'touch',prev=getBest(m),b=Math.max(S.score,prev);localStorage.setItem(BEST_KEYS[m],b);if(S.score>prev&&S.score>0)localStorage.setItem(BEST_KEYS[m]+'_stage',S.stage|0);localStorage.setItem('fa_top',Math.max(topScore(),S.score));showBest();
   let streak=null;if(S.daily){const dk='fa_daily_'+S.day+'_'+m;localStorage.setItem(dk,Math.max(+localStorage.getItem(dk)||0,S.score));streak=recordDaily()}
   STATS.games++;LS.set('fa_stats',STATS);checkBadges(false);
   overState={m,s:S.score,g:S.stage,nb:S.score>prev&&S.score>0,b,prev,daily:S.daily?S.day:null,date:new Date(),streak,badges:[...S.newBadges],chapDone:[...S.chapDone],secs:Math.round(S.t),coins:gained};renderOver();$('over').classList.remove('hide');draw();try{if(S.score>0)submitScore(overState).then(r=>{if(r&&r.rank)$('oShareMsg').textContent=t('lbSubmitted',{r:r.rank,s:r.best||S.score});else if(r===null)$('oShareMsg').textContent=''})}catch(e){}}
@@ -1270,13 +1270,13 @@ async function submitScore(o){try{const score=(o&&(o.score!=null?o.score:o.s))|0
   return await lbFetch('/submit',{method:'POST',body:JSON.stringify(body)})}catch(e){return null}}
 /** Post local personal bests under the saved nickname (Save button + first-time name). secs=0 skips PPS gate. */
 async function publishLocalBests(name){name=setFaName(name||faName());if(!name)return null;const pid=faPlayerId();const modes=['touch','face'];const out=[];
-  for(const mode of modes){const score=getBest(mode)|0;if(score<=0)continue;try{out.push(await lbFetch('/submit',{method:'POST',body:JSON.stringify({playerId:pid,name,score,stage:1,mode,secs:0})}))}catch(e){out.push(null)}}
+  for(const mode of modes){const score=getBest(mode)|0;if(score<=0)continue;try{out.push(await lbFetch('/submit',{method:'POST',body:JSON.stringify({playerId:pid,name,score,stage:(+localStorage.getItem(BEST_KEYS[mode]+'_stage')|0),mode,secs:0})}))}catch(e){out.push(null)}}
   return out}
 function askLbName(){return new Promise(resolve=>{let ov=$('lbAsk');if(!ov){ov=document.createElement('div');ov.id='lbAsk';ov.className='ov thHall hide';ov.innerHTML='<h2 data-t="lbName"></h2><p style="margin:0;font-size:14px;opacity:.85">'+escLb(t('lbP'))+'</p><input id="lbAskIn" maxlength="16" style="width:min(280px,80vw);padding:10px 12px;border-radius:10px;border:1px solid #ffd54a66;background:#1a1430;color:#fff;font-size:16px"><button id="lbAskOk" class="play pTouch" data-t="lbSave"></button>';document.body.appendChild(ov)}
   const inp=$('lbAskIn');inp.value=faName()||($('lbName')&&$('lbName').value)||'';ov.classList.remove('hide');try{inp.focus();inp.select()}catch(e){}
   const done=()=>{const n=setFaName(inp.value);ov.classList.add('hide');resolve(n||null)};$('lbAskOk').onclick=done;inp.onkeydown=e=>{if(e.key==='Enter')done()}})}
 function lbRowHtml(r){const n=r.rank|0;const medal=n===1?'🥇':n===2?'🥈':n===3?'🥉':'';const cls='lbRow'+(n>=1&&n<=3?' podium r'+n:'');const rank=medal?('<span class="lbMedal">'+medal+'</span>'):('<span class="lbRank">#'+n+'</span>');
-  return '<div class="'+cls+'"><span>'+rank+' <span class="lbNameTxt">'+escLb(r.name)+'</span></span><span class="lbScore">'+r.score+' <small>lv '+r.stage+'</small></span></div>'}
+  return '<div class="'+cls+'"><span>'+rank+' <span class="lbNameTxt">'+escLb(r.name)+'</span></span><span class="lbScore">'+r.score+(r.stage>0?' <small>lv '+r.stage+'</small>':'')+'</span></div>'}
 function buildLb(){const nameEl=$('lbName');if(nameEl&&document.activeElement!==nameEl)nameEl.value=faName();$('lbStatus').textContent=t('lbLoading');$('lbTop').innerHTML='';$('lbRest').innerHTML='';$('lbRest').style.display='none';$('lbYou').textContent='';
   if($('lbTabTouch'))$('lbTabTouch').classList.toggle('on',lbMode==='touch');
   if($('lbTabFace'))$('lbTabFace').classList.toggle('on',lbMode==='face');
@@ -1286,7 +1286,7 @@ function buildLb(){const nameEl=$('lbName');if(nameEl&&document.activeElement!==
     if(!rows.length){$('lbTop').innerHTML='<p style="opacity:.75;margin:0">'+t('lbEmpty')+'</p>'}
     else{$('lbTop').innerHTML=rows.slice(0,3).map(lbRowHtml).join('');
       const rest=rows.slice(3);if(rest.length){$('lbRest').style.display='flex';$('lbRest').innerHTML=rest.map(lbRowHtml).join('');$('lbRest').scrollTop=0}}
-    if(data.you)$('lbYou').textContent=t('lbYou',{r:data.you.rank,s:data.you.score,g:data.you.stage});
+    if(data.you){let y=t('lbYou',{r:data.you.rank,s:data.you.score,g:data.you.stage});if(!(data.you.stage>0))y=y.replace(/ · (stage|niv\.) .*$/,'');$('lbYou').textContent=y}
     else $('lbYou').textContent='';
     $('lbStatus').textContent=''}).catch(()=>{$('lbStatus').textContent=t('lbOffline');$('lbWeek').textContent=''})}
 if($('bLb'))$('bLb').onclick=()=>{lbMode='touch';buildLb();$('lb').classList.remove('hide');$('lb').scrollTop=0};
