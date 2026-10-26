@@ -1003,7 +1003,7 @@ function buildUpgrades(){syncCoinsUI();const list=$('upList');if(!list)return;li
     row.appendChild(b);list.appendChild(row)}}
 $('bUp').onclick=()=>{buildUpgrades();$('upgrades').classList.remove('hide');$('upgrades').scrollTop=0};
 $('bUpOk').onclick=()=>$('upgrades').classList.add('hide');
-$('bContRun').onclick=()=>{const r=loadRun();if(!r)return;mode=r.mode==='face'?'face':'touch';daily=!!r.daily;if(mode==='face'){pendingResume=r;askFace()}else{pendingResume=null;begin(false,r)}};
+$('bContRun').onclick=()=>{try{audioUnlock()}catch(e){}const r=loadRun();if(!r)return;mode=r.mode==='face'?'face':'touch';daily=!!r.daily;if(mode==='face'){pendingResume=r;askFace()}else{pendingResume=null;begin(false,r)}};
 syncCoinsUI();syncResumeUI();
 // ----- hunters collection UI + migrate old helmet unlocks -----
 const topScore=()=>Math.max(+localStorage.getItem('fa_top')||0,getBest('face'),getBest('touch'));
@@ -1244,7 +1244,7 @@ async function calibrate(){const cg=window.__faceGen;const chk=()=>{if(cg!==wind
   $('cCount').textContent='';$('cStep').textContent='';calState={};
   saveCal();lightWatch(false);$('calib').classList.add('hide');
 }
-function begin(again,fromSave){$('start').classList.add('hide');$('bPause').classList.remove('hide');$('touch').classList.toggle('hide',mode!=='touch');
+function begin(again,fromSave){try{audioUnlock()}catch(e){}$('start').classList.add('hide');$('bPause').classList.remove('hide');$('touch').classList.toggle('hide',mode!=='touch');
   if(fromSave){restoreRun(fromSave); /* keep fa_run until game over / quit / fresh start */}
   else{clearRun();newGame();if(!daily&&getBoost()>0){S.boost=true;addBoost(-1);S.special=100;S.banner=t('boostOn');S.bannerT=2.6}}
   for(const k in touch)touch[k]=false;running=true;paused=false;last=performance.now();if(again||fromSave)camResume();saveRun();syncResumeUI();
@@ -1257,7 +1257,7 @@ $('bHowOk').onclick=()=>{localStorage.setItem(HOW_KEY,'1');$('howto').classList.
 if(!localStorage.getItem(HOW_KEY))showHow();
 function doPause(){if(!running||S.ended||paused)return;paused=true;camStop();saveRun();$('pause').classList.remove('hide')}
 $('bPause').onclick=doPause;
-$('bResume').onclick=()=>{$('pause').classList.add('hide');paused=false;last=performance.now();camResume()};
+$('bResume').onclick=()=>{try{audioUnlock()}catch(e){}$('pause').classList.add('hide');paused=false;last=performance.now();camResume()};
 $('bVol').textContent=volIcon();$('bVol').onclick=e=>{e.stopPropagation();cycleVol();sfx.beep(true)};
 const sl=$('sens');sl.value=sens;sl.oninput=()=>{sens=+sl.value;localStorage.setItem('ftq_sens',sens);if(localStorage.getItem(CAL_KEY))saveCal()};
 function syncHud(){$('sensBox').classList.toggle('hide',!hudOn)}syncHud();
@@ -1266,7 +1266,7 @@ $('bRecalStart').onclick=()=>{$('settings').classList.add('hide');forceCal=true;
 $('bRecalAuto').onclick=async()=>{$('bRecalAuto').classList.add('hide');noFaceT=0;paused=true;await calibrate();paused=false;last=performance.now()};
 $('bRecal').onclick=async()=>{if(mode!=='face')return;paused=true;await calibrate();paused=false;last=performance.now()};
 $('bTouch').onclick=()=>{pendingResume=null;mode='touch';begin(false)};
-document.addEventListener('visibilitychange',()=>{if(document.hidden){camStop();if(running){paused=true;saveRun()}}else{if($('rest').classList.contains('hide')&&$('calib').classList.contains('hide')&&$('pause').classList.contains('hide')&&!(S&&S.offer))paused=false;last=performance.now();camResume()}updInd()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){camStop();if(running){paused=true;saveRun()}}else{try{audioUnlock()}catch(e){}if($('rest').classList.contains('hide')&&$('calib').classList.contains('hide')&&$('pause').classList.contains('hide')&&!(S&&S.offer))paused=false;last=performance.now();camResume()}updInd()});
 addEventListener('pagehide',()=>{saveRun();camStop()});addEventListener('pageshow',e=>{if(e.persisted)camResume()});
 $('camResume').onclick=()=>camStart();
 $('bPrev').onclick=()=>{prevOn=!prevOn;localStorage.setItem('ftq_prev',prevOn?'1':'0');updInd()};
@@ -1294,9 +1294,9 @@ async function submitScore(o){try{const score=(o&&(o.score!=null?o.score:o.s))|0
 async function publishLocalBests(name){name=setFaName(name||faName());if(!name)return null;const pid=faPlayerId();const modes=['touch','face'];const out=[];
   for(const mode of modes){if(!isLbPublishable(mode))continue;const score=getBest(mode)|0,stage=(+localStorage.getItem(BEST_KEYS[mode]+'_stage')|0),at=bestAt(mode);try{out.push(await lbFetch('/submit',{method:'POST',body:JSON.stringify({playerId:pid,name,score,stage,mode,game:'treasure',secs:0,ts:at,client:LB_CLIENT})}))}catch(e){out.push(null)}}
   return out}
-function askLbName(){return new Promise(resolve=>{let ov=$('lbAsk');if(!ov){ov=document.createElement('div');ov.id='lbAsk';ov.className='ov thHall hide';ov.innerHTML='<h2 data-t="lbName"></h2><p style="margin:0;font-size:14px;opacity:.85">'+escLb(t('lbP'))+'</p><input id="lbAskIn" maxlength="16" style="width:min(280px,80vw);padding:10px 12px;border-radius:10px;border:1px solid #ffd54a66;background:#1a1430;color:#fff;font-size:16px"><button id="lbAskOk" class="play pTouch" data-t="lbSave"></button>';document.body.appendChild(ov)}
-  const inp=$('lbAskIn');inp.value=faName()||($('lbName')&&$('lbName').value)||'';ov.classList.remove('hide');try{inp.focus();inp.select()}catch(e){}
-  const done=()=>{const n=setFaName(inp.value);ov.classList.add('hide');resolve(n||null)};$('lbAskOk').onclick=done;inp.onkeydown=e=>{if(e.key==='Enter')done()}})}
+function askLbName(){return new Promise(resolve=>{let ov=$('lbAsk');if(!ov){ov=document.createElement('div');ov.id='lbAsk';ov.className='ov thHall hide';ov.innerHTML='<h2 data-t="lbName"></h2><p id="lbAskP" style="margin:0;font-size:14px;opacity:.85"></p><input id="lbAskIn" maxlength="16" style="width:min(280px,80vw);padding:10px 12px;border-radius:10px;border:1px solid #ffd54a66;background:#1a1430;color:#fff;font-size:16px"><button id="lbAskOk" class="play pTouch" data-t="lbSave"></button>';document.body.appendChild(ov)}
+  const inp=$('lbAskIn');inp.value=faName()||($('lbName')&&$('lbName').value)||'';const h2=ov.querySelector('h2');if(h2)h2.textContent=t('lbName');const p=ov.querySelector('#lbAskP')||ov.querySelector('p');if(p)p.textContent=t('lbP');const ok=$('lbAskOk');if(ok)ok.textContent=t('lbSave')||'Save';ov.classList.remove('hide');try{inp.focus();inp.select()}catch(e){}
+  const done=()=>{const n=setFaName(inp.value);ov.classList.add('hide');resolve(n||null)};ok.onclick=done;inp.onkeydown=e=>{if(e.key==='Enter')done()}})}
 function lbRowHtml(r){const n=r.rank|0;const medal=n===1?'🥇':n===2?'🥈':n===3?'🥉':'';const cls='lbRow'+(n>=1&&n<=3?' podium r'+n:'');const rank=medal?('<span class="lbMedal">'+medal+'</span>'):('<span class="lbRank">#'+n+'</span>');
   return '<div class="'+cls+'"><span>'+rank+' <span class="lbNameTxt">'+escLb(r.name)+'</span></span><span class="lbScore">'+r.score+(r.stage>0?' <small>lv '+r.stage+'</small>':'')+'</span></div>'}
 function buildLb(){const nameEl=$('lbName');if(nameEl&&document.activeElement!==nameEl)nameEl.value=faName();$('lbStatus').textContent=t('lbLoading');$('lbTop').innerHTML='';$('lbRest').innerHTML='';$('lbRest').style.display='none';$('lbYou').textContent='';
