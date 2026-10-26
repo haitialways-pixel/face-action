@@ -161,3 +161,8 @@ Guardians are the main focus; treasure is a reward, not a carpet.
   - Start screen: exits the app.
   - On the web, Escape does the same, except it never exits.
 - **Camera:** always off on the start screen. Home or back during camera start-up, model loading or calibration cancels the face start, and so does tapping Touch while the model loads. Calibration aborts instead of finishing and starting a game.
+
+## Weekly leaderboard appearance (multi-game rule)
+Treasure Hunt’s online board uses a **cavern / carved-gold Hall of Champions** skin (`#lb.thHall`): torchlit browns, Cinzel/Georgia titles, gold tablet rows, and 🥇🥈🥉 podium medals. It must **not** share Falling Bricks’ future board look.
+
+**Falling Bricks (when wired):** use a **neon arcade / brick-stack** palette — electric magenta→cyan gradients, white “FACE-ACTION” pill, rounded Baloo/Fredoka type, brick-tile row backgrounds, cyan/pink glow borders. No carved gold, no cavern brown, no serif treasure titles. Keep the two boards visually unmistakable at a glance.

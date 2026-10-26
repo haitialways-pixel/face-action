@@ -109,6 +109,40 @@ small{opacity:.75}
 .thFA #best{color:#f1dcb0}
 @media (max-height:780px){.thFA .heroArt{width:96px;height:96px;padding:4px}.thFA .faT1{font-size:36px}}
 @media (max-height:660px){.thFA .heroArt{width:70px;height:70px}.thFA .faT1{font-size:32px}.thFA [data-h="intro"] small{display:none}}
+/* ===== Weekly Hall of Champions (Treasure Hunt) — cavern gold, distinct from generic .ov purple & from Falling Bricks neon arcade ===== */
+#lb.thHall{background:radial-gradient(ellipse at 50% 0%,#4a2a12 0%,#1a0c06 45%,#080310 100%);border:0;font-family:Georgia,'DejaVu Serif',serif;gap:10px;padding:calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 16px)}
+#lb.thHall::before{content:'';position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 20% 90%,rgba(255,140,0,.12),transparent 40%),radial-gradient(ellipse at 80% 85%,rgba(0,200,255,.08),transparent 35%);z-index:0}
+#lb.thHall>*{position:relative;z-index:1}
+#lb.thHall [data-t="lbGame"]{font-family:'Cinzel',Georgia,serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#ffb74d;text-shadow:0 0 10px rgba(255,150,0,.5);margin:0}
+#lb.thHall h2{margin:2px 0 0;font-family:'Cinzel',Georgia,serif;font-size:26px;background:linear-gradient(180deg,#fff7cf,#ffd54a 40%,#b97812 70%,#ffe7a0);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 #3b2208);text-shadow:none}
+#lb.thHall [data-t="lbP"]{color:#e8d4a8;opacity:1;font-style:italic;font-size:12.5px;max-width:380px}
+#lb.thHall #lbWeek{color:#c9a66b;font-family:system-ui,sans-serif;font-size:12px;opacity:1}
+#lb.thHall .lbTabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%}
+#lb.thHall .lbTab{min-width:0;padding:8px 16px;border-radius:8px;border:2px solid #8a5a1e;background:linear-gradient(180deg,#3b2410,#1a0e06);color:#ffcf66;font-family:Georgia,serif;font-weight:700;font-size:14px;box-shadow:inset 0 1px 0 rgba(255,220,150,.2)}
+#lb.thHall .lbTab.on{border-color:#ffd54a;box-shadow:0 0 0 1px #ffd54a88,0 0 16px rgba(255,180,40,.35);color:#fff3c4;background:linear-gradient(180deg,#5a3814,#2a1608)}
+#lb.thHall .lbNick{display:flex;gap:8px;align-items:center;width:100%;max-width:420px;justify-content:center;flex-wrap:wrap;background:linear-gradient(180deg,#2a1608,#170d06);border:2px solid #b8862f;border-radius:10px;padding:8px 10px;box-sizing:border-box}
+#lb.thHall .lbNick label{color:#ffcf66;font-size:13px;font-weight:700}
+#lb.thHall #lbName{flex:1;min-width:120px;padding:8px 10px;border-radius:8px;border:1px solid #c48a1c;background:#120a04;color:#fff7cf;font-size:15px;font-family:Georgia,serif}
+#lb.thHall #lbSaveName{min-width:0;padding:8px 14px;border-radius:8px;border:2px solid #2e1d0c;background:linear-gradient(180deg,#ffe48a,#d35400);color:#2b1200;font-weight:800;font-family:Georgia,serif}
+#lb.thHall #lbYou{color:#ffe082;font-weight:700;font-size:14px;text-shadow:0 0 8px rgba(255,180,40,.4)}
+#lb.thHall #lbList{width:100%;max-width:420px;gap:8px}
+#lb.thHall #lbTop{gap:8px}
+#lb.thHall #lbRest{display:none;flex-direction:column;gap:6px;max-height:168px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 4px 4px;border-top:2px solid #b8862f66;margin-top:2px;scrollbar-color:#c48a1c #1a0c06}
+#lb.thHall .lbRow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;flex-shrink:0;border-radius:10px;background:linear-gradient(180deg,#2e1b0d,#170d06);border:2px solid #8a5a1e;box-shadow:inset 0 1px 0 rgba(255,220,150,.12),0 2px 8px rgba(0,0,0,.4);font-family:system-ui,sans-serif;text-align:left}
+#lb.thHall .lbRow.podium{border-width:2px;padding:12px 14px}
+#lb.thHall .lbRow.r1{border-color:#ffd54a;background:linear-gradient(135deg,#4a3410,#2a1a08 60%,#1a1006);box-shadow:0 0 0 1px #ffd54a55,0 0 20px rgba(255,180,40,.25),inset 0 1px 0 rgba(255,240,180,.25)}
+#lb.thHall .lbRow.r2{border-color:#c0c8d4;background:linear-gradient(135deg,#2a3038,#1a1e24)}
+#lb.thHall .lbRow.r3{border-color:#c4783a;background:linear-gradient(135deg,#3a2414,#1e120a)}
+#lb.thHall .lbRow .lbMedal{font-size:22px;line-height:1;margin-right:4px}
+#lb.thHall .lbRow .lbRank{color:#ffcf66;font-weight:800;min-width:2.2em}
+#lb.thHall .lbRow .lbNameTxt{color:#fff7cf;font-weight:600}
+#lb.thHall .lbRow .lbScore{color:#ffd54a;font-weight:800;white-space:nowrap}
+#lb.thHall .lbRow .lbScore small{color:#c9a66b;font-weight:600}
+#lb.thHall #lbStatus{color:#c9a66b;font-size:12px}
+#lb.thHall #bLbOk{min-width:0;padding:10px 28px;border-radius:10px;border:3px solid #2e1d0c;background:linear-gradient(180deg,#ffe48a,#d35400);color:#2b1200;font-family:Georgia,serif;font-weight:800;box-shadow:0 0 0 2px #d9ad52,inset 0 2px 0 rgba(255,255,255,.5)}
+#lbAsk.thHall{background:radial-gradient(ellipse at 50% 20%,#4a2a12,#080310 70%);font-family:Georgia,serif}
+#lbAsk.thHall input{border:1px solid #c48a1c;background:#120a04;color:#fff7cf;border-radius:8px}
+#start.thFA #bLb{color:#ffcf66!important;border-color:#b8862f!important;background:linear-gradient(180deg,#2e1b0d,#170d06)}
 html,body,button,canvas{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}html,body,canvas{touch-action:none}input,textarea,select{-webkit-user-select:text;user-select:text}
 </style></head><body>
 <canvas id="game"></canvas>
@@ -124,7 +158,7 @@ html,body,button,canvas{touch-action:manipulation;-webkit-user-select:none;user-
   <button id="bDaily" class="daily"><span class="dTop" id="dTop"></span><span class="dSub" id="dSub"></span></button>
   <button id="bChapter" class="chap"></button>
   <button id="bBoard" class="boardBtn"><span data-t="boardBtn"></span><span id="boardDot" class="dot hide"></span></button>
-  <button id="bLb" class="boardBtn" style="color:#7cf;border-color:#7cf66"><span data-t="lbBtn"></span></button>
+  <button id="bLb" class="boardBtn"><span data-t="lbBtn"></span></button>
   <p id="coinHud"></p>
   <div class="mini"><button id="bUp" class="sec" data-t="upBtn"></button><button id="bStyle" class="sec" data-t="collectBtn"></button><button id="bSet" class="sec" data-t="setBtn"></button><button id="bHow" class="sec" data-t="howBtn"></button></div>
   <p id="best" style="margin:0;font-size:14px"></p><p style="margin:0"><a href="privacy.html" style="color:#9cf;font-size:13px" data-t="privacy"></a> · <a href="#" id="bLang" style="color:#9cf;font-size:13px"></a><br><small style="opacity:.6;font-size:11px" data-t="copy"></small></p><p id="msg" style="margin:0"><small></small></p>
@@ -184,25 +218,25 @@ window.__startBg={get running(){return !!raf},get count(){return typeof count===
   <h3 data-t="boardWeekly" style="font-size:18px;margin:12px 0 0"></h3>
   <div id="boardWeekly" style="display:flex;flex-direction:column;gap:8px;width:100%;align-items:center"></div>
   <button id="bBoardOk" data-t="done"></button></div>
-<div id="lb" class="ov hide"><p data-t="lbGame" style="margin:0;font-size:15px;font-weight:800;color:#ffd54a;letter-spacing:.02em;text-align:center"></p><h2 data-t="lbTitle" style="margin:4px 0 0"></h2>
-  <p data-t="lbP" style="margin:0;font-size:13px;max-width:400px;opacity:.85"></p>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%">
-    <button id="lbTabTouch" class="sec" data-t="lbTouch"></button>
-    <button id="lbTabFace" class="sec" data-t="lbFace"></button>
+<div id="lb" class="ov thHall hide"><p data-t="lbGame"></p><h2 data-t="lbTitle"></h2>
+  <p data-t="lbP"></p>
+  <div class="lbTabs">
+    <button type="button" id="lbTabTouch" class="lbTab" data-t="lbTouch"></button>
+    <button type="button" id="lbTabFace" class="lbTab" data-t="lbFace"></button>
   </div>
-  <p id="lbWeek" style="margin:0;font-size:13px;opacity:.75"></p>
-  <div style="display:flex;gap:8px;align-items:center;width:100%;max-width:420px;justify-content:center;flex-wrap:wrap">
-    <label style="font-size:13px" data-t="lbName"></label>
-    <input id="lbName" maxlength="16" style="flex:1;min-width:120px;padding:8px 10px;border-radius:10px;border:1px solid #ffd54a66;background:#1a1430;color:#fff;font-size:15px">
-    <button id="lbSaveName" class="sec" data-t="lbSave"></button>
+  <p id="lbWeek"></p>
+  <div class="lbNick">
+    <label data-t="lbName"></label>
+    <input id="lbName" maxlength="16" autocomplete="nickname">
+    <button type="button" id="lbSaveName" data-t="lbSave"></button>
   </div>
-  <p id="lbYou" style="margin:0;font-size:14px;color:#ffd54a"></p>
-  <div id="lbList" style="display:flex;flex-direction:column;gap:8px;width:100%;max-width:420px;align-items:stretch">
-    <div id="lbTop" style="display:flex;flex-direction:column;gap:6px"></div>
-    <div id="lbRest" style="display:none;flex-direction:column;gap:6px;max-height:168px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:4px;border-top:1px solid #ffffff22;padding-top:8px"></div>
+  <p id="lbYou"></p>
+  <div id="lbList" style="display:flex;flex-direction:column;align-items:stretch">
+    <div id="lbTop" style="display:flex;flex-direction:column"></div>
+    <div id="lbRest"></div>
   </div>
-  <p id="lbStatus" style="margin:0;font-size:12px;opacity:.7"></p>
-  <button id="bLbOk" data-t="done"></button></div>
+  <p id="lbStatus"></p>
+  <button type="button" id="bLbOk" data-t="done"></button></div>
 <div id="missions" class="ov hide"><h2 id="mTitle"></h2><p data-t="chapP" style="margin:0;font-size:14px;max-width:400px"></p><div id="mList" style="display:flex;flex-direction:column;gap:8px;width:100%;align-items:center"></div><p id="mTotal" style="margin:0;font-size:13px;opacity:.75"></p><button id="bMisOk" data-t="done"></button></div>
 <div id="styles" class="ov hide"><h2 data-t="collTitle"></h2><p id="collCoins" style="margin:0;font-size:15px;color:#ffd54a;font-weight:700"></p><p id="collStreak" style="margin:0;font-size:14px"></p><h3 data-t="skinTitle" style="font-size:18px"></h3><p data-t="skinP" style="margin:0;font-size:13px"></p><div class="stylegrid" id="styleGrid"></div><h3 data-t="badgesH" style="font-size:18px"></h3><div class="stylegrid" id="badgeGrid"></div><button id="bStyleOk" data-t="done" style="flex:none"></button></div>
 <div id="howto" class="ov hide">
@@ -1238,13 +1272,14 @@ async function submitScore(o){try{const score=(o&&(o.score!=null?o.score:o.s))|0
 async function publishLocalBests(name){name=setFaName(name||faName());if(!name)return null;const pid=faPlayerId();const modes=['touch','face'];const out=[];
   for(const mode of modes){const score=getBest(mode)|0;if(score<=0)continue;try{out.push(await lbFetch('/submit',{method:'POST',body:JSON.stringify({playerId:pid,name,score,stage:1,mode,secs:0})}))}catch(e){out.push(null)}}
   return out}
-function askLbName(){return new Promise(resolve=>{let ov=$('lbAsk');if(!ov){ov=document.createElement('div');ov.id='lbAsk';ov.className='ov hide';ov.innerHTML='<h2 data-t="lbName"></h2><p style="margin:0;font-size:14px;opacity:.85">'+escLb(t('lbP'))+'</p><input id="lbAskIn" maxlength="16" style="width:min(280px,80vw);padding:10px 12px;border-radius:10px;border:1px solid #ffd54a66;background:#1a1430;color:#fff;font-size:16px"><button id="lbAskOk" class="play pTouch" data-t="lbSave"></button>';document.body.appendChild(ov)}
+function askLbName(){return new Promise(resolve=>{let ov=$('lbAsk');if(!ov){ov=document.createElement('div');ov.id='lbAsk';ov.className='ov thHall hide';ov.innerHTML='<h2 data-t="lbName"></h2><p style="margin:0;font-size:14px;opacity:.85">'+escLb(t('lbP'))+'</p><input id="lbAskIn" maxlength="16" style="width:min(280px,80vw);padding:10px 12px;border-radius:10px;border:1px solid #ffd54a66;background:#1a1430;color:#fff;font-size:16px"><button id="lbAskOk" class="play pTouch" data-t="lbSave"></button>';document.body.appendChild(ov)}
   const inp=$('lbAskIn');inp.value=faName()||($('lbName')&&$('lbName').value)||'';ov.classList.remove('hide');try{inp.focus();inp.select()}catch(e){}
   const done=()=>{const n=setFaName(inp.value);ov.classList.add('hide');resolve(n||null)};$('lbAskOk').onclick=done;inp.onkeydown=e=>{if(e.key==='Enter')done()}})}
-function lbRowHtml(r){return '<div style="display:flex;justify-content:space-between;gap:8px;padding:8px 12px;background:#1a1430;border:1px solid #ffffff22;border-radius:10px;flex-shrink:0"><span><b>#'+r.rank+'</b> '+escLb(r.name)+'</span><span style="color:#ffd54a">'+r.score+' <small style="opacity:.7">lv '+r.stage+'</small></span></div>'}
+function lbRowHtml(r){const n=r.rank|0;const medal=n===1?'🥇':n===2?'🥈':n===3?'🥉':'';const cls='lbRow'+(n>=1&&n<=3?' podium r'+n:'');const rank=medal?('<span class="lbMedal">'+medal+'</span>'):('<span class="lbRank">#'+n+'</span>');
+  return '<div class="'+cls+'"><span>'+rank+' <span class="lbNameTxt">'+escLb(r.name)+'</span></span><span class="lbScore">'+r.score+' <small>lv '+r.stage+'</small></span></div>'}
 function buildLb(){const nameEl=$('lbName');if(nameEl&&document.activeElement!==nameEl)nameEl.value=faName();$('lbStatus').textContent=t('lbLoading');$('lbTop').innerHTML='';$('lbRest').innerHTML='';$('lbRest').style.display='none';$('lbYou').textContent='';
-  if($('lbTabTouch'))$('lbTabTouch').style.outline=lbMode==='touch'?'2px solid #ffd54a':'none';
-  if($('lbTabFace'))$('lbTabFace').style.outline=lbMode==='face'?'2px solid #7cf':'none';
+  if($('lbTabTouch'))$('lbTabTouch').classList.toggle('on',lbMode==='touch');
+  if($('lbTabFace'))$('lbTabFace').classList.toggle('on',lbMode==='face');
   lbFetch('/board?mode='+lbMode+'&playerId='+encodeURIComponent(faPlayerId())).then(data=>{
     $('lbWeek').textContent=(data.week||'')+' · '+(lbMode==='face'?t('lbFace'):t('lbTouch'))+(data.resetsAt?' · reset '+String(data.resetsAt).replace('T00:00:00-04:00',' (Mon)'):'');
     const rows=(data.rows||[]).slice(0,10);
