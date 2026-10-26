@@ -16,8 +16,15 @@
 html,body{margin:0;height:100%;background:#05030c;color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
 #cam.off{opacity:0;pointer-events:none}
 #camNote{position:fixed;right:4px;top:calc(env(safe-area-inset-top) + 124px);width:90px;font-size:9px;line-height:1.2;text-align:right;opacity:.7;z-index:3}
-#howto,#styles,#settings,#missions{justify-content:flex-start;overflow-y:auto;background:#05030c;z-index:8;padding:calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 16px);gap:8px}
-#howto h2,#styles h2,#settings h2,#missions h2,#styles h3{margin:4px 0;color:#ffd54a;font-size:24px}
+#howto,#styles,#settings,#missions,#upgrades{justify-content:flex-start;overflow-y:auto;background:#05030c;z-index:8;padding:calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 16px);gap:8px}
+#howto h2,#styles h2,#settings h2,#missions h2,#upgrades h2,#styles h3{margin:4px 0;color:#ffd54a;font-size:24px}
+.upRow{display:flex;align-items:center;gap:10px;width:100%;max-width:440px;text-align:left;background:#1a1430;border:2px solid #ffd54a55;border-radius:12px;padding:8px 10px;box-sizing:border-box}
+.upRow .ic{font-size:28px;width:40px;text-align:center;flex:none}
+.upRow .meta{flex:1;min-width:0;font-size:13px;line-height:1.3}
+.upRow .meta b{color:#ffd54a;font-size:15px}
+.upRow button{min-width:0;font-size:13px;padding:8px 10px;border-radius:10px}
+#coinHud{margin:0;font-size:15px;color:#ffd54a;font-weight:700}
+#bContRun{background:linear-gradient(180deg,#00c853,#009624);color:#fff;border:2px solid #b9f6ca;width:min(84vw,330px);min-width:0;font-size:20px;padding:14px 10px;border-radius:18px;font-weight:800}
 .hrow{display:flex;align-items:center;gap:12px;width:100%;max-width:440px;text-align:left;background:#1a1430;border:2px solid #ffd54a55;border-radius:12px;padding:7px 10px;box-sizing:border-box;flex:none}
 .hrow .ic{font-size:32px;width:46px;text-align:center;flex:none}.hrow b{color:#ffd54a;font-size:16px}.hrow div{font-size:14px;line-height:1.3;color:#fff}
 .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%;max-width:440px;flex:none}
@@ -107,11 +114,13 @@ html,body,button,canvas{touch-action:manipulation;-webkit-user-select:none;user-
   <div class="heroArt"><img src="art/hero.webp" alt="" width="132" height="132" decoding="async"></div>
   <h1><span class="faT1">Face-Action</span><span class="faSub"><svg class="chest" viewBox="0 0 64 54" aria-hidden="true"><ellipse cx="32" cy="23" rx="23" ry="6" fill="#ffd54a"/><circle cx="24" cy="20" r="4" fill="#ffe680" stroke="#b07a10"/><circle cx="38" cy="19" r="4" fill="#ffe680" stroke="#b07a10"/><path d="M6 24Q6 4 32 4Q58 4 58 24Z" fill="#8a4b1c" stroke="#3b1f0a" stroke-width="2"/><path d="M15 24Q15 8 23 6M49 24Q49 8 41 6" stroke="#ffcf4a" stroke-width="4" fill="none"/><rect x="6" y="24" width="52" height="27" rx="3" fill="#a0561f" stroke="#3b1f0a" stroke-width="2"/><rect x="13" y="24" width="5" height="27" fill="#ffcf4a"/><rect x="46" y="24" width="5" height="27" fill="#ffcf4a"/><rect x="27" y="27" width="10" height="12" rx="2" fill="#ffd54a" stroke="#3b1f0a" stroke-width="1.5"/><circle cx="32" cy="32" r="1.8" fill="#3b1f0a"/></svg><small data-t="sub"></small></span></h1>
   <p data-h="intro" style="max-width:360px;margin:0;font-size:15px"></p>
+  <button id="bContRun" class="hide"></button>
   <button id="bTouch" class="play pTouch" data-t="playTouch"></button>
   <button id="bFace" class="play pFace" data-t="playFace"></button>
   <button id="bDaily" class="daily"><span class="dTop" id="dTop"></span><span class="dSub" id="dSub"></span></button>
   <button id="bChapter" class="chap"></button>
-  <div class="mini"><button id="bStyle" class="sec" data-t="collectBtn"></button><button id="bSet" class="sec" data-t="setBtn"></button><button id="bHow" class="sec" data-t="howBtn"></button></div>
+  <p id="coinHud"></p>
+  <div class="mini"><button id="bUp" class="sec" data-t="upBtn"></button><button id="bStyle" class="sec" data-t="collectBtn"></button><button id="bSet" class="sec" data-t="setBtn"></button><button id="bHow" class="sec" data-t="howBtn"></button></div>
   <p id="best" style="margin:0;font-size:14px"></p><p style="margin:0"><a href="privacy.html" style="color:#9cf;font-size:13px" data-t="privacy"></a> · <a href="#" id="bLang" style="color:#9cf;font-size:13px"></a><br><small style="opacity:.6;font-size:11px" data-t="copy"></small></p><p id="msg" style="margin:0"><small></small></p>
 </div>
 <script>/* start-screen background: animates only while #start is visible; one static frame with prefers-reduced-motion */
@@ -153,6 +162,11 @@ window.__startBg={get running(){return !!raf},get count(){return typeof count===
 <div id="camEx" class="ov hide" style="z-index:9"><div style="font-size:56px">📷</div><h2 data-t="camExT" style="margin:0;color:#7df"></h2>
   <div class="hrow"><span class="ic">😀</span><div data-t="camEx1"></div></div><div class="hrow"><span class="ic">🔒</span><div data-t="camEx2"></div></div><div class="hrow"><span class="ic">👆</span><div data-t="camEx3"></div></div>
   <button id="bCamGo" class="play pFace" data-t="camExGo"></button><button id="bCamBack" class="sec" data-t="back"></button></div>
+<div id="upgrades" class="ov hide"><h2 data-t="upTitle"></h2>
+  <p id="upCoins" style="margin:0;font-size:16px;color:#ffd54a;font-weight:700"></p>
+  <p data-t="upP" style="margin:0;font-size:13px;max-width:400px;opacity:.85"></p>
+  <div id="upList" style="display:flex;flex-direction:column;gap:8px;width:100%;align-items:center"></div>
+  <button id="bUpOk" data-t="done"></button></div>
 <div id="settings" class="ov hide"><h2 data-t="setTitle"></h2>
   <div class="hrow"><span class="ic">🔷</span><div><b data-t="cbL"></b><br><span data-t="cbD"></span></div><button id="tCb" class="tog"></button></div>
   <div class="hrow"><span class="ic">🐢</span><div><b data-t="relaxL"></b><br><span data-t="relaxD"></span></div><button id="tRelax" class="tog"></button></div>
@@ -235,7 +249,7 @@ function applyLang(){document.documentElement.lang=LANG;
   if(msgState)$('msg').innerHTML=t(msgState[0],msgState[1]);
   if(overState)renderOver();
   if(calState.text)$('cText').textContent=t(calState.text);if(calState.step)$('cStep').textContent=t('stepOf',calState.step);
-  showBest();syncDaily();buildSettings();if(!$('styles').classList.contains('hide')){buildSkins();buildBadges()}if(!$('missions').classList.contains('hide'))buildMissions();if(S&&S.offer)$('contScore').textContent=t('contScore',{s:S.score})}
+  showBest();syncDaily();buildSettings();syncResumeUI();syncCoinsUI();if(!$('styles').classList.contains('hide')){buildSkins();buildBadges()}if(!$('missions').classList.contains('hide'))buildMissions();if(!$('upgrades').classList.contains('hide'))buildUpgrades();if(S&&S.offer)$('contScore').textContent=t('contScore',{s:S.score})}
 // ---------- v1.1 strings (Treasure Hunt) ----------
 Object.assign(L.en,{sub:'Treasure Hunt',intro:'Defeat guardians and grab treasure. Tap to play, or go hands-free with your face!<br><small>A fun facial workout. Camera stays on your device; nothing is uploaded.</small>',
 menu:'🏠 Menu',ouch:'Ouch! Out of hearts',again:'▶️ Play again',near:'So close! Only {n} points from your best!',
@@ -450,9 +464,52 @@ let S,FAKE_DAY=null,daily=false;
 const today=()=>{if(FAKE_DAY)return FAKE_DAY;const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let x=Math.imul(a^a>>>15,1|a);x=x+Math.imul(x^x>>>7,61|x)^x;return((x^x>>>14)>>>0)/4294967296}}
 const hashStr=s=>{let h=2166136261;for(const c of s)h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0};
-function newGame(){S={score:0,hearts:3,stage:0,combo:0,comboT:0,special:0,x:0.5,ents:[],shots:[],fx:[],parts:[],coins:[],t:0,stageT:0,spawnT:0,kills:0,need:0,banner:'',bannerT:0,pw:{},playT:0,ended:false,shieldCd:0,
+/* Soft-currency upgrades (fa_coins / fa_upgrades). Coins banked on game-over at score/10.
+   Upgrades raise the floor; face/touch skill still sets the ceiling. */
+const UP_DEFS=[
+  {k:'hearts',icon:'❤️',max:2,costs:[80,200]},
+  {k:'special',icon:'💥',max:4,costs:[60,140,280,500]},
+  {k:'move',icon:'💨',max:4,costs:[60,140,280,500]},
+  {k:'shield',icon:'🛡️',max:3,costs:[50,120,250]},
+  {k:'magnet',icon:'🧲',max:3,costs:[70,160,320]}
+];
+const RUN_KEY='fa_run',RUN_VER=1;let pendingResume=null;
+const _lsGet=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+const _lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const getCoins=()=>Math.max(0,+localStorage.getItem('fa_coins')||0);
+const setCoins=n=>{localStorage.setItem('fa_coins',Math.max(0,Math.floor(n)));try{syncCoinsUI()}catch(e){}};
+const addCoins=n=>{if(n>0)setCoins(getCoins()+n);return n};
+const getUpgrades=()=>{const u=_lsGet('fa_upgrades',{});const o={};for(const d of UP_DEFS)o[d.k]=Math.min(d.max,Math.max(0,+u[d.k]||0));return o};
+const setUpgrade=(k,lv)=>{const u=getUpgrades();u[k]=lv;_lsSet('fa_upgrades',u)};
+const upMul=()=>{const u=getUpgrades();return{hearts:u.hearts,special:1+.15*u.special,move:1+.08*u.move,shield:u.shield,magnet:1+.3*u.magnet,maxHearts:Math.min(5,3+u.hearts)}};
+function clearRun(){try{localStorage.removeItem(RUN_KEY)}catch(e){}try{syncResumeUI()}catch(e){}}
+function loadRun(){const r=_lsGet(RUN_KEY,null);if(!r||r.v!==RUN_VER||!(r.hearts>0)||r.ended)return null;return r}
+function saveRun(){if(!S||!running||S.ended||S.offer||!(S.hearts>0))return;try{
+  _lsSet(RUN_KEY,{v:RUN_VER,at:Date.now(),mode,daily:!!S.daily,day:S.day||today(),
+    score:S.score,hearts:S.hearts,stage:S.stage,combo:S.combo,comboT:S.comboT,special:S.special,x:S.x,
+    kills:S.kills,need:S.need,stageT:S.stageT,spawnT:S.spawnT,t:S.t,playT:S.playT,
+    pw:Object.assign({},S.pw),bossOut:!!S.bossOut,lastIdol:S.lastIdol,maxCombo:S.maxCombo||0,
+    contUsed:!!S.contUsed,boost:!!S.boost,relax:!!S.relax,shieldCd:S.shieldCd||0,freezeT:S.freezeT||0,
+    newBadges:[...(S.newBadges||[])],chapDone:[...(S.chapDone||[])],
+    ents:(S.ents||[]).filter(e=>!e.dead).map(e=>Object.assign({},e)),
+    shots:(S.shots||[]).filter(s=>!s.hit).map(s=>({x:s.x,y:s.y}))})}catch(e){}}
+function restoreRun(r){
+  daily=!!r.daily;const day=r.day||today();
+  S={score:r.score|0,hearts:r.hearts|0,stage:r.stage|0,combo:r.combo|0,comboT:r.comboT||0,special:r.special||0,x:r.x??0.5,
+    ents:(r.ents||[]).map(e=>Object.assign({},e)),shots:(r.shots||[]).map(s=>({x:s.x,y:s.y})),fx:[],parts:[],coins:[],
+    t:r.t||0,stageT:r.stageT||0,spawnT:r.spawnT||0,kills:r.kills|0,need:r.need|0,banner:()=>t('resumeBanner'),bannerT:3.2,
+    pw:Object.assign({},r.pw||{}),playT:r.playT||0,ended:false,shieldCd:r.shieldCd||0,
+    daily,day,rng:daily?mulberry(hashStr('fa-'+day)):Math.random,relax:!!r.relax,boost:!!r.boost,contUsed:!!r.contUsed,offer:false,
+    hype:null,hypeLast:-9,flash:null,shake:0,freezeT:r.freezeT||0,fireQ:[],prevBest:getBest(mode),recordHit:false,scorePulse:0,
+    maxCombo:r.maxCombo||0,newBadges:[...(r.newBadges||[])],chapDone:[...(r.chapDone||[])],bossOut:!!r.bossOut,lastIdol:r.lastIdol,
+    maxHearts:upMul().maxHearts};
+  if(!S.need)S.need=diff(S.stage).kills;
+}
+function newGame(){const um=upMul();S={score:0,hearts:um.maxHearts,maxHearts:um.maxHearts,stage:0,combo:0,comboT:0,special:0,x:0.5,ents:[],shots:[],fx:[],parts:[],coins:[],t:0,stageT:0,spawnT:0,kills:0,need:0,banner:'',bannerT:0,pw:{},playT:0,ended:false,shieldCd:0,
   daily,day:today(),rng:daily?mulberry(hashStr('fa-'+today())):Math.random,relax:OPT.relax,boost:false,contUsed:false,offer:false,
-  hype:null,hypeLast:-9,flash:null,shake:0,freezeT:0,fireQ:[],prevBest:getBest(mode),recordHit:false,scorePulse:0,maxCombo:0,newBadges:[],chapDone:[]};nextStage()}
+  hype:null,hypeLast:-9,flash:null,shake:0,freezeT:0,fireQ:[],prevBest:getBest(mode),recordHit:false,scorePulse:0,maxCombo:0,newBadges:[],chapDone:[]};
+  if(um.shield>0)S.pw.shield=1.5+um.shield*1.5; // starting shield seconds
+  nextStage()}
 // Difficulty: gentle ramp, capped (v1.1: unchanged per-stage curve; Relaxed = 75% speed, 20% slower spawns, half the ramp)
 const diff=s=>{const r=S&&S.relax,k=r?.5:1;return {speed:60*(r?.75:1)*(1+0.08*k*Math.min(s-1,15)+0.02*k*Math.max(0,s-16)),spawn:Math.max(r?.7:.55,(r?1.6:1.35)*Math.pow(r?.965:.93,s-1)),kills:5+s}};
 function nextStage(){const cleared=S.stage;S.stage++;S.kills=0;S.need=diff(S.stage).kills;S.stageT=0;
@@ -484,6 +541,7 @@ function step(now){requestAnimationFrame(step);const dt=Math.min(.05,(now-last)/
   if(!running)return;updateInput(dt);if(!paused&&!S.ended)update(dt);if(running||S.ended)draw()}
 function update(dt){
   if(S.offer)return; // waiting on the Continue? offer
+  S._saveAcc=(S._saveAcc||0)+dt;if(S._saveAcc>2.5){S._saveAcc=0;saveRun()}
   celebUpdate(dt);const frozen=S.freezeT>0;
   S.t+=dt;S.bannerT-=dt;S.shake=Math.max(0,S.shake-dt);
   const pd=frozen?dt*.5:dt;for(const p of S.parts){p.t-=pd;if(p.conf){p.vx*=1-pd*1.5;p.vy=p.vy*(1-pd*1.5)+260*pd;p.rot+=p.vr*pd}else p.vy+=(p.spark?160:500)*pd;p.x+=p.vx*pd;p.y+=p.vy*pd}S.parts=S.parts.filter(p=>p.t>0);
@@ -493,7 +551,7 @@ function update(dt){
   S.stageT+=dt;S.shieldCd-=dt;S.comboT-=dt;if(S.comboT<=0)S.combo=0;
   for(const k in S.pw)if((S.pw[k]-=dt)<=0)delete S.pw[k];
   const d=diff(S.stage),slow=S.pw.slow?.5:1;
-  S.x=Math.max(.06,Math.min(.94,S.x+inp.x*dt*0.9));
+  S.x=Math.max(.06,Math.min(.94,S.x+inp.x*dt*0.9*upMul().move));
   const px=S.x*W,py=H*0.78;
   if(inp.attack){inp.attack=false;S.shots.push({x:px,y:py-30});sfx.shot()}
   if(inp.special){inp.special=false;if(S.special>=100){S.special=0;sfx.nova();fx(px,py-60,t('nova'),'#ffd54a',22);screenFlash('#ffd54a',.35,.3);S.shake=.25;ev('nova');
@@ -505,20 +563,20 @@ function update(dt){
     e.ph+=dt;e.y+=d.speed*(e.sp??1)*slow*dt*(e.t==='g'?1:0.8); // v1.1 fix: treasure/power-ups had no sp -> NaN y, so they never appeared
     if(e.zig)e.x+=Math.sin(e.ph*4)*0.25*dt;
     const ex=e.x*W;
-    if(e.t!=='g'&&(vac||S.pw.magnet)){const dx=px-ex,dy=py-e.y,dd=Math.hypot(dx,dy);if(dd<(S.pw.magnet?W:W*.45)){e.x+=dx/dd*1.2*dt;e.y+=dy/dd*260*dt}}
+    if(e.t!=='g'&&(vac||S.pw.magnet)){const dx=px-ex,dy=py-e.y,dd=Math.hypot(dx,dy);const mp=upMul().magnet;if(dd<(S.pw.magnet?W:W*.45)){e.x+=dx/dd*1.2*mp*dt;e.y+=dy/dd*260*mp*dt}}
     if(e.t==='g'){
       const solid=!e.phase||Math.sin(e.ph*2)>-.2;
       for(const s of S.shots)if(!s.hit&&solid&&Math.abs(s.x-ex)<U()*28&&Math.abs(s.y-e.y)<U()*28){s.hit=true;e.hpL--;fx(ex,e.y,'⚔️');if(e.hpL>0)sfx.hit();
         if(e.hpL<=0){e.dead=true;S.kills++;S.combo++;S.maxCombo=Math.max(S.maxCombo,S.combo);sfx.kill();ev('kill');ev('combo',S.combo);
           if(S.combo>=5&&S.combo%5===0)hypeCombo(S.combo);
-          S.comboT=3;S.special=Math.min(100,S.special+8);addScore((e.boss?150:10)*(1+Math.min(S.combo,10)*0.1),ex,e.y);
+          S.comboT=3;S.special=Math.min(100,S.special+8*upMul().special);addScore((e.boss?150:10)*(1+Math.min(S.combo,10)*0.1),ex,e.y);
           if(e.boss){ev('boss');bossCelebrate(ex,e.y)}}}
       if(!e.dead&&e.y>py-20&&Math.abs(ex-px)<40){e.dead=true;hurt()}
       if(e.y>H+30){e.dead=true}
     }else{
       if(Math.hypot(ex-px,e.y-py)<(vac?60:38)){e.dead=true;
         if(e.t==='t'){const guarded=S.ents.some(o=>o.t==='g'&&!o.dead&&!o.boss&&Math.abs(o.y-e.y)<120&&Math.abs(o.x-e.x)<.2);
-          const mult=1+Math.min(S.combo,10)*0.1;addScore(e.p*mult*(guarded?0.5:1),ex,e.y);sfx.treasure(e.p);S.special=Math.min(100,S.special+3);ev('treasure');
+          const mult=1+Math.min(S.combo,10)*0.1;addScore(e.p*mult*(guarded?0.5:1),ex,e.y);sfx.treasure(e.p);S.special=Math.min(100,S.special+3*upMul().special);ev('treasure');
           if(e.p===100){ev('idol');if(!guarded)jackpotPop(ex,e.y)}}
         else powerup(e.k,ex,e.y)}
       if(e.y>H+30)e.dead=true}
@@ -528,17 +586,20 @@ function update(dt){
   if(S.kills>=S.need&&!S.ents.some(e=>e.boss))nextStage();
 }
 function addScore(p,x,y){p=Math.round(p);S.score+=p;fx(x,y,'+'+p,'#ffd54a');checkRecord();ev('score',S.score)}
-function powerup(k,x,y){sfx.power();if(k==='heart')S.hearts=Math.min(5,S.hearts+1);else S.pw[k]=k==='shield'?8:6;fx(x,y,(k==='heart'?'+❤️':t(k)),'#7cf')}
+function powerup(k,x,y){sfx.power();if(k==='heart')S.hearts=Math.min(S.maxHearts||5,S.hearts+1);else{const base=k==='shield'?8:6;S.pw[k]=base+(k==='magnet'?1.5*(getUpgrades().magnet||0):k==='shield'?1*(getUpgrades().shield||0):0)}fx(x,y,(k==='heart'?'+❤️':t(k)),'#7cf')}
 function hurt(){if(S.pw.shield||inp.shield&&S.shieldCd<=0){fx(S.x*W,H*.7,t('blocked'),'#7cf');if(!S.pw.shield)S.shieldCd=4;ev('block');parts(S.x*W,H*.74,'#7cf',14,160);return}
   S.hearts--;S.combo=0;sfx.hurt();S.shake=.3;navigator.vibrate&&navigator.vibrate(120);if(S.hearts<=0){S.hearts=0;endOrOffer()}}
 function parts(x,y,col,n=16,sp=220){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=sp*(.3+Math.random());S.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-80,t:.6+Math.random()*.5,col,s:2+Math.random()*4})}}
 function gameOver(){S.ended=true;running=false;sfx.over();camStop();$('bPause').classList.add('hide');$('touch').classList.add('hide');
+  clearRun();
+  // Bank soft currency: 1 coin per 10 score points (fair drip; skill runs still pay more).
+  const gained=addCoins(Math.floor((S.score||0)/10));
   const m=mode==='face'?'face':'touch',prev=getBest(m),b=Math.max(S.score,prev);localStorage.setItem(BEST_KEYS[m],b);localStorage.setItem('fa_top',Math.max(topScore(),S.score));showBest();
   let streak=null;if(S.daily){const dk='fa_daily_'+S.day+'_'+m;localStorage.setItem(dk,Math.max(+localStorage.getItem(dk)||0,S.score));streak=recordDaily()}
   STATS.games++;LS.set('fa_stats',STATS);checkBadges(false);
-  overState={m,s:S.score,g:S.stage,nb:S.score>prev&&S.score>0,b,prev,daily:S.daily?S.day:null,date:new Date(),streak,badges:[...S.newBadges],chapDone:[...S.chapDone],secs:Math.round(S.t)};renderOver();$('over').classList.remove('hide');draw()}
+  overState={m,s:S.score,g:S.stage,nb:S.score>prev&&S.score>0,b,prev,daily:S.daily?S.day:null,date:new Date(),streak,badges:[...S.newBadges],chapDone:[...S.chapDone],secs:Math.round(S.t),coins:gained};renderOver();$('over').classList.remove('hide');draw()}
 function renderOver(){const o=overState,lbl=t(o.m+'L');
-  $('oScore').innerHTML=(o.daily?t('dailyL',{d:o.daily})+'<br>':'')+t('overLine',{m:lbl,s:'<b>'+o.s+'</b>',g:o.g})+'<br>'+(o.nb?t('newBest',{m:lbl}):t('bestIs',{m:lbl,b:o.b}));
+  $('oScore').innerHTML=(o.daily?t('dailyL',{d:o.daily})+'<br>':'')+t('overLine',{m:lbl,s:'<b>'+o.s+'</b>',g:o.g})+'<br>'+(o.nb?t('newBest',{m:lbl}):t('bestIs',{m:lbl,b:o.b}))+(o.coins?('<br><span style="color:#ffd54a">'+t('banked',{n:o.coins})+'</span>'):'');
   const gap=o.prev-o.s;$('oHook').innerHTML=!o.nb&&gap>0&&gap<=Math.max(60,o.prev*.25)?t('near',{n:gap}):'';
   const meta=[];if(o.streak&&!o.streak.same){meta.push(tp('streakUp',o.streak.n));if(o.streak.milestone)meta.push(t('streakRew',{n:o.streak.n})+' '+t('rewBoost')+(o.streak.skin?' · '+t('rewSkin',{s:t(SKINS.find(x=>x.k===o.streak.skin).n)}):''))}
   for(const c of o.chapDone)meta.push(t('chapRewOver',{n:c}));for(const b of o.badges)meta.push(t('badgeGot',{b:t('b_'+b)}));
@@ -547,7 +608,7 @@ function renderOver(){const o=overState,lbl=t(o.m+'L');
   $('oShareMsg').textContent='';if(o.nb)showCard(o);else{$('oCard').classList.add('hide');$('bShare').classList.add('hide')}}
 $('bAgain').onclick=()=>{$('over').classList.add('hide');overState=null;begin(true)};
 $('bMenu').onclick=()=>{$('over').classList.add('hide');overState=null;toMenu()};
-function toMenu(){running=false;paused=false;camStop();['pause','bPause','touch'].forEach(i=>$(i).classList.add('hide'));$('start').classList.remove('hide');showBest();syncDaily();newGame();draw()}
+function toMenu(){running=false;paused=false;camStop();['pause','bPause','touch'].forEach(i=>$(i).classList.add('hide'));$('start').classList.remove('hide');showBest();syncDaily();syncResumeUI();syncCoinsUI();newGame();draw()}
 $('bQuit').onclick=toMenu;
 const U=()=>Math.min(W,H)/400;
 const COL={goblin:['#e53935','G'],bat:['#d500f9','B'],golem:['#ff6d00','R'],ghost:['#00e5ff','?'],mimic:['#ff1744','M'],dragon:['#ff1744','D'],
@@ -717,6 +778,19 @@ function buildSettings(){for(const [id,k] of [['tCb','cb'],['tRelax','relax']]){
 function setOpt(k,v){OPT[k]=v;LS.set('fa_opts',OPT);buildSettings()}
 $('tCb').onclick=()=>setOpt('cb',!OPT.cb);$('tRelax').onclick=()=>setOpt('relax',!OPT.relax);
 $('bSet').onclick=()=>{buildSettings();$('settings').classList.remove('hide')};$('bSetOk').onclick=()=>$('settings').classList.add('hide');
+function syncCoinsUI(){const n=getCoins(),el=$('coinHud');if(el)el.textContent=t('upCoins',{n});const u=$('upCoins');if(u)u.textContent=t('upCoins',{n})}
+function syncResumeUI(){const btn=$('bContRun');if(!btn)return;const r=loadRun();if(r){btn.classList.remove('hide');btn.textContent=t('resumeRun',{s:r.score,g:r.stage})}else btn.classList.add('hide')}
+function buildUpgrades(){syncCoinsUI();const list=$('upList');if(!list)return;list.innerHTML='';const u=getUpgrades(),coins=getCoins();
+  for(const d of UP_DEFS){const lv=u[d.k]|0,maxed=lv>=d.max,cost=maxed?0:d.costs[lv];
+    const row=document.createElement('div');row.className='upRow';
+    row.innerHTML='<span class="ic">'+d.icon+'</span><div class="meta"><b>'+t('up_'+d.k)+'</b> · '+t('upLvl',{n:lv})+(maxed?'':' / '+d.max)+'<br>'+t('up_'+d.k+'D')+'</div>';
+    const b=document.createElement('button');b.className=maxed||coins<cost?'sec':'';b.disabled=maxed||coins<cost;b.textContent=maxed?t('upMax'):t('upBuy',{c:cost});
+    b.onclick=()=>{if(maxed||getCoins()<cost)return;setCoins(getCoins()-cost);setUpgrade(d.k,lv+1);sfx.beep&&sfx.beep(true);buildUpgrades()};
+    row.appendChild(b);list.appendChild(row)}}
+$('bUp').onclick=()=>{buildUpgrades();$('upgrades').classList.remove('hide');$('upgrades').scrollTop=0};
+$('bUpOk').onclick=()=>$('upgrades').classList.add('hide');
+$('bContRun').onclick=()=>{const r=loadRun();if(!r)return;mode=r.mode==='face'?'face':'touch';daily=!!r.daily;if(mode==='face'){pendingResume=r;askFace()}else{pendingResume=null;begin(false,r)}};
+syncCoinsUI();syncResumeUI();
 // ----- hunter helmets (skins) -----
 const SKINS=[{k:'gold',n:'kGold',c:'#ffb300',need:0},{k:'ruby',n:'kRuby',c:'#e53935',need:1500},{k:'jade',n:'kJade',c:'#00c853',need:4000},{k:'cosmic',n:'kCosmic',c:'#7c4dff',grad:['#7c4dff','#00e5ff','#ff4081'],glow:'#b388ff',need:8000}];
 const topScore=()=>Math.max(+localStorage.getItem('fa_top')||0,getBest('face'),getBest('touch'));
@@ -818,7 +892,7 @@ async function startFace(){
     try{await initFace()}finally{clearInterval(iv)}
   }catch(e){setMsg('loadFail',{e:e.message});camStop();return}
   if(gen!==window.__faceGen){camStop();setMsg(null);return}
-  mode='face';faceLoopOn=true;faceLoop();$('start').classList.add('hide');if(forceCal||!loadCal()){try{await calibrate()}catch(e){if(e==='cancel'){lightWatch(false);return}throw e}}if(gen!==window.__faceGen)return;forceCal=false;begin(false);
+  mode='face';faceLoopOn=true;faceLoop();$('start').classList.add('hide');if(forceCal||!loadCal()){try{await calibrate()}catch(e){if(e==='cancel'){lightWatch(false);return}throw e}}if(gen!==window.__faceGen)return;forceCal=false;if(pendingResume){const r=pendingResume;pendingResume=null;begin(false,r)}else begin(false);
 }
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 // ---------- Camera lifecycle: camera only on while actively playing ----------
@@ -869,16 +943,17 @@ async function calibrate(){const cg=window.__faceGen;const chk=()=>{if(cg!==wind
   $('cCount').textContent='';$('cStep').textContent='';calState={};
   saveCal();lightWatch(false);$('calib').classList.add('hide');
 }
-function begin(again){$('start').classList.add('hide');$('bPause').classList.remove('hide');$('touch').classList.toggle('hide',mode!=='touch');
-  newGame();if(!daily&&getBoost()>0){S.boost=true;addBoost(-1);S.special=100;S.banner=t('boostOn');S.bannerT=2.6}
-  for(const k in touch)touch[k]=false;running=true;paused=false;last=performance.now();if(again)camResume()}
-$('bFace').onclick=askFace;
+function begin(again,fromSave){$('start').classList.add('hide');$('bPause').classList.remove('hide');$('touch').classList.toggle('hide',mode!=='touch');
+  if(fromSave){restoreRun(fromSave); /* keep fa_run until game over / quit / fresh start */}
+  else{clearRun();newGame();if(!daily&&getBoost()>0){S.boost=true;addBoost(-1);S.special=100;S.banner=t('boostOn');S.bannerT=2.6}}
+  for(const k in touch)touch[k]=false;running=true;paused=false;last=performance.now();if(again||fromSave)camResume();saveRun();syncResumeUI()}
+$('bFace').onclick=()=>{pendingResume=null;askFace()};
 const HOW_KEY='fa_howto_v1';
 function showHow(){$('howto').classList.remove('hide');$('howto').scrollTop=0}
 $('bHow').onclick=showHow;$('bHowP').onclick=showHow;
 $('bHowOk').onclick=()=>{localStorage.setItem(HOW_KEY,'1');$('howto').classList.add('hide')};
 if(!localStorage.getItem(HOW_KEY))showHow();
-function doPause(){if(!running||S.ended||paused)return;paused=true;camStop();$('pause').classList.remove('hide')}
+function doPause(){if(!running||S.ended||paused)return;paused=true;camStop();saveRun();$('pause').classList.remove('hide')}
 $('bPause').onclick=doPause;
 $('bResume').onclick=()=>{$('pause').classList.add('hide');paused=false;last=performance.now();camResume()};
 $('bVol').textContent=volIcon();$('bVol').onclick=e=>{e.stopPropagation();cycleVol();sfx.beep(true)};
@@ -888,9 +963,9 @@ $('bHud').onclick=()=>{hudOn=!hudOn;localStorage.setItem('ftq_hud',hudOn?'1':'0'
 $('bRecalStart').onclick=()=>{$('settings').classList.add('hide');forceCal=true;askFace()};
 $('bRecalAuto').onclick=async()=>{$('bRecalAuto').classList.add('hide');noFaceT=0;paused=true;await calibrate();paused=false;last=performance.now()};
 $('bRecal').onclick=async()=>{if(mode!=='face')return;paused=true;await calibrate();paused=false;last=performance.now()};
-$('bTouch').onclick=()=>{mode='touch';begin(false)};
-document.addEventListener('visibilitychange',()=>{if(document.hidden){camStop();if(running)paused=true}else{if($('rest').classList.contains('hide')&&$('calib').classList.contains('hide')&&$('pause').classList.contains('hide')&&!(S&&S.offer))paused=false;last=performance.now();camResume()}updInd()});
-addEventListener('pagehide',camStop);addEventListener('pageshow',e=>{if(e.persisted)camResume()});
+$('bTouch').onclick=()=>{pendingResume=null;mode='touch';begin(false)};
+document.addEventListener('visibilitychange',()=>{if(document.hidden){camStop();if(running){paused=true;saveRun()}}else{if($('rest').classList.contains('hide')&&$('calib').classList.contains('hide')&&$('pause').classList.contains('hide')&&!(S&&S.offer))paused=false;last=performance.now();camResume()}updInd()});
+addEventListener('pagehide',()=>{saveRun();camStop()});addEventListener('pageshow',e=>{if(e.persisted)camResume()});
 $('camResume').onclick=()=>camStart();
 $('bPrev').onclick=()=>{prevOn=!prevOn;localStorage.setItem('ftq_prev',prevOn?'1':'0');updInd()};
 newGame();requestAnimationFrame(step);
@@ -898,21 +973,21 @@ window.__ft={sfx,SND,startRest,endRest,gameOver,get stream(){return stream},get 
   setMode:m=>{mode=m},setBs:v=>{bs=v;faceSeen=true},setYaw:v=>{yaw=v},updateInput,setDay:d=>{FAKE_DAY=d;syncDaily()},recordDaily,syncDaily,get PROG(){return PROG},ev,get STATS(){return STATS},get BGOT(){return BGOT},showRewardedAd,lightWatch,luma,get OPT(){return OPT},endOrOffer,diff,get running(){return running},nextStage,setSkin:k=>{skin=k},get W(){return W},get H(){return H}};
 
 // ===== Navigation: 🏠 Home in the top bar, quit confirmation, ← Back on overlays, Android hardware back (Oct 18 2026) =====
-Object.assign(L.en,{home:'Home',quitT:'Quit to menu?',quitP:"Your score won't be saved.",quitYes:'🏠 Yes, quit',quitNo:'▶️ No, keep playing',quitNoP:'↩️ No, go back',navBack:'← Back'});
-Object.assign(L.fr,{home:'Accueil',quitT:'Retourner au menu ?',quitP:'Votre score ne sera pas enregistré.',quitYes:'🏠 Oui, quitter',quitNo:'▶️ Non, continuer',quitNoP:'↩️ Non, revenir',navBack:'← Retour'});
+Object.assign(L.en,{home:'Home',quitT:'Quit to menu?',quitP:'This run will be abandoned (saved progress cleared).',quitYes:'🏠 Yes, quit',quitNo:'▶️ No, keep playing',quitNoP:'↩️ No, go back',navBack:'← Back',resumeRun:'▶️ Continue · {s} pts · stage {g}',resumeBanner:'↩️ Resumed — pick up where you left off!',upBtn:'⬆️ Upgrades',upTitle:'Upgrades',upP:'Spend coins earned from your runs. Upgrades raise your floor — skill still sets the ceiling.',upCoins:'🪙 Coins: {n}',upMax:'MAX',upBuy:'🪙 {c}',upLvl:'Lv {n}',up_hearts:'Max hearts',up_heartsD:'Start with more ❤️ (cap 5).',up_special:'Special charge',up_specialD:'Fill the nova meter faster.',up_move:'Move speed',up_moveD:'Slide a bit faster (touch & face).',up_shield:'Starting shield',up_shieldD:'Begin each run with a short 🛡️.',up_magnet:'Magnet power',up_magnetD:'Stronger treasure pull when 🧲 is active.',banked:'+{n} 🪙 banked'});
+Object.assign(L.fr,{home:'Accueil',quitT:'Retourner au menu ?',quitP:'Cette partie sera abandonnée (progression sauvegardée effacée).',quitYes:'🏠 Oui, quitter',quitNo:'▶️ Non, continuer',quitNoP:'↩️ Non, revenir',navBack:'← Retour',resumeRun:'▶️ Reprendre · {s} pts · niv. {g}',resumeBanner:'↩️ Reprise — continuez où vous vous êtes arrêté !',upBtn:'⬆️ Améliorations',upTitle:'Améliorations',upP:'Dépensez les pièces gagnées en partie. Les améliorations haussent le plancher — le skill fixe toujours le plafond.',upCoins:'🪙 Pièces : {n}',upMax:'MAX',upBuy:'🪙 {c}',upLvl:'Niv. {n}',up_hearts:'Cœurs max',up_heartsD:'Commencez avec plus de ❤️ (plafond 5).',up_special:'Charge spéciale',up_specialD:'Remplissez la jauge nova plus vite.',up_move:'Vitesse',up_moveD:'Glissez un peu plus vite (tactile & visage).',up_shield:'Bouclier de départ',up_shieldD:'Commencez chaque partie avec un court 🛡️.',up_magnet:'Puissance aimant',up_magnetD:'Attraction des trésors plus forte avec 🧲.',banked:'+{n} 🪙 en banque'});
 (()=>{const st=document.createElement('style');st.textContent='.navBack{position:fixed;left:8px;top:calc(env(safe-area-inset-top) + 8px);min-width:0!important;width:auto!important;padding:7px 14px!important;font-size:15px!important;z-index:7;border-radius:999px!important}#quitAsk{z-index:10}';document.head.appendChild(st);
  const h=document.createElement('button');h.id='bHome';h.className='hide';h.dataset.ti='home';h.textContent='🏠';h.setAttribute('aria-label','Home');
  h.style.cssText='position:fixed;right:200px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6';document.body.appendChild(h);
  const q=document.createElement('div');q.id='quitAsk';q.className='ov hide';q.innerHTML='<div style="font-size:52px">🏠</div><h2 data-t="quitT" style="margin:0"></h2><p data-t="quitP" style="margin:0;font-size:17px"></p><button id="bQuitYes" class="play pTouch" data-t="quitYes"></button><button id="bQuitNo" class="sec" data-t="quitNo"></button>';document.body.appendChild(q);
- for(const id of ['howto','styles','settings','missions']){const o=$(id);if(!o)continue;const b=document.createElement('button');b.className='sec navBack';b.dataset.t='navBack';b.dataset.for=id;o.insertBefore(b,o.firstChild)}
+ for(const id of ['howto','styles','settings','missions','upgrades']){const o=$(id);if(!o)continue;const b=document.createElement('button');b.className='sec navBack';b.dataset.t='navBack';b.dataset.for=id;o.insertBefore(b,o.firstChild)}
  new MutationObserver(()=>h.classList.toggle('hide',$('bPause').classList.contains('hide'))).observe($('bPause'),{attributes:true,attributeFilter:['class']});
 })();
 const vis=id=>{const e=$(id);return !!e&&!e.classList.contains('hide')};
-function closeOv(id){({howto:'bHowOk',styles:'bStyleOk',settings:'bSetOk',missions:'bMisOk',camEx:'bCamBack'})[id]&&$(({howto:'bHowOk',styles:'bStyleOk',settings:'bSetOk',missions:'bMisOk',camEx:'bCamBack'})[id]).click()}
+function closeOv(id){({howto:'bHowOk',styles:'bStyleOk',settings:'bSetOk',missions:'bMisOk',upgrades:'bUpOk',camEx:'bCamBack'})[id]&&$(({howto:'bHowOk',styles:'bStyleOk',settings:'bSetOk',missions:'bMisOk',upgrades:'bUpOk',camEx:'bCamBack'})[id]).click()}
 document.querySelectorAll('.navBack').forEach(b=>b.onclick=()=>closeOv(b.dataset.for));
 // leave whatever is happening and show the start screen; toMenu() stops the loop and the camera
 function cancelFace(){window.__faceGen=(window.__faceGen||0)+1}
-function goHome(){cancelFace();try{clearInterval(restI)}catch(e){}document.querySelectorAll('.ov').forEach(o=>{if(o.id!=='start')o.classList.add('hide')});try{overState=null}catch(e){}toMenu();camStop();try{setMsg(null)}catch(e){}}
+function goHome(){cancelFace();try{clearInterval(restI)}catch(e){}document.querySelectorAll('.ov').forEach(o=>{if(o.id!=='start')o.classList.add('hide')});try{overState=null}catch(e){}clearRun();pendingResume=null;toMenu();camStop();try{setMsg(null)}catch(e){}}
 // tapping Touch while the face model is still loading cancels the face start and turns the camera off
 $('bTouch').addEventListener('click',()=>{if(stream||window.__faceGen){cancelFace();camStop()}},true);
 let askFrom=null;
