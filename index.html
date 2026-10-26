@@ -325,7 +325,7 @@ streakRew:'🔥 {n}-day streak!',rewBoost:'⚡ Treasure boost next game',rewSkin
 chapBtn:'📖 Chapter {n} · {d}/3 missions',chapTitle:'📖 Chapter {n}',chapP:'Complete all 3 missions to reach the next chapter. Reward: ⚡ treasure boost next game.',
 mKill:'Defeat {n} guardians',mIdol:'Collect {n} golden idol{s} (🏆 100 pts)',mNova:'Use Treasure Nova {n} time{s}',mBlock:'Block {n} attack{s}',mStage:'Reach stage {n} in one game',mScore:'Score {n} in one game',mCombo:'Reach a x{n} kill combo',mBoss:'Defeat {n} dragon{s}',mTreasure:'Collect {n} treasures',
 mDone:'✅ Mission complete: {m}',chapDone:'CHAPTER {n} COMPLETE!',chapRewOver:'📖 Chapter {n} complete! ⚡ Treasure boost next game',chapTotal:'Chapters completed: {n}',boostOn:'⚡ Treasure boost: full special meter + rarer treasure!',colon:': ',
-collectBtn:'🏆 Collection',collTitle:'🏆 Collection',skinTitle:'⚔️ Hunters',skinP:'Buy hunters with coins, then tap to equip for one run. Equipped figure expires after each game (back to Scout). Ownership stays.',badgesH:'🏅 Badges',needPts:'🔒 {n} pts',needStreak:'or 🔥 {n} days',bestStreak:'🔥 Best daily streak: {n} day{s}',
+collectBtn:'🏆 Collection',collTitle:'🏆 Collection',skinTitle:'⚔️ Hunters',skinP:'Buy hunters with coins, then tap to equip for one run. A loss resets hunters and upgrades back to Scout (no refund).',badgesH:'🏅 Badges',needPts:'🔒 {n} pts',needStreak:'or 🔥 {n} days',bestStreak:'🔥 Best daily streak: {n} day{s}',
 hScout:'Scout',hScoutA:'Classic cavern hunter',hBlade:'Blade',hBladeA:'Twin shots · +15% special from kills',hWarden:'Warden',hWardenA:'Faster shield · +2s start shield',hRelic:'Relic',hRelicA:'+20% treasure · stronger magnet',buyHunter:'🪙 Buy · {c}',hunterEq:'✓ Equipped',hunterOwn:'Owned — tap to equip (1 run)',
 b_dragon:'Dragon Slayer',d_dragon:'Defeat a dragon boss',b_hunter:'Guardian Hunter',d_hunter:'Defeat 200 guardians',b_idol:'Idol Collector',d_idol:'Collect 10 golden idols',b_wall:'Iron Wall',d_wall:'Block 25 attacks',
 b_s3:'On a Roll',d_s3:'3-day daily streak',b_s7:'Week Warrior',d_s7:'7-day daily streak',b_s14:'Two-Week Titan',d_s14:'14-day daily streak',b_s30:'Monthly Legend',d_s30:'30-day daily streak',badgeGot:'🏅 Badge: {b}!',
@@ -344,7 +344,7 @@ streakRew:'🔥 Série de {n} jours !',rewBoost:'⚡ Bonus trésor à la prochai
 chapBtn:'📖 Chapitre {n} · {d}/3 missions',chapTitle:'📖 Chapitre {n}',chapP:'Réussissez les 3 missions pour passer au chapitre suivant. Récompense : ⚡ bonus trésor à la prochaine partie.',
 mKill:'Battez {n} gardiens',mIdol:'Ramassez {n} idole{s} dorée{s} (🏆 100 pts)',mNova:'Utilisez la Treasure Nova {n} fois',mBlock:'Bloquez {n} attaque{s}',mStage:'Atteignez le niveau {n} en une partie',mScore:'Marquez {n} en une partie',mCombo:'Atteignez un combo x{n}',mBoss:'Battez {n} dragon{s}',mTreasure:'Ramassez {n} trésors',
 mDone:'✅ Mission réussie : {m}',chapDone:'CHAPITRE {n} TERMINÉ !',chapRewOver:'📖 Chapitre {n} terminé ! ⚡ Bonus trésor à la prochaine partie',chapTotal:'Chapitres terminés : {n}',boostOn:'⚡ Bonus trésor : jauge spéciale pleine + trésors rares !',colon:' : ',
-collectBtn:'🏆 Collection',collTitle:'🏆 Collection',skinTitle:'⚔️ Chasseurs',skinP:'Achetez des chasseurs avec des pièces, puis touchez pour équiper une partie. La figure expire après chaque partie (retour à Éclaireur). La possession reste.',badgesH:'🏅 Badges',needPts:'🔒 {n} pts',needStreak:'ou 🔥 {n} jours',bestStreak:'🔥 Meilleure série : {n} jour{s}',
+collectBtn:'🏆 Collection',collTitle:'🏆 Collection',skinTitle:'⚔️ Chasseurs',skinP:'Achetez des chasseurs avec des pièces, puis touchez pour équiper une partie. Une défaite remet chasseurs et améliorations à Éclaireur (sans remboursement).',badgesH:'🏅 Badges',needPts:'🔒 {n} pts',needStreak:'ou 🔥 {n} jours',bestStreak:'🔥 Meilleure série : {n} jour{s}',
 hScout:'Éclaireur',hScoutA:'Chasseur classique de cavernes',hBlade:'Lame',hBladeA:'Tirs doubles · +15 % spécial aux kills',hWarden:'Gardien',hWardenA:'Bouclier plus rapide · +2 s au départ',hRelic:'Relique',hRelicA:'+20 % trésor · aimant plus fort',buyHunter:'🪙 Acheter · {c}',hunterEq:'✓ Équipé',hunterOwn:'Possédé — toucher pour équiper (1 partie)',
 b_dragon:'Tueur de dragon',d_dragon:'Battez un dragon',b_hunter:'Chasseur de gardiens',d_hunter:'Battez 200 gardiens',b_idol:'Collectionneur d\'idoles',d_idol:'Ramassez 10 idoles dorées',b_wall:'Mur de fer',d_wall:'Bloquez 25 attaques',
 b_s3:'Sur la lancée',d_s3:'Série de 3 jours',b_s7:'Guerrier de la semaine',d_s7:'Série de 7 jours',b_s14:'Titan des deux semaines',d_s14:'Série de 14 jours',b_s30:'Légende du mois',d_s30:'Série de 30 jours',badgeGot:'🏅 Badge : {b} !',
@@ -680,11 +680,19 @@ function hurt(){if(S.pw.shield||inp.shield&&S.shieldCd<=0){fx(S.x*W,H*.7,t('bloc
   S.hearts--;S.combo=0;sfx.hurt();S.shake=.3;navigator.vibrate&&navigator.vibrate(120);if(S.hearts<=0){S.hearts=0;endOrOffer()}}
 function parts(x,y,col,n=16,sp=220){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=sp*(.3+Math.random());S.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-80,t:.6+Math.random()*.5,col,s:2+Math.random()*4})}}
 function expireHunter(){skin='scout';try{localStorage.setItem('fa_skin','scout')}catch(e){}try{if(!$('styles').classList.contains('hide'))buildSkins()}catch(e){}}
+function resetAcquiredOnLoss(){
+  // Wipe coin upgrades + hunter ownership (Scout only). No coin refund. Coins/bests/badges kept.
+  try{_lsSet('fa_upgrades',{})}catch(e){}
+  try{LS.set('fa_hunters',['scout'])}catch(e){try{localStorage.setItem('fa_hunters',JSON.stringify(['scout']))}catch(e2){}}
+  expireHunter();
+  try{if(!$('upgrades').classList.contains('hide'))buildUpgrades()}catch(e){}
+}
 function gameOver(){S.ended=true;running=false;sfx.over();camStop();$('bPause').classList.add('hide');$('touch').classList.add('hide');
-  clearRun();expireHunter();
+  clearRun();
   try{boardBump('games',1);boardMarkDay()}catch(e){}
-  // Bank soft currency: 1 coin per 10 score points (fair drip; skill runs still pay more).
+  // Bank soft currency first, then wipe upgrades/collections (continue-offer path never reaches here).
   const gained=addCoins(Math.floor((S.score||0)/10));
+  resetAcquiredOnLoss();
   const m=mode==='face'?'face':'touch',prev=getBest(m),b=Math.max(S.score,prev);localStorage.setItem(BEST_KEYS[m],b);if(S.score>prev&&S.score>0){localStorage.setItem(BEST_KEYS[m]+'_stage',S.stage|0);stampBestAt(m)}localStorage.setItem('fa_top',Math.max(topScore(),S.score));showBest();
   let streak=null;if(S.daily){const dk='fa_daily_'+S.day+'_'+m;localStorage.setItem(dk,Math.max(+localStorage.getItem(dk)||0,S.score));streak=recordDaily()}
   STATS.games++;LS.set('fa_stats',STATS);checkBadges(false);
@@ -1269,6 +1277,8 @@ window.__ft={sfx,SND,startRest,endRest,gameOver,get stream(){return stream},get 
 
 // ===== Weekly online leaderboard (Cloudflare Worker + D1) =====
 const LB_API='https://face-action-scores.haitialways.workers.dev';
+/** Leaderboard protocol version — must be >= Worker MIN_CLIENT (2 = loss-reset / TH 1.1.6). */
+const LB_CLIENT=2;
 function faPlayerId(){let id=localStorage.getItem('fa_pid');if(!id){id=(crypto.randomUUID&&crypto.randomUUID())||('p'+Math.random().toString(36).slice(2)+Date.now().toString(36));localStorage.setItem('fa_pid',id)}return id}
 function faName(){return (localStorage.getItem('fa_name')||'').trim()}
 function setFaName(n){n=String(n||'').trim().replace(/\s+/g,' ').slice(0,16);if(n)localStorage.setItem('fa_name',n);return n}
@@ -1278,11 +1288,11 @@ async function lbFetch(path,opt){const r=await fetch(LB_API+path,{...opt,headers
 /** Resolve nickname: localStorage, then #lbName field (typed but unsaved), never rely on window.prompt (blocked on many phones). */
 function resolveLbName(){let name=faName();if(!name){const el=$('lbName');if(el&&el.value)name=setFaName(el.value)}return name}
 async function submitScore(o){try{const score=(o&&(o.score!=null?o.score:o.s))|0,stage=(o&&(o.stage!=null?o.stage:o.g))|0||1;if(!(score>0))return null;const now=Date.now();if(now<LB_CUTOFF_MS)return null;let name=resolveLbName();if(!name){name=await askLbName();if(!name)return null}
-  const body={playerId:faPlayerId(),name,score,stage,mode:o.m==='face'?'face':'touch',game:'treasure',secs:o.secs|0||0,ts:now};
+  const body={playerId:faPlayerId(),name,score,stage,mode:o.m==='face'?'face':'touch',game:'treasure',secs:o.secs|0||0,ts:now,client:LB_CLIENT};
   return await lbFetch('/submit',{method:'POST',body:JSON.stringify(body)})}catch(e){return null}}
 /** Post local bests only if stamped on/after LB cutoff (pre-launch bests were zeroed by resetLbScoresOnce). */
 async function publishLocalBests(name){name=setFaName(name||faName());if(!name)return null;const pid=faPlayerId();const modes=['touch','face'];const out=[];
-  for(const mode of modes){if(!isLbPublishable(mode))continue;const score=getBest(mode)|0,stage=(+localStorage.getItem(BEST_KEYS[mode]+'_stage')|0),at=bestAt(mode);try{out.push(await lbFetch('/submit',{method:'POST',body:JSON.stringify({playerId:pid,name,score,stage,mode,game:'treasure',secs:0,ts:at})}))}catch(e){out.push(null)}}
+  for(const mode of modes){if(!isLbPublishable(mode))continue;const score=getBest(mode)|0,stage=(+localStorage.getItem(BEST_KEYS[mode]+'_stage')|0),at=bestAt(mode);try{out.push(await lbFetch('/submit',{method:'POST',body:JSON.stringify({playerId:pid,name,score,stage,mode,game:'treasure',secs:0,ts:at,client:LB_CLIENT})}))}catch(e){out.push(null)}}
   return out}
 function askLbName(){return new Promise(resolve=>{let ov=$('lbAsk');if(!ov){ov=document.createElement('div');ov.id='lbAsk';ov.className='ov thHall hide';ov.innerHTML='<h2 data-t="lbName"></h2><p style="margin:0;font-size:14px;opacity:.85">'+escLb(t('lbP'))+'</p><input id="lbAskIn" maxlength="16" style="width:min(280px,80vw);padding:10px 12px;border-radius:10px;border:1px solid #ffd54a66;background:#1a1430;color:#fff;font-size:16px"><button id="lbAskOk" class="play pTouch" data-t="lbSave"></button>';document.body.appendChild(ov)}
   const inp=$('lbAskIn');inp.value=faName()||($('lbName')&&$('lbName').value)||'';ov.classList.remove('hide');try{inp.focus();inp.select()}catch(e){}
