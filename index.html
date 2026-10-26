@@ -1219,7 +1219,7 @@ window.__ft={sfx,SND,startRest,endRest,gameOver,get stream(){return stream},get 
 
 
 // ===== Weekly online leaderboard (Cloudflare Worker + D1) =====
-const LB_API='https://face-action-scores.info-phalotrans.workers.dev';
+const LB_API='https://face-action-scores.haitialways.workers.dev';
 function faPlayerId(){let id=localStorage.getItem('fa_pid');if(!id){id=(crypto.randomUUID&&crypto.randomUUID())||('p'+Math.random().toString(36).slice(2)+Date.now().toString(36));localStorage.setItem('fa_pid',id)}return id}
 function faName(){return (localStorage.getItem('fa_name')||'').trim()}
 function setFaName(n){n=String(n||'').trim().replace(/\s+/g,' ').slice(0,16);if(n)localStorage.setItem('fa_name',n);return n}
