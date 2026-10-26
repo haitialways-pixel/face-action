@@ -257,7 +257,7 @@ window.__startBg={get running(){return !!raf},get count(){return typeof count===
 <button id="bPause" class="hide" style="position:fixed;right:152px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6">⏸</button>
 <div id="calib" class="ov hide"><h2 id="cTitle" data-t="calibrating"></h2><p id="cText"></p><div style="font-size:64px" id="cIcon">😐</div><div style="width:70%;height:12px;background:#333;border-radius:6px;overflow:hidden"><div id="cBar" style="height:100%;width:0;background:#ffd54a"></div></div><div id="cCount" style="font-size:28px;font-weight:700"></div><small id="cStep"></small><p id="cLight" class="hide" data-t="dark" style="margin:0;background:#5d4037;border:2px solid #ffb300;border-radius:12px;padding:8px 12px;max-width:340px;font-weight:700"></p></div>
 <div id="rest" class="ov hide"><h2 data-t="restT"></h2><p data-t="restP"></p><p id="restT" style="font-size:48px"></p><button id="bSkip" class="sec" data-t="skip"></button></div>
-<div id="cont" class="ov hide" style="z-index:7"><div style="font-size:60px">💔</div><h2 data-t="contT" style="margin:0;font-size:32px;color:#ff6ec7"></h2><p data-t="contP" style="margin:0;font-size:17px;max-width:320px"></p><p id="contScore" style="margin:0;font-size:20px;color:#ffd54a;font-weight:700"></p><button id="bContYes" class="play pTouch" data-t="contYes"></button><button id="bContNo" class="sec" data-t="contNo"></button></div>
+<div id="cont" class="ov hide" style="z-index:7"><div style="font-size:60px">💔</div><h2 data-t="contT" style="margin:0;font-size:32px;color:#ff6ec7"></h2><p data-t="contP" style="margin:0;font-size:17px;max-width:320px"></p><p id="contScore" style="margin:0;font-size:20px;color:#ffd54a;font-weight:700"></p><button id="bContYes" class="play pTouch" data-t="contYes"></button><button id="bContRemove" class="play hide" style="background:linear-gradient(135deg,#7c4dff,#b388ff);color:#fff;border:2px solid rgba(255,255,255,.4);box-shadow:0 0 18px rgba(124,77,255,.45)" data-t="contRemove"></button><button id="bContNo" class="sec" data-t="contNo"></button></div><div id="noAds" class="ov hide" style="z-index:8"><div style="font-size:48px">✨</div><h2 data-t="noAdsT" style="margin:0;color:#ffd54a"></h2><p data-t="noAdsP" style="margin:0;font-size:15px;max-width:360px;line-height:1.35"></p><button id="bNoAdsTip" class="play pTouch" data-t="noAdsTip"></button><p data-t="noAdsCodeL" style="margin:4px 0 0;font-size:13px;opacity:.9"></p><input id="noAdsCode" maxlength="40" autocomplete="off" spellcheck="false" style="width:min(300px,84vw);padding:10px 12px;border-radius:10px;border:1px solid #ffd54a66;background:#1a1430;color:#fff;font-size:16px;font-weight:700;letter-spacing:.04em;text-align:center;text-transform:uppercase"><button id="bNoAdsUnlock" class="play" style="background:linear-gradient(135deg,#00c853,#009624);color:#fff" data-t="noAdsUnlock"></button><p id="noAdsMsg" style="margin:0;font-size:14px;min-height:1.3em;font-weight:700"></p><button id="bNoAdsBack" class="sec" data-t="back"></button></div>
 <div id="over" class="ov hide"><h2 data-t="ouch" style="font-size:28px;color:#ffd54a;margin:0"></h2><p id="oScore" style="font-size:18px;line-height:1.5;margin:0"></p><p id="oHook" style="font-size:20px;font-weight:700;color:#ff6ec7;margin:0"></p><p id="oMeta"></p><img id="oCard" class="hide" alt="" style="max-height:28vh;max-width:60vw;border-radius:12px;border:2px solid #ffd54a;box-shadow:0 0 20px #ffd54a66"><button id="bShare" class="sec hide" data-t="share" style="background:#ff1493"></button><small id="oShareMsg"></small><button id="bAgain" class="play pTouch" data-t="again"></button><button id="bMenu" class="sec" data-t="menu"></button></div>
 <button id="bHud" style="position:fixed;left:auto;right:8px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6">🐞</button>
 <div id="sensBox" class="hide" style="position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top) + 150px);z-index:6;background:rgba(0,0,0,.7);padding:6px;border-radius:8px;font-size:13px"><span data-t="sensL"></span> <input id="sens" type="range" min="0.4" max="1.6" step="0.05" style="width:100%"> <button id="bRecal" class="sec" style="min-width:0;font-size:13px;padding:6px 10px" data-t="recal"></button></div>
@@ -315,7 +315,7 @@ function applyLang(){document.documentElement.lang=LANG;
   if(msgState)$('msg').innerHTML=t(msgState[0],msgState[1]);
   if(overState)renderOver();
   if(calState.text)$('cText').textContent=t(calState.text);if(calState.step)$('cStep').textContent=t('stepOf',calState.step);
-  showBest();syncDaily();buildSettings();syncResumeUI();syncCoinsUI();if(!$('styles').classList.contains('hide')){buildSkins();buildBadges()}if(!$('missions').classList.contains('hide'))buildMissions();if(!$('upgrades').classList.contains('hide'))buildUpgrades();if(!$('board').classList.contains('hide'))buildBoard();if($('lb')&&!$('lb').classList.contains('hide'))buildLb();try{syncBoardBtn()}catch(e){}if(S&&S.offer)$('contScore').textContent=t('contScore',{s:S.score})}
+  showBest();syncDaily();buildSettings();syncResumeUI();syncCoinsUI();if(!$('styles').classList.contains('hide')){buildSkins();buildBadges()}if(!$('missions').classList.contains('hide'))buildMissions();if(!$('upgrades').classList.contains('hide'))buildUpgrades();if(!$('board').classList.contains('hide'))buildBoard();if($('lb')&&!$('lb').classList.contains('hide'))buildLb();try{syncBoardBtn()}catch(e){}if(S&&S.offer)$('contScore').textContent=t('contScore',{s:S.score});try{syncContAdsUI()}catch(e){}}
 // ---------- v1.1 strings (Treasure Hunt) ----------
 Object.assign(L.en,{sub:'Treasure Hunt',intro:'Defeat guardians and grab treasure. Tap to play, or go hands-free with your face!<br><small>A fun facial workout. Camera stays on your device; nothing is uploaded.</small>',
 menu:'🏠 Menu',ouch:'Ouch! Out of hearts',again:'▶️ Play again',near:'So close! Only {n} points from your best!',
@@ -330,7 +330,7 @@ hScout:'Scout',hScoutA:'Classic cavern hunter',hBlade:'Blade',hBladeA:'Twin shot
 b_dragon:'Dragon Slayer',d_dragon:'Defeat a dragon boss',b_hunter:'Guardian Hunter',d_hunter:'Defeat 200 guardians',b_idol:'Idol Collector',d_idol:'Collect 10 golden idols',b_wall:'Iron Wall',d_wall:'Block 25 attacks',
 b_s3:'On a Roll',d_s3:'3-day daily streak',b_s7:'Week Warrior',d_s7:'7-day daily streak',b_s14:'Two-Week Titan',d_s14:'14-day daily streak',b_s30:'Monthly Legend',d_s30:'30-day daily streak',badgeGot:'🏅 Badge: {b}!',
 setBtn:'⚙️ Settings',setTitle:'⚙️ Settings',cbL:'Shape outlines',cbD:'Bold outlines + shape markers: guardians ✖ spiky, treasure ◆ ★ with point value, power-ups ■.',relaxL:'Relaxed speed',relaxD:'Slower guardians and treasure, gentler ramp.',on:'ON',off:'OFF',recalFace:'🎯 Recalibrate face',done:'Done',
-contT:'Continue?',contP:'Get +1 ❤️ for free and keep going. Once per game.',contScore:'Score so far: {s}',contYes:'▶️ Continue (+1 ❤️)',contNo:'No thanks',contGo:'+1 ❤️ KEEP GOING!',
+contT:'Continue?',contP:'Get +1 ❤️ for free and keep going. Once per game.',contPAd:'Watch a short ad for +1 ❤️ and keep going. Once per game.',contScore:'Score so far: {s}',contYes:'▶️ Continue (+1 ❤️)',contYesAd:'▶️ Watch ad · Continue (+1 ❤️)',contNo:'No thanks',contGo:'+1 ❤️ KEEP GOING!',contRemove:'✨ Play ad-free — $2.99',noAdsT:'Play ad-free — $2.99',noAdsP:'itch.io browser games can\'t take card payments inside the embed. Tip $2.99 on the itch page (Pay what you want), then enter the unlock code emailed to you (or from the developer). Unlocks ads for THIS game on this device/browser only.',noAdsTip:'💙 Open tip jar / itch page',noAdsCodeL:'Already tipped? Enter unlock code:',noAdsUnlock:'🔓 Unlock ad-free',noAdsOk:'✅ Ads removed here. Continue is free!',noAdsBad:'Code not recognized. Check spelling or email faceaction.support@gmail.com.',noAdsHave:'✅ Ad-free on this device',
 camExT:'Face mode',camEx1:'Uses your front camera to read your expressions (head turn, blink, mouth, smile).',camEx2:'Video stays on this phone. Nothing is recorded or uploaded.',camEx3:'You can switch back to Touch any time.',camExGo:'📷 Turn on camera',back:'⬅️ Back',
 dark:'💡 It\'s too dark here: find better light (face a window or a lamp).',relaxHud:'🐢',
 hype5:'NICE!',hype10:'ON FIRE! 🔥',hype15:'UNSTOPPABLE!',hype20:'LEGENDARY!',jackpot:'JACKPOT!',stageClr:'STAGE CLEAR!',bossKill:'DRAGON DEFEATED!',record:'NEW RECORD!',
@@ -349,7 +349,7 @@ hScout:'Éclaireur',hScoutA:'Chasseur classique de cavernes',hBlade:'Lame',hBlad
 b_dragon:'Tueur de dragon',d_dragon:'Battez un dragon',b_hunter:'Chasseur de gardiens',d_hunter:'Battez 200 gardiens',b_idol:'Collectionneur d\'idoles',d_idol:'Ramassez 10 idoles dorées',b_wall:'Mur de fer',d_wall:'Bloquez 25 attaques',
 b_s3:'Sur la lancée',d_s3:'Série de 3 jours',b_s7:'Guerrier de la semaine',d_s7:'Série de 7 jours',b_s14:'Titan des deux semaines',d_s14:'Série de 14 jours',b_s30:'Légende du mois',d_s30:'Série de 30 jours',badgeGot:'🏅 Badge : {b} !',
 setBtn:'⚙️ Réglages',setTitle:'⚙️ Réglages',cbL:'Contours de formes',cbD:'Contours épais + repères de forme : gardiens ✖ à pointes, trésors ◆ ★ avec leur valeur, bonus ■.',relaxL:'Vitesse détente',relaxD:'Gardiens et trésors plus lents, progression plus douce.',on:'OUI',off:'NON',recalFace:'🎯 Recalibrer le visage',done:'OK',
-contT:'Continuer ?',contP:'Récupérez +1 ❤️ gratuitement et continuez. Une fois par partie.',contScore:'Score actuel : {s}',contYes:'▶️ Continuer (+1 ❤️)',contNo:'Non merci',contGo:'+1 ❤️ ON CONTINUE !',
+contT:'Continuer ?',contP:'Récupérez +1 ❤️ gratuitement et continuez. Une fois par partie.',contPAd:'Regardez une courte pub pour +1 ❤️ et continuez. Une fois par partie.',contScore:'Score actuel : {s}',contYes:'▶️ Continuer (+1 ❤️)',contYesAd:'▶️ Voir la pub · Continuer (+1 ❤️)',contNo:'Non merci',contGo:'+1 ❤️ ON CONTINUE !',contRemove:'✨ Jouer sans pub — 2,99 $',noAdsT:'Jouer sans pub — 2,99 $',noAdsP:'Les jeux HTML5 sur itch.io ne peuvent pas encaisser une carte dans l\'embed. Donnez 2,99 $ sur la page itch (prix libre), puis saisissez le code reçu par e-mail (ou du développeur). Débloque les pubs pour CE jeu sur cet appareil/navigateur seulement.',noAdsTip:'💙 Ouvrir le pourboire / page itch',noAdsCodeL:'Déjà payé ? Entrez le code :',noAdsUnlock:'🔓 Débloquer sans pub',noAdsOk:'✅ Pubs retirées ici. Continuer est gratuit !',noAdsBad:'Code non reconnu. Vérifiez l\'orthographe ou écrivez à faceaction.support@gmail.com.',noAdsHave:'✅ Sans pub sur cet appareil',
 camExT:'Mode visage',camEx1:'Utilise la caméra avant pour lire vos expressions (tête, clignement, bouche, sourire).',camEx2:'La vidéo reste sur ce téléphone. Rien n\'est enregistré ni envoyé.',camEx3:'Vous pouvez revenir au tactile à tout moment.',camExGo:'📷 Activer la caméra',back:'⬅️ Retour',
 dark:'💡 Il fait trop sombre : trouvez un meilleur éclairage (face à une fenêtre ou une lampe).',relaxHud:'🐢',
 hype5:'BIEN JOUÉ !',hype10:'EN FEU ! 🔥',hype15:'IMPARABLE !',hype20:'LÉGENDAIRE !',jackpot:'JACKPOT !',stageClr:'NIVEAU RÉUSSI !',bossKill:'DRAGON VAINCU !',record:'NOUVEAU RECORD !',
@@ -1003,7 +1003,7 @@ function buildUpgrades(){syncCoinsUI();const list=$('upList');if(!list)return;li
     row.appendChild(b);list.appendChild(row)}}
 $('bUp').onclick=()=>{buildUpgrades();$('upgrades').classList.remove('hide');$('upgrades').scrollTop=0};
 $('bUpOk').onclick=()=>$('upgrades').classList.add('hide');
-$('bContRun').onclick=()=>{try{audioUnlock()}catch(e){}const r=loadRun();if(!r)return;mode=r.mode==='face'?'face':'touch';daily=!!r.daily;if(mode==='face'){pendingResume=r;askFace()}else{pendingResume=null;begin(false,r)}};
+$('bContRun').onclick=()=>{try{audioUnlock()}catch(e){}try{faRequestFullscreen()}catch(e){}const r=loadRun();if(!r)return;mode=r.mode==='face'?'face':'touch';daily=!!r.daily;if(mode==='face'){pendingResume=r;askFace()}else{pendingResume=null;begin(false,r)}};
 syncCoinsUI();syncResumeUI();
 // ----- hunters collection UI + migrate old helmet unlocks -----
 const topScore=()=>Math.max(+localStorage.getItem('fa_top')||0,getBest('face'),getBest('touch'));
@@ -1157,21 +1157,46 @@ function ev(type,val=1){if(STATK[type]){STATS[STATK[type]]=(STATS[STATK[type]]||
   if(!ch)return;
   if(ms.every((m,i)=>PROG.p[i]>=m[1])){const done=PROG.ch;PROG={ch:done+1,p:[0,0,0]};addBoost(1);if(S){(S.chapDone=S.chapDone||[]).push(done);if(running&&!S.ended){hype(t('chapDone',{n:done}),'#00e676',{dur:1.5,force:true,size:30});screenFlash('#00e676',.4,.3);sfx.fanfare()}}}
   LS.set('fa_prog',PROG)}
-// ----- "Continue?" offer: once per game, a free +1 heart (no ads) -----
-// TODO(AdMob): to turn this free continue into a rewarded ad later, replace the body of showRewardedAd() with the real
-// rewarded-ad call (e.g. Capacitor AdMob plugin: load + show a RewardedAd, resolve(true) only on the "reward earned"
-// callback, resolve(false) on dismiss/failure) and update the Continue wording, privacy policy and Play ads/Data safety answers.
-// For now the continue is FREE: no ad, no countdown; it grants +1 heart immediately.
-function showRewardedAd(){return Promise.resolve(true)}
-function endOrOffer(){if(!S.contUsed&&S.score>0){S.contUsed=true;S.offer=true;camStop();$('touch').classList.add('hide');$('bPause').classList.add('hide');$('contScore').textContent=t('contScore',{s:S.score});$('cont').classList.remove('hide')}else gameOver()}
+
+// ----- Remove-ads flag (per game) + fullscreen helpers -----
+// itch HTML5 has no in-embed IAP; unlock via tip + code. Play Alpha stays ad-free until real IAP plugs into setAdsRemoved().
+const ADS_KEY='fa_ads_removed',ADS_CODES=['FA-TH-NOADS-2026','FATH-NOADS-2026'],ITCH_TIP_URL='https://opaqdev.itch.io/face-action-treasure-hunt';
+function adsRemoved(){try{if(localStorage.getItem(ADS_KEY)==='1')return true}catch(e){}return!!window.__FA_ADS_REMOVED__}
+function setAdsRemoved(v){try{if(v)localStorage.setItem(ADS_KEY,'1');else localStorage.removeItem(ADS_KEY)}catch(e){}window.__FA_ADS_REMOVED__=!!v;try{syncContAdsUI()}catch(e){}}
+function adsWouldShow(){return!!window.__FA_ITCH__&&!adsRemoved()}
+window.__faAdsRemoved=adsRemoved;window.__faSetAdsRemoved=setAdsRemoved; // future Play Billing / bridge
+function syncContAdsUI(){
+  const show=adsWouldShow(),rem=$('bContRemove'),yes=$('bContYes'),p=document.querySelector('#cont [data-t="contP"]');
+  if(rem)rem.classList.toggle('hide',!show);
+  if(p)p.textContent=show?t('contPAd'):t('contP');
+  if(yes){yes.dataset.t=show?'contYesAd':'contYes';yes.textContent=show?t('contYesAd'):t('contYes')}
+}
+function faRequestFullscreen(){
+  try{
+    const d=document;if(d.fullscreenElement||d.webkitFullscreenElement||d.msFullscreenElement)return;
+    const el=d.documentElement;const fn=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+    if(fn){const r=fn.call(el);if(r&&r.catch)r.catch(function(){})}
+  }catch(e){}
+}
+try{document.addEventListener('fullscreenchange',function(){try{resize()}catch(e){}});document.addEventListener('webkitfullscreenchange',function(){try{resize()}catch(e){}})}catch(e){}
+// ----- "Continue?" offer: once per game -----
+// Play / non-itch: free Continue (ad-free for Alpha testers). itch zip sets __FA_ITCH__ and replaces showRewardedAd().
+// adsRemoved() skips ads on itch after unlock; setAdsRemoved() is the hook for a future Play IAP.
+function showRewardedAd(){if(adsRemoved())return Promise.resolve(true);return Promise.resolve(true)}
+function endOrOffer(){if(!S.contUsed&&S.score>0){S.contUsed=true;S.offer=true;camStop();$('touch').classList.add('hide');$('bPause').classList.add('hide');$('contScore').textContent=t('contScore',{s:S.score});try{syncContAdsUI()}catch(e){};$('cont').classList.remove('hide')}else gameOver()}
 function continueGame(){S.offer=false;S.hearts=1;S.ents=S.ents.filter(e=>e.t!=='g'||e.boss);for(const e of S.ents)if(e.boss)e.y=Math.min(e.y,H*.2);S.pw.shield=Math.max(S.pw.shield||0,2.5);S.combo=0;paused=false;last=performance.now();
   for(const k in touch)touch[k]=false;inp.attack=inp.special=false;
   $('touch').classList.toggle('hide',mode!=='touch');$('bPause').classList.remove('hide');hype(t('contGo'),'#ff6ec7',{force:true,size:32,dur:1.2});sfx.power();camResume()}
 $('bContNo').onclick=()=>{$('cont').classList.add('hide');S.offer=false;gameOver()};
-$('bContYes').onclick=async()=>{$('cont').classList.add('hide');const ok=await showRewardedAd();if(ok)continueGame();else{S.offer=false;gameOver()}};
+$('bContYes').onclick=async()=>{try{faRequestFullscreen()}catch(e){};$('cont').classList.add('hide');const ok=await showRewardedAd();if(ok)continueGame();else{S.offer=false;gameOver()}};
+if($('bContRemove'))$('bContRemove').onclick=()=>{$('cont').classList.add('hide');if($('noAdsMsg'))$('noAdsMsg').textContent='';if($('noAdsCode'))$('noAdsCode').value='';$('noAds').classList.remove('hide')};
+if($('bNoAdsBack'))$('bNoAdsBack').onclick=()=>{$('noAds').classList.add('hide');if(S&&S.offer){$('cont').classList.remove('hide');try{syncContAdsUI()}catch(e){}}};
+if($('bNoAdsTip'))$('bNoAdsTip').onclick=()=>{try{window.open(ITCH_TIP_URL,'_blank','noopener')}catch(e){try{location.href=ITCH_TIP_URL}catch(e2){}}};
+if($('bNoAdsUnlock'))$('bNoAdsUnlock').onclick=()=>{const raw=($('noAdsCode')&&$('noAdsCode').value)||'';const code=String(raw).trim().toUpperCase().replace(/\s+/g,'');if(ADS_CODES.indexOf(code)>=0){setAdsRemoved(true);if($('noAdsMsg')){$('noAdsMsg').textContent=t('noAdsOk');$('noAdsMsg').style.color='#00e676'}setTimeout(()=>{$('noAds').classList.add('hide');if(S&&S.offer){$('cont').classList.remove('hide');try{syncContAdsUI()}catch(e){}}},800)}else{if($('noAdsMsg')){$('noAdsMsg').textContent=t('noAdsBad');$('noAdsMsg').style.color='#ff6ec7'}}};
+try{syncContAdsUI()}catch(e){};
 // ----- camera explainer before the permission prompt (camera is never requested at app open) -----
 function askFace(){if(localStorage.getItem('fa_cam_ok')==='1')startFace();else $('camEx').classList.remove('hide')}
-$('bCamGo').onclick=()=>{$('camEx').classList.add('hide');startFace()};$('bCamBack').onclick=()=>$('camEx').classList.add('hide');
+$('bCamGo').onclick=()=>{try{faRequestFullscreen()}catch(e){}$('camEx').classList.add('hide');startFace()};$('bCamBack').onclick=()=>$('camEx').classList.add('hide');
 // ----- calibration light check: average brightness of a tiny downscaled video frame (in memory only) -----
 const lightC=document.createElement('canvas');lightC.width=32;lightC.height=24;const lightG=lightC.getContext('2d',{willReadFrequently:true});
 const DARK_LUMA=60;let lightI=null;
@@ -1244,12 +1269,12 @@ async function calibrate(){const cg=window.__faceGen;const chk=()=>{if(cg!==wind
   $('cCount').textContent='';$('cStep').textContent='';calState={};
   saveCal();lightWatch(false);$('calib').classList.add('hide');
 }
-function begin(again,fromSave){try{audioUnlock()}catch(e){}$('start').classList.add('hide');$('bPause').classList.remove('hide');$('touch').classList.toggle('hide',mode!=='touch');
+function begin(again,fromSave){try{audioUnlock()}catch(e){}try{faRequestFullscreen()}catch(e){}$('start').classList.add('hide');$('bPause').classList.remove('hide');$('touch').classList.toggle('hide',mode!=='touch');
   if(fromSave){restoreRun(fromSave); /* keep fa_run until game over / quit / fresh start */}
   else{clearRun();newGame();if(!daily&&getBoost()>0){S.boost=true;addBoost(-1);S.special=100;S.banner=t('boostOn');S.bannerT=2.6}}
   for(const k in touch)touch[k]=false;running=true;paused=false;last=performance.now();if(again||fromSave)camResume();saveRun();syncResumeUI();
   try{boardMarkDay();if(!fromSave)boardBump(mode==='face'?'face':'touch',1);S._survAcc=0}catch(e){}}
-$('bFace').onclick=()=>{pendingResume=null;askFace()};
+$('bFace').onclick=()=>{try{faRequestFullscreen()}catch(e){}pendingResume=null;askFace()};
 const HOW_KEY='fa_howto_v1';
 function showHow(){$('howto').classList.remove('hide');$('howto').scrollTop=0}
 $('bHow').onclick=showHow;$('bHowP').onclick=showHow;
@@ -1265,7 +1290,7 @@ $('bHud').onclick=()=>{hudOn=!hudOn;localStorage.setItem('ftq_hud',hudOn?'1':'0'
 $('bRecalStart').onclick=()=>{$('settings').classList.add('hide');forceCal=true;askFace()};
 $('bRecalAuto').onclick=async()=>{$('bRecalAuto').classList.add('hide');noFaceT=0;paused=true;await calibrate();paused=false;last=performance.now()};
 $('bRecal').onclick=async()=>{if(mode!=='face')return;paused=true;await calibrate();paused=false;last=performance.now()};
-$('bTouch').onclick=()=>{pendingResume=null;mode='touch';begin(false)};
+$('bTouch').onclick=()=>{try{faRequestFullscreen()}catch(e){}pendingResume=null;mode='touch';begin(false)};
 document.addEventListener('visibilitychange',()=>{if(document.hidden){camStop();if(running){paused=true;saveRun()}}else{try{audioUnlock()}catch(e){}if($('rest').classList.contains('hide')&&$('calib').classList.contains('hide')&&$('pause').classList.contains('hide')&&!(S&&S.offer))paused=false;last=performance.now();camResume()}updInd()});
 addEventListener('pagehide',()=>{saveRun();camStop()});addEventListener('pageshow',e=>{if(e.persisted)camResume()});
 $('camResume').onclick=()=>camStart();
