@@ -124,6 +124,7 @@ html,body,button,canvas{touch-action:manipulation;-webkit-user-select:none;user-
   <button id="bDaily" class="daily"><span class="dTop" id="dTop"></span><span class="dSub" id="dSub"></span></button>
   <button id="bChapter" class="chap"></button>
   <button id="bBoard" class="boardBtn"><span data-t="boardBtn"></span><span id="boardDot" class="dot hide"></span></button>
+  <button id="bLb" class="boardBtn" style="color:#7cf;border-color:#7cf66"><span data-t="lbBtn"></span></button>
   <p id="coinHud"></p>
   <div class="mini"><button id="bUp" class="sec" data-t="upBtn"></button><button id="bStyle" class="sec" data-t="collectBtn"></button><button id="bSet" class="sec" data-t="setBtn"></button><button id="bHow" class="sec" data-t="howBtn"></button></div>
   <p id="best" style="margin:0;font-size:14px"></p><p style="margin:0"><a href="privacy.html" style="color:#9cf;font-size:13px" data-t="privacy"></a> · <a href="#" id="bLang" style="color:#9cf;font-size:13px"></a><br><small style="opacity:.6;font-size:11px" data-t="copy"></small></p><p id="msg" style="margin:0"><small></small></p>
@@ -183,6 +184,22 @@ window.__startBg={get running(){return !!raf},get count(){return typeof count===
   <h3 data-t="boardWeekly" style="font-size:18px;margin:12px 0 0"></h3>
   <div id="boardWeekly" style="display:flex;flex-direction:column;gap:8px;width:100%;align-items:center"></div>
   <button id="bBoardOk" data-t="done"></button></div>
+<div id="lb" class="ov hide"><h2 data-t="lbTitle"></h2>
+  <p data-t="lbP" style="margin:0;font-size:13px;max-width:400px;opacity:.85"></p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%">
+    <button id="lbTabTouch" class="sec" data-t="lbTouch"></button>
+    <button id="lbTabFace" class="sec" data-t="lbFace"></button>
+  </div>
+  <p id="lbWeek" style="margin:0;font-size:13px;opacity:.75"></p>
+  <div style="display:flex;gap:8px;align-items:center;width:100%;max-width:420px;justify-content:center;flex-wrap:wrap">
+    <label style="font-size:13px" data-t="lbName"></label>
+    <input id="lbName" maxlength="16" style="flex:1;min-width:120px;padding:8px 10px;border-radius:10px;border:1px solid #ffd54a66;background:#1a1430;color:#fff;font-size:15px">
+    <button id="lbSaveName" class="sec" data-t="lbSave"></button>
+  </div>
+  <p id="lbYou" style="margin:0;font-size:14px;color:#ffd54a"></p>
+  <div id="lbList" style="display:flex;flex-direction:column;gap:6px;width:100%;max-width:420px;align-items:stretch"></div>
+  <p id="lbStatus" style="margin:0;font-size:12px;opacity:.7"></p>
+  <button id="bLbOk" data-t="done"></button></div>
 <div id="missions" class="ov hide"><h2 id="mTitle"></h2><p data-t="chapP" style="margin:0;font-size:14px;max-width:400px"></p><div id="mList" style="display:flex;flex-direction:column;gap:8px;width:100%;align-items:center"></div><p id="mTotal" style="margin:0;font-size:13px;opacity:.75"></p><button id="bMisOk" data-t="done"></button></div>
 <div id="styles" class="ov hide"><h2 data-t="collTitle"></h2><p id="collStreak" style="margin:0;font-size:14px"></p><h3 data-t="skinTitle" style="font-size:18px"></h3><p data-t="skinP" style="margin:0;font-size:13px"></p><div class="stylegrid" id="styleGrid"></div><h3 data-t="badgesH" style="font-size:18px"></h3><div class="stylegrid" id="badgeGrid"></div><button id="bStyleOk" data-t="done" style="flex:none"></button></div>
 <div id="howto" class="ov hide">
@@ -261,7 +278,7 @@ function applyLang(){document.documentElement.lang=LANG;
   if(msgState)$('msg').innerHTML=t(msgState[0],msgState[1]);
   if(overState)renderOver();
   if(calState.text)$('cText').textContent=t(calState.text);if(calState.step)$('cStep').textContent=t('stepOf',calState.step);
-  showBest();syncDaily();buildSettings();syncResumeUI();syncCoinsUI();if(!$('styles').classList.contains('hide')){buildSkins();buildBadges()}if(!$('missions').classList.contains('hide'))buildMissions();if(!$('upgrades').classList.contains('hide'))buildUpgrades();if(!$('board').classList.contains('hide'))buildBoard();try{syncBoardBtn()}catch(e){}if(S&&S.offer)$('contScore').textContent=t('contScore',{s:S.score})}
+  showBest();syncDaily();buildSettings();syncResumeUI();syncCoinsUI();if(!$('styles').classList.contains('hide')){buildSkins();buildBadges()}if(!$('missions').classList.contains('hide'))buildMissions();if(!$('upgrades').classList.contains('hide'))buildUpgrades();if(!$('board').classList.contains('hide'))buildBoard();if($('lb')&&!$('lb').classList.contains('hide'))buildLb();try{syncBoardBtn()}catch(e){}if(S&&S.offer)$('contScore').textContent=t('contScore',{s:S.score})}
 // ---------- v1.1 strings (Treasure Hunt) ----------
 Object.assign(L.en,{sub:'Treasure Hunt',intro:'Defeat guardians and grab treasure. Tap to play, or go hands-free with your face!<br><small>A fun facial workout. Camera stays on your device; nothing is uploaded.</small>',
 menu:'🏠 Menu',ouch:'Ouch! Out of hearts',again:'▶️ Play again',near:'So close! Only {n} points from your best!',
@@ -611,7 +628,7 @@ function gameOver(){S.ended=true;running=false;sfx.over();camStop();$('bPause').
   const m=mode==='face'?'face':'touch',prev=getBest(m),b=Math.max(S.score,prev);localStorage.setItem(BEST_KEYS[m],b);localStorage.setItem('fa_top',Math.max(topScore(),S.score));showBest();
   let streak=null;if(S.daily){const dk='fa_daily_'+S.day+'_'+m;localStorage.setItem(dk,Math.max(+localStorage.getItem(dk)||0,S.score));streak=recordDaily()}
   STATS.games++;LS.set('fa_stats',STATS);checkBadges(false);
-  overState={m,s:S.score,g:S.stage,nb:S.score>prev&&S.score>0,b,prev,daily:S.daily?S.day:null,date:new Date(),streak,badges:[...S.newBadges],chapDone:[...S.chapDone],secs:Math.round(S.t),coins:gained};renderOver();$('over').classList.remove('hide');draw()}
+  overState={m,s:S.score,g:S.stage,nb:S.score>prev&&S.score>0,b,prev,daily:S.daily?S.day:null,date:new Date(),streak,badges:[...S.newBadges],chapDone:[...S.chapDone],secs:Math.round(S.t),coins:gained};renderOver();$('over').classList.remove('hide');draw();try{if(S.score>0)submitScore(overState).then(r=>{if(r&&r.rank)$('oShareMsg').textContent=t('lbSubmitted',{r:r.rank})})}catch(e){}}
 function renderOver(){const o=overState,lbl=t(o.m+'L');
   $('oScore').innerHTML=(o.daily?t('dailyL',{d:o.daily})+'<br>':'')+t('overLine',{m:lbl,s:'<b>'+o.s+'</b>',g:o.g})+'<br>'+(o.nb?t('newBest',{m:lbl}):t('bestIs',{m:lbl,b:o.b}))+(o.coins?('<br><span style="color:#ffd54a">'+t('banked',{n:o.coins})+'</span>'):'');
   const gap=o.prev-o.s;$('oHook').innerHTML=!o.nb&&gap>0&&gap<=Math.max(60,o.prev*.25)?t('near',{n:gap}):'';
@@ -1066,18 +1083,45 @@ newGame();requestAnimationFrame(step);
 window.__ft={sfx,SND,startRest,endRest,gameOver,get stream(){return stream},get S(){return S},begin,inp,touch,update,draw,get bs(){return bs},get st(){return {camStatus,modelStatus,faceSeen,faceFps,mode}},
   setMode:m=>{mode=m},setBs:v=>{bs=v;faceSeen=true},setYaw:v=>{yaw=v},updateInput,setDay:d=>{FAKE_DAY=d;syncDaily()},recordDaily,syncDaily,get PROG(){return PROG},ev,get STATS(){return STATS},get BGOT(){return BGOT},showRewardedAd,lightWatch,luma,get OPT(){return OPT},endOrOffer,diff,get running(){return running},nextStage,setSkin:k=>{skin=k},get W(){return W},get H(){return H}};
 
+
+// ===== Weekly online leaderboard (Cloudflare Worker + D1) =====
+const LB_API='https://face-action-scores.info-phalotrans.workers.dev';
+function faPlayerId(){let id=localStorage.getItem('fa_pid');if(!id){id=(crypto.randomUUID&&crypto.randomUUID())||('p'+Math.random().toString(36).slice(2)+Date.now().toString(36));localStorage.setItem('fa_pid',id)}return id}
+function faName(){return (localStorage.getItem('fa_name')||'').trim()}
+function setFaName(n){n=String(n||'').trim().replace(/\s+/g,' ').slice(0,16);if(n)localStorage.setItem('fa_name',n);return n}
+function escLb(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+let lbMode='touch';
+async function lbFetch(path,opt){const r=await fetch(LB_API+path,{...opt,headers:{'Content-Type':'application/json',...((opt&&opt.headers)||{})}});if(!r.ok)throw new Error('http '+r.status);return r.json()}
+async function submitScore(o){try{if(!(o&&o.score>0))return null;let name=faName();if(!name){const asked=prompt(t('lbName')||'Nickname','Player');name=setFaName(asked||'Player')||'Player'}
+  const body={playerId:faPlayerId(),name,score:o.score|0,stage:o.stage|0||1,mode:o.m==='face'?'face':'touch',secs:o.secs|0||0};
+  return await lbFetch('/submit',{method:'POST',body:JSON.stringify(body)})}catch(e){return null}}
+function buildLb(){const nameEl=$('lbName');if(nameEl)nameEl.value=faName();$('lbStatus').textContent=t('lbLoading');$('lbList').innerHTML='';$('lbYou').textContent='';
+  if($('lbTabTouch'))$('lbTabTouch').style.outline=lbMode==='touch'?'2px solid #ffd54a':'none';
+  if($('lbTabFace'))$('lbTabFace').style.outline=lbMode==='face'?'2px solid #7cf':'none';
+  lbFetch('/board?mode='+lbMode+'&playerId='+encodeURIComponent(faPlayerId())).then(data=>{
+    $('lbWeek').textContent=(data.week||'')+' · '+(lbMode==='face'?t('lbFace'):t('lbTouch'));
+    const rows=data.rows||[];
+    $('lbList').innerHTML=rows.length?rows.map(r=>'<div style="display:flex;justify-content:space-between;gap:8px;padding:8px 12px;background:#1a1430;border:1px solid #ffffff22;border-radius:10px"><span><b>#'+r.rank+'</b> '+escLb(r.name)+'</span><span style="color:#ffd54a">'+r.score+' <small style="opacity:.7">lv '+r.stage+'</small></span></div>').join(''):('<p style="opacity:.75">'+t('lbEmpty')+'</p>');
+    if(data.you)$('lbYou').textContent=t('lbYou',{r:data.you.rank,s:data.you.score,g:data.you.stage});
+    $('lbStatus').textContent=''}).catch(()=>{$('lbStatus').textContent=t('lbOffline');$('lbWeek').textContent=''})}
+if($('bLb'))$('bLb').onclick=()=>{lbMode='touch';buildLb();$('lb').classList.remove('hide');$('lb').scrollTop=0};
+if($('bLbOk'))$('bLbOk').onclick=()=>$('lb').classList.add('hide');
+if($('lbTabTouch'))$('lbTabTouch').onclick=()=>{lbMode='touch';buildLb()};
+if($('lbTabFace'))$('lbTabFace').onclick=()=>{lbMode='face';buildLb()};
+if($('lbSaveName'))$('lbSaveName').onclick=()=>{setFaName($('lbName').value);buildLb()};
+
 // ===== Navigation: 🏠 Home in the top bar, quit confirmation, ← Back on overlays, Android hardware back (Oct 18 2026) =====
-Object.assign(L.en,{home:'Home',quitT:'Quit to menu?',quitP:'This run will be abandoned (saved progress cleared).',quitYes:'🏠 Yes, quit',quitNo:'▶️ No, keep playing',quitNoP:'↩️ No, go back',navBack:'← Back',resumeRun:'▶️ Continue · {s} pts · stage {g}',resumeBanner:'↩️ Resumed — pick up where you left off!',upBtn:'⬆️ Upgrades',upTitle:'Upgrades',upP:'Spend coins earned from your runs. Upgrades raise your floor — skill still sets the ceiling.',upCoins:'🪙 Coins: {n}',upMax:'MAX',upBuy:'🪙 {c}',upLvl:'Lv {n}',up_hearts:'Max hearts',up_heartsD:'Start with more ❤️ (cap 5).',up_special:'Special charge',up_specialD:'Fill the nova meter faster.',up_move:'Move speed',up_moveD:'Slide a bit faster (touch & face).',up_shield:'Starting shield',up_shieldD:'Begin each run with a short 🛡️.',up_magnet:'Magnet power',up_magnetD:'Stronger treasure pull when 🧲 is active.',banked:'+{n} 🪙 banked',boardBtn:'🎯 Missions',boardTitle:'Daily & Weekly Missions',boardP:'Finish short goals for bonus coins. Resets each day / week. Chapters stay separate.',boardDaily:'☀️ Daily',boardWeekly:'📅 Weekly',boardClaim:'🪙 Claim {n}',boardClaimed:'Claimed',bm_score:'Score {n} in one run',bm_kill:'Defeat {n} guardians',bm_treasure:'Collect {n} treasures',bm_stage:'Reach stage {n}',bm_nova:'Use special {n} time{s}',bm_face:'Play a Face-mode run',bm_touch:'Play a Touch-mode run',bm_survive:'Survive {n} seconds total',bm_games:'Finish {n} runs',bm_days:'Play on {n} different days'});
-Object.assign(L.fr,{home:'Accueil',quitT:'Retourner au menu ?',quitP:'Cette partie sera abandonnée (progression sauvegardée effacée).',quitYes:'🏠 Oui, quitter',quitNo:'▶️ Non, continuer',quitNoP:'↩️ Non, revenir',navBack:'← Retour',resumeRun:'▶️ Reprendre · {s} pts · niv. {g}',resumeBanner:'↩️ Reprise — continuez où vous vous êtes arrêté !',upBtn:'⬆️ Améliorations',upTitle:'Améliorations',upP:'Dépensez les pièces gagnées en partie. Les améliorations haussent le plancher — le skill fixe toujours le plafond.',upCoins:'🪙 Pièces : {n}',upMax:'MAX',upBuy:'🪙 {c}',upLvl:'Niv. {n}',up_hearts:'Cœurs max',up_heartsD:'Commencez avec plus de ❤️ (plafond 5).',up_special:'Charge spéciale',up_specialD:'Remplissez la jauge nova plus vite.',up_move:'Vitesse',up_moveD:'Glissez un peu plus vite (tactile & visage).',up_shield:'Bouclier de départ',up_shieldD:'Commencez chaque partie avec un court 🛡️.',up_magnet:'Puissance aimant',up_magnetD:'Attraction des trésors plus forte avec 🧲.',banked:'+{n} 🪙 en banque',boardBtn:'🎯 Quêtes',boardTitle:'Quêtes du jour & de la semaine',boardP:'Objectifs courts pour des pièces bonus. Se réinitialisent chaque jour / semaine. Les chapitres restent séparés.',boardDaily:'☀️ Quotidien',boardWeekly:'📅 Hebdomadaire',boardClaim:'🪙 Réclamer {n}',boardClaimed:'Réclamé',bm_score:'Marquez {n} en une partie',bm_kill:'Battez {n} gardiens',bm_treasure:'Ramassez {n} trésors',bm_stage:'Atteignez le niveau {n}',bm_nova:'Utilisez le spécial {n} fois',bm_face:'Jouez une partie Visage',bm_touch:'Jouez une partie Tactile',bm_survive:'Survivez {n} secondes au total',bm_games:'Terminez {n} parties',bm_days:'Jouez {n} jours différents'});
+Object.assign(L.en,{home:'Home',quitT:'Quit to menu?',quitP:'This run will be abandoned (saved progress cleared).',quitYes:'🏠 Yes, quit',quitNo:'▶️ No, keep playing',quitNoP:'↩️ No, go back',navBack:'← Back',resumeRun:'▶️ Continue · {s} pts · stage {g}',resumeBanner:'↩️ Resumed — pick up where you left off!',upBtn:'⬆️ Upgrades',upTitle:'Upgrades',upP:'Spend coins earned from your runs. Upgrades raise your floor — skill still sets the ceiling.',upCoins:'🪙 Coins: {n}',upMax:'MAX',upBuy:'🪙 {c}',upLvl:'Lv {n}',up_hearts:'Max hearts',up_heartsD:'Start with more ❤️ (cap 5).',up_special:'Special charge',up_specialD:'Fill the nova meter faster.',up_move:'Move speed',up_moveD:'Slide a bit faster (touch & face).',up_shield:'Starting shield',up_shieldD:'Begin each run with a short 🛡️.',up_magnet:'Magnet power',up_magnetD:'Stronger treasure pull when 🧲 is active.',banked:'+{n} 🪙 banked',boardBtn:'🎯 Missions',boardTitle:'Daily & Weekly Missions',boardP:'Finish short goals for bonus coins. Resets each day / week. Chapters stay separate.',boardDaily:'☀️ Daily',boardWeekly:'📅 Weekly',boardClaim:'🪙 Claim {n}',boardClaimed:'Claimed',bm_score:'Score {n} in one run',bm_kill:'Defeat {n} guardians',bm_treasure:'Collect {n} treasures',bm_stage:'Reach stage {n}',bm_nova:'Use special {n} time{s}',bm_face:'Play a Face-mode run',bm_touch:'Play a Touch-mode run',bm_survive:'Survive {n} seconds total',bm_games:'Finish {n} runs',bm_days:'Play on {n} different days',lbBtn:'🏆 Leaderboard',lbTitle:'🏆 Weekly Leaderboard',lbP:'Top scores this ISO week. Touch and Face are separate. Offline play still works if the board is unreachable.',lbTouch:'👆 Touch',lbFace:'😀 Face',lbName:'Nickname',lbSave:'Save',lbYou:'You · #{r} · {s} pts · stage {g}',lbEmpty:'No scores yet this week — be the first!',lbOffline:'Board offline — try again later.',lbLoading:'Loading…',lbRank:'#{r}',lbSubmitted:'Posted · rank #{r}'});
+Object.assign(L.fr,{home:'Accueil',quitT:'Retourner au menu ?',quitP:'Cette partie sera abandonnée (progression sauvegardée effacée).',quitYes:'🏠 Oui, quitter',quitNo:'▶️ Non, continuer',quitNoP:'↩️ Non, revenir',navBack:'← Retour',resumeRun:'▶️ Reprendre · {s} pts · niv. {g}',resumeBanner:'↩️ Reprise — continuez où vous vous êtes arrêté !',upBtn:'⬆️ Améliorations',upTitle:'Améliorations',upP:'Dépensez les pièces gagnées en partie. Les améliorations haussent le plancher — le skill fixe toujours le plafond.',upCoins:'🪙 Pièces : {n}',upMax:'MAX',upBuy:'🪙 {c}',upLvl:'Niv. {n}',up_hearts:'Cœurs max',up_heartsD:'Commencez avec plus de ❤️ (plafond 5).',up_special:'Charge spéciale',up_specialD:'Remplissez la jauge nova plus vite.',up_move:'Vitesse',up_moveD:'Glissez un peu plus vite (tactile & visage).',up_shield:'Bouclier de départ',up_shieldD:'Commencez chaque partie avec un court 🛡️.',up_magnet:'Puissance aimant',up_magnetD:'Attraction des trésors plus forte avec 🧲.',banked:'+{n} 🪙 en banque',boardBtn:'🎯 Quêtes',boardTitle:'Quêtes du jour & de la semaine',boardP:'Objectifs courts pour des pièces bonus. Se réinitialisent chaque jour / semaine. Les chapitres restent séparés.',boardDaily:'☀️ Quotidien',boardWeekly:'📅 Hebdomadaire',boardClaim:'🪙 Réclamer {n}',boardClaimed:'Réclamé',bm_score:'Marquez {n} en une partie',bm_kill:'Battez {n} gardiens',bm_treasure:'Ramassez {n} trésors',bm_stage:'Atteignez le niveau {n}',bm_nova:'Utilisez le spécial {n} fois',bm_face:'Jouez une partie Visage',bm_touch:'Jouez une partie Tactile',bm_survive:'Survivez {n} secondes au total',bm_games:'Terminez {n} parties',bm_days:'Jouez {n} jours différents',lbBtn:'🏆 Classement',lbTitle:'🏆 Classement de la semaine',lbP:'Meilleurs scores de cette semaine ISO. Tactile et Visage sont séparés. Le jeu marche hors-ligne si le classement est indisponible.',lbTouch:'👆 Tactile',lbFace:'😀 Visage',lbName:'Pseudo',lbSave:'Enregistrer',lbYou:'Vous · #{r} · {s} pts · niv. {g}',lbEmpty:'Aucun score cette semaine — soyez le premier !',lbOffline:'Classement hors-ligne — réessayez plus tard.',lbLoading:'Chargement…',lbRank:'#{r}',lbSubmitted:'Envoyé · rang #{r}'});
 (()=>{const st=document.createElement('style');st.textContent='.navBack{position:fixed;left:8px;top:calc(env(safe-area-inset-top) + 8px);min-width:0!important;width:auto!important;padding:7px 14px!important;font-size:15px!important;z-index:7;border-radius:999px!important}#quitAsk{z-index:10}';document.head.appendChild(st);
  const h=document.createElement('button');h.id='bHome';h.className='hide';h.dataset.ti='home';h.textContent='🏠';h.setAttribute('aria-label','Home');
  h.style.cssText='position:fixed;right:200px;top:calc(env(safe-area-inset-top) + 8px);min-width:0;padding:6px 10px;font-size:16px;z-index:6';document.body.appendChild(h);
  const q=document.createElement('div');q.id='quitAsk';q.className='ov hide';q.innerHTML='<div style="font-size:52px">🏠</div><h2 data-t="quitT" style="margin:0"></h2><p data-t="quitP" style="margin:0;font-size:17px"></p><button id="bQuitYes" class="play pTouch" data-t="quitYes"></button><button id="bQuitNo" class="sec" data-t="quitNo"></button>';document.body.appendChild(q);
- for(const id of ['howto','styles','settings','missions','upgrades','board']){const o=$(id);if(!o)continue;const b=document.createElement('button');b.className='sec navBack';b.dataset.t='navBack';b.dataset.for=id;o.insertBefore(b,o.firstChild)}
+ for(const id of ['howto','styles','settings','missions','upgrades','board','lb']){const o=$(id);if(!o)continue;const b=document.createElement('button');b.className='sec navBack';b.dataset.t='navBack';b.dataset.for=id;o.insertBefore(b,o.firstChild)}
  new MutationObserver(()=>h.classList.toggle('hide',$('bPause').classList.contains('hide'))).observe($('bPause'),{attributes:true,attributeFilter:['class']});
 })();
 const vis=id=>{const e=$(id);return !!e&&!e.classList.contains('hide')};
-function closeOv(id){({howto:'bHowOk',styles:'bStyleOk',settings:'bSetOk',missions:'bMisOk',upgrades:'bUpOk',board:'bBoardOk',camEx:'bCamBack'})[id]&&$(({howto:'bHowOk',styles:'bStyleOk',settings:'bSetOk',missions:'bMisOk',upgrades:'bUpOk',board:'bBoardOk',camEx:'bCamBack'})[id]).click()}
+function closeOv(id){({howto:'bHowOk',styles:'bStyleOk',settings:'bSetOk',missions:'bMisOk',upgrades:'bUpOk',board:'bBoardOk',lb:'bLbOk',camEx:'bCamBack'})[id]&&$(({howto:'bHowOk',styles:'bStyleOk',settings:'bSetOk',missions:'bMisOk',upgrades:'bUpOk',board:'bBoardOk',lb:'bLbOk',camEx:'bCamBack'})[id]).click()}
 document.querySelectorAll('.navBack').forEach(b=>b.onclick=()=>closeOv(b.dataset.for));
 // leave whatever is happening and show the start screen; toMenu() stops the loop and the camera
 function cancelFace(){window.__faceGen=(window.__faceGen||0)+1}
@@ -1093,7 +1137,7 @@ $('bQuitNo').onclick=()=>{$('quitAsk').classList.add('hide');if(askFrom==='home'
 // hardware/system back: returns true when handled, false at the start screen (caller exits the app)
 function navBack(){
  if(vis('quitAsk')){$('bQuitNo').click();return true}
- for(const id of ['camEx','howto','styles','settings','missions'])if(vis(id)){closeOv(id);return true}
+ for(const id of ['camEx','howto','styles','settings','missions','upgrades','board','lb'])if(vis(id)){closeOv(id);return true}
  if(vis('cont')){$('bContNo').click();return true}
  if(vis('over')){$('bMenu').click();return true}
  if(vis('calib')||vis('rest')){goHome();return true}
