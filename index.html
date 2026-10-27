@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="fr"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#170b24">
@@ -302,7 +302,7 @@ c1:'Détendez votre visage et regardez l\'écran bien en face. Ne bougez pas.',c
 stage:'Niveau',tw:['','Les chauves-souris zigzaguent !','Les golems encaissent 3 coups','Les fantômes apparaissent et disparaissent — frappez-les quand ils sont visibles','Les mimiques ressemblent à des trésors !','Boss : Dragon','Brouillard : vue réduite','Pluie de trésors doublée'],tw2:['Gardiens plus rapides','Horde mixte','Frénésie de trésors','Revanche du boss'],
 combo:'Combo x',comboUp:'COMBO x',nova:'💥 TREASURE NOVA !',magnet:'Aimant !',slow:'Ralenti !',shield:'Bouclier !',blocked:'Bloqué !',hp:'PV',smileNova:'SOURIEZ pour la Nova !',ready:'✨ prêt !',spReady:'PRÊT',special:'Spécial',noFace:'Visage introuvable — tenez le téléphone à hauteur des yeux',
 dCam:'caméra',dModel:'modèle',dFace:'visage',yes:'OUI',no:'NON',dSens:'sens.',dBlink:'cligner',dMouth:'bouche',dSmile:'sourire',dPuff:'joues',dBrow:'sourcils',dMove:'bouger',langBtn:'English'}};
-const detectLang=()=>{const s=localStorage.getItem('fa_lang');if(s==='en'||s==='fr')return s;const ls=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'en']);return String(ls[0]||'').toLowerCase().startsWith('fr')?'fr':'en'};
+const detectLang=()=>{const s=localStorage.getItem('fa_lang');if(s==='en'||s==='fr')return s;return'fr'};
 let LANG=detectLang();
 const t=(k,v)=>{let s=(L[LANG]&&L[LANG][k]!==undefined?L[LANG][k]:L.en[k]);if(s===undefined)return k;if(v&&typeof s==='string')s=s.replace(/\{(\w+)\}/g,(m,n)=>v[n]!==undefined?v[n]:m);return s};
 let msgState=null,overState=null,calState={};
