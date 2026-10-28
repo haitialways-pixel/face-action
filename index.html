@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <title>Face-Action Treasure Hunt</title>
 <style>
-html,body{margin:0;height:100%;background:#05030c;color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
+html,body{margin:0;height:100%;background:#05030c;color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 #cam.off{opacity:0;pointer-events:none}
 #camNote{position:fixed;right:4px;top:calc(env(safe-area-inset-top) + 124px);width:90px;font-size:9px;line-height:1.2;text-align:right;opacity:.7;z-index:3}
 #howto,#styles,#settings,#missions,#upgrades,#board{justify-content:flex-start;overflow-y:auto;background:#05030c;z-index:8;padding:calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 16px);gap:8px}
@@ -143,7 +143,12 @@ small{opacity:.75}
 #lbAsk.thHall{background:radial-gradient(ellipse at 50% 20%,#4a2a12,#080310 70%);font-family:Georgia,serif}
 #lbAsk.thHall input{border:1px solid #c48a1c;background:#120a04;color:#fff7cf;border-radius:8px}
 #start.thFA #bLb{color:#ffcf66!important;border-color:#b8862f!important;background:linear-gradient(180deg,#2e1b0d,#170d06)}
-html,body,button,canvas{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}html,body,canvas{touch-action:none}input,textarea,select{-webkit-user-select:text;user-select:text}
+html,body,button{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+#game{pointer-events:none;touch-action:none}
+#cam,#camNote,#camInd,#startBg{pointer-events:none}
+.ov,#howto,#styles,#settings,#missions,#upgrades,#board,#lb{touch-action:pan-y}
+#touch{touch-action:none}
+input,textarea,select{-webkit-user-select:text;user-select:text;touch-action:auto}
 </style></head><body>
 <canvas id="game"></canvas>
 <video id="cam" playsinline muted autoplay class="hide"></video>
@@ -358,7 +363,7 @@ hProg:'<b>📅 Défi du jour</b> : les mêmes gardiens et trésors pour tout le 
 const tp=(k,n,v={})=>t(k,{n,s:n>1?'s':'',...v});
 
 const cv=$('game'),video=$('cam');let ctx=cv.getContext('2d');
-let W,H,DPR;function resize(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize);
+let W,H,DPR,SAT=0,REDUCE_MOT=false;function refreshUiMetrics(){try{SAT=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat'))||0}catch(e){SAT=0}try{REDUCE_MOT=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){REDUCE_MOT=false}}function resize(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);refreshUiMetrics()}addEventListener('resize',resize);
 const BEST_KEYS={face:'fa_best_face',touch:'fa_best_touch'};const getBest=m=>+localStorage.getItem(BEST_KEYS[m])||0;function showBest(){$('best').innerHTML=t('faceBest')+': <b>'+getBest('face')+'</b> &nbsp;·&nbsp; '+t('touchBest')+': <b>'+getBest('touch')+'</b>'}
 /** Weekly LB opens 2026-10-26 00:00 America/Port-au-Prince. One-time Play upgrade clears local bests so pre-launch scores never show/post. */
 const LB_CUTOFF_MS=Date.parse('2026-10-26T00:00:00-04:00');
@@ -527,7 +532,7 @@ function cycleVol(){const i=VOLS.indexOf(SND.vol);SND.vol=VOLS[(i+1)%VOLS.length
 // ---------- Game data ----------
 // v1.1 (Oct 18): rarer high-value treasure (was 40/25/15/10/6/4)
 const TREASURES=[{e:'🪙',p:5,w:46},{e:'💍',p:10,w:28},{e:'🏺',p:20,w:14},{e:'👑',p:40,w:7},{e:'💎',p:70,w:3.5},{e:'🏆',p:100,w:1.5}];
-const TREAS_CAP=3,IDOL_PITY=60; // max treasures on screen; guaranteed 🏆 if none spawned for 60 s of play
+const TREAS_CAP=3,IDOL_PITY=60,GUARD_CAP=12,POWER_CAP=3,MAXSHOTS=40,MAXFX=40,MAXCOINS=28; // caps keep high-score runs playable
 const GUARDS=[
  {id:'goblin',e:'👺',hp:1,sp:1,from:1},
  {id:'bat',e:'🦇',hp:1,sp:1.5,zig:true,from:2},
@@ -599,7 +604,7 @@ function newGame(){const um=upMul(),hm=hunterMul();S={score:0,hearts:um.maxHeart
   if(hm.startShield)S.pw.shield=(S.pw.shield||0)+hm.startShield;
   nextStage()}
 // Difficulty: gentle ramp, capped (v1.1: unchanged per-stage curve; Relaxed = 75% speed, 20% slower spawns, half the ramp)
-const diff=s=>{const r=S&&S.relax,k=r?.5:1;return {speed:60*(r?.75:1)*(1+0.08*k*Math.min(s-1,15)+0.02*k*Math.max(0,s-16)),spawn:Math.max(r?.7:.55,(r?1.6:1.35)*Math.pow(r?.965:.93,s-1)),kills:5+s}};
+const diff=s=>{const r=S&&S.relax,k=r?.5:1,sc=Math.min(s|0,28);return {speed:60*(r?.75:1)*(1+0.08*k*Math.min(sc-1,15)+0.02*k*Math.min(Math.max(0,sc-16),8)),spawn:Math.max(r?.7:.55,(r?1.6:1.35)*Math.pow(r?.965:.93,sc-1)),kills:5+Math.min(s|0,28)}};
 function nextStage(){const cleared=S.stage;S.stage++;S.kills=0;S.need=diff(S.stage).kills;S.stageT=0;
   const st=S.stage;S.banner=()=>{const tw=st<NTW?t('tw')[st-1]:t('tw2')[st%4];return t('stage')+' '+st+(tw?' — '+tw:'')};S.bannerT=3;S.bossOut=false;
   if(cleared>=1){stageCelebrate(cleared);ev('stage',S.stage)}
@@ -608,17 +613,19 @@ function nextStage(){const cleared=S.stage;S.stage++;S.kills=0;S.need=diff(S.sta
 function pick(arr){const w=a=>a.w*(S.boost&&a.p>=40?2.2:1);let t=arr.reduce((a,b)=>a+w(b),0)*S.rng();for(const a of arr){t-=w(a);if(t<=0)return a}return arr[0]}
 function spawn(){
   const d=diff(S.stage),pool=GUARDS.filter(g=>g.from<=S.stage&&!g.boss),R=S.rng;
-  if(S.stage%5===0&&!S.bossOut&&S.kills>=S.need-1){S.bossOut=true;const b=GUARDS[5];S.ents.push({t:'g',...b,x:.5,y:-40,hpL:b.hp+Math.floor(S.stage/5),sp:b.sp,ph:0});return}
+  if(S.stage%5===0&&!S.bossOut&&S.kills>=S.need-1){S.bossOut=true;const b=GUARDS[5];S.ents.push({t:'g',...b,x:.5,y:-40,hpL:b.hp+Math.min(12,Math.floor(S.stage/5)),sp:b.sp,ph:0});return}
   const r=R();
-  if(r<0.62){const g=pool[Math.floor(R()*pool.length)];S.ents.push({t:'g',...g,x:.1+R()*.8,y:-30,hpL:g.hp+(S.stage>10&&R()<.3?1:0),ph:R()*6})}
+  if(r<0.62){let gc=0;for(const e of S.ents)if(e.t==='g'&&!e.dead)gc++;if(gc>=GUARD_CAP)return;
+   const g=pool[Math.floor(R()*pool.length)];S.ents.push({t:'g',...g,x:.1+R()*.8,y:-30,hpL:g.hp+(S.stage>10&&R()<.3?1:0),ph:R()*6})}
   else if(r<0.75){ // v1.1 (Oct 18): treasure 13% of spawn ticks (was 33%), the freed ticks spawn nothing so guardian density is unchanged
-   if(S.ents.filter(e=>e.t==='t'&&!e.dead).length>=TREAS_CAP)return;
+   let tc=0;for(const e of S.ents)if(e.t==='t'&&!e.dead)tc++;if(tc>=TREAS_CAP)return;
    if(S.lastIdol==null)S.lastIdol=S.t;let tr=pick(TREASURES);if(S.t-S.lastIdol>=IDOL_PITY)tr=TREASURES[5];if(tr.p===100)S.lastIdol=S.t;
    S.ents.push({t:'t',...tr,x:.1+R()*.8,y:-30,ph:0})}
-  else if(r<0.80){const p=R()<.14?POWER[0]:POWER[1+Math.floor(R()*3)]; // power-ups stay 5%; heart drops ~half as often as v1.0
+  else if(r<0.80){let pc=0;for(const e of S.ents)if(e.t==='p'&&!e.dead)pc++;if(pc>=POWER_CAP)return;
+   const p=R()<.14?POWER[0]:POWER[1+Math.floor(R()*3)]; // power-ups stay 5%; heart drops ~half as often as v1.0
    S.ents.push({t:'p',...p,x:.1+R()*.8,y:-30,ph:0})}
 }
-function fx(x,y,txt,col,size=18){S.fx.push({x,y,txt,col,t:1,size})}
+function fx(x,y,txt,col,size=18){S.fx.push({x,y,txt,col,t:1,size});if(S.fx.length>MAXFX)S.fx.splice(0,S.fx.length-MAXFX)}
 function startRest(){paused=true;camStop();let n=15;$('rest').classList.remove('hide');$('restT').textContent=n;clearInterval(restI);restI=setInterval(()=>{n--;$('restT').textContent=n;if(n<=0)endRest()},1000)}
 let restI,paused=false;function endRest(){clearInterval(restI);$('rest').classList.add('hide');paused=false;last=performance.now();camResume()}
 $('bSkip').onclick=endRest;
@@ -646,16 +653,16 @@ function update(dt){
   if(inp.special){inp.special=false;if(S.special>=100){S.special=0;sfx.nova();fx(px,py-60,t('nova'),'#ffd54a',22);screenFlash('#ffd54a',.35,.3);S.shake=.25;ev('nova');
     for(const e of S.ents)if(e.t==='g'&&!e.boss){e.dead=true;addScore(10,e.x*W,e.y);ev('kill')}else if(e.boss)e.hpL-=3;}}
   S.spawnT-=dt;if(S.spawnT<=0){S.spawnT=d.spawn*(0.7+S.rng()*.6);spawn();if(S.stage>=8&&S.stage%4===3)spawn()}
-  for(const s of S.shots)s.y-=520*dt;S.shots=S.shots.filter(s=>s.y>-20&&!s.hit);
-  const vac=inp.vac;
+  for(const s of S.shots)s.y-=520*dt;S.shots=S.shots.filter(s=>s.y>-20&&!s.hit);if(S.shots.length>MAXSHOTS)S.shots.splice(0,S.shots.length-MAXSHOTS);
+  const vac=inp.vac,hitR=U()*28,hmMove=hunterMul(),um=upMul();
   for(const e of S.ents){
     e.ph+=dt;e.y+=d.speed*(e.sp??1)*slow*dt*(e.t==='g'?1:0.8); // v1.1 fix: treasure/power-ups had no sp -> NaN y, so they never appeared
     if(e.zig)e.x+=Math.sin(e.ph*4)*0.25*dt;
     const ex=e.x*W;
-    if(e.t!=='g'&&(vac||S.pw.magnet)){const dx=px-ex,dy=py-e.y,dd=Math.hypot(dx,dy);const mp=upMul().magnet*(hunterMul().magnet||1);if(dd<(S.pw.magnet?W:W*.45)){e.x+=dx/dd*1.2*mp*dt;e.y+=dy/dd*260*mp*dt}}
+    if(e.t!=='g'&&(vac||S.pw.magnet)){const dx=px-ex,dy=py-e.y,dd=Math.hypot(dx,dy);const mp=um.magnet*(hmMove.magnet||1);if(dd<(S.pw.magnet?W:W*.45)){e.x+=dx/dd*1.2*mp*dt;e.y+=dy/dd*260*mp*dt}}
     if(e.t==='g'){
       const solid=!e.phase||Math.sin(e.ph*2)>-.2;
-      for(const s of S.shots)if(!s.hit&&solid&&Math.abs(s.x-ex)<U()*28&&Math.abs(s.y-e.y)<U()*28){s.hit=true;e.hpL--;fx(ex,e.y,'⚔️');if(e.hpL>0)sfx.hit();
+      for(const s of S.shots)if(!s.hit&&solid&&Math.abs(s.x-ex)<hitR&&Math.abs(s.y-e.y)<hitR){s.hit=true;e.hpL--;fx(ex,e.y,'⚔️');if(e.hpL>0)sfx.hit();
         if(e.hpL<=0){e.dead=true;S.kills++;S.combo++;S.maxCombo=Math.max(S.maxCombo,S.combo);sfx.kill();ev('kill');ev('combo',S.combo);
           if(S.combo>=5&&S.combo%5===0)hypeCombo(S.combo);
           S.comboT=3;S.special=Math.min(100,S.special+8*upMul().special*(hunterMul().specialKill||1));addScore((e.boss?150:10)*(1+Math.min(S.combo,10)*0.1),ex,e.y);
@@ -886,7 +893,7 @@ function buildJungle(){const w=Math.ceil(W),h=Math.ceil(H),r=jRnd(7);
   const ff=[];for(let i=0;i<14;i++)ff.push({x:r()*w,y:r()*h,p:r()*7,s:.3+r()*.7});
   JG={w,h,b,f,m,n,ff}}
 function drawJungle(){if(!JG||JG.w!==Math.ceil(W)||JG.h!==Math.ceil(H))buildJungle();
-  const sp=(matchMedia("(prefers-reduced-motion: reduce)").matches?.25:1)*(S&&S.relax?.6:1),tt=(S?S.t:0)*sp;
+  const sp=(REDUCE_MOT?.25:1)*(S&&S.relax?.6:1),tt=(S?S.t:0)*sp;
   ctx.drawImage(JG.b,0,0,W,H);
   const lay=(c,v)=>{const o=(tt*v)%H;ctx.drawImage(c,0,o,W,H);ctx.drawImage(c,0,o-H,W,H)};
   lay(JG.f,10);lay(JG.m,28);
@@ -906,7 +913,7 @@ function draw(){
   for(const p of S.parts){ctx.globalAlpha=Math.max(0,Math.min(1,p.t*1.5));ctx.fillStyle=p.col;if(p.conf){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore()}else ctx.fillRect(p.x-p.s/2,p.y-p.s/2,p.s,p.s)}ctx.globalAlpha=1;
   for(const f of S.fx){ctx.globalAlpha=Math.max(0,f.t);ctx.fillStyle=f.col||'#fff';ctx.font='bold '+(f.size||18)+'px sans-serif';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.6)';ctx.strokeText(f.txt,f.x,f.y);ctx.fillText(f.txt,f.x,f.y)}ctx.globalAlpha=1;
   ctx.restore();
-  const top=(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat'))||0)+14;
+  const top=SAT+14;
   ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font='bold '+Math.round(18*(1+S.scorePulse*.8))+'px sans-serif';ctx.shadowColor='#ffd54a';ctx.shadowBlur=S.scorePulse*40;
   ctx.fillText('💰 '+S.score,12,top+10);ctx.shadowBlur=0;ctx.font='bold 18px sans-serif';ctx.fillText('❤️'.repeat(Math.max(0,S.hearts)),12,top+36);
   ctx.fillText(t('stage')+' '+S.stage+'  '+S.kills+'/'+S.need+(S.relax?'  '+t('relaxHud'):'')+(S.boost?'  ⚡':''),12,top+62);
@@ -921,7 +928,7 @@ function draw(){
   if(mode==='face'&&running&&!faceSeen){ctx.textAlign='center';ctx.fillStyle='#f88';ctx.font='14px sans-serif';ctx.fillText(t('noFace'),W/2,H*.45)}
   if(mode==='touch'&&running){const c=S.shieldCd>0&&!S.pw.shield;$('touch').querySelector('[data-k=shield]').classList.toggle('cd',c)}
 }
-document.documentElement.style.setProperty('--sat','env(safe-area-inset-top)');
+document.documentElement.style.setProperty('--sat','env(safe-area-inset-top)');try{refreshUiMetrics()}catch(e){}
 
 // ---------- Celebrations: hype banners, stage clear / boss party, personal best ----------
 const MAXPARTS=260;
@@ -932,9 +939,9 @@ function hype(txt,col,{dur=.9,force=false,size=40}={}){if(!force&&S.t-S.hypeLast
 function screenFlash(col,dur=.3,a=.35){S.flash={col,t:dur,dur,a}}
 function hypeCombo(n){const k=n>=20?20:n;if(hype(t('hype'+k),HYPECOL[k],{size:n>=20?44:40})){screenFlash(HYPECOL[k],.3,.28);sfx.sting(Math.min(4,n/5));navigator.vibrate&&navigator.vibrate(30)}else sfx.combo(n)}
 function jackpotPop(x,y){fx(Math.max(80,Math.min(W-80,x)),y-50,t('jackpot'),'#fff59d',24);screenFlash('#ffffff',.2,.2);confetti(x,y,'#ffd740',24)}
-function confetti(x,y,col,n){const cols=[col,'#ffffff',col,'#ffd54a'];for(let i=0;i<n;i++){const a=-Math.PI/2+(Math.random()-.5)*1.6,v=320+Math.random()*380;
+function confetti(x,y,col,n){n=Math.min(n,Math.max(0,MAXPARTS-S.parts.length));const cols=[col,'#ffffff',col,'#ffd54a'];for(let i=0;i<n;i++){const a=-Math.PI/2+(Math.random()-.5)*1.6,v=320+Math.random()*380;
   S.parts.push({x:x+(Math.random()-.5)*30,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:1.2+Math.random()*.6,col:cols[i%4],s:5+Math.random()*4,conf:1,rot:Math.random()*6,vr:(Math.random()-.5)*14})}}
-function coinShower(n,x,y){for(let k=0;k<n;k++)S.coins.push({x0:x+(Math.random()-.5)*W*.5,y0:y-Math.random()*60,t:-k*.05,dur:.75+Math.random()*.2,wob:(Math.random()-.5)*160})}
+function coinShower(n,x,y){const room=Math.max(0,MAXCOINS-S.coins.length);n=Math.min(n,room);for(let k=0;k<n;k++)S.coins.push({x0:x+(Math.random()-.5)*W*.5,y0:y-Math.random()*60,t:-k*.05,dur:.75+Math.random()*.2,wob:(Math.random()-.5)*160})}
 function stageCelebrate(st){hype(t('stageClr'),'#00e676',{dur:1.1,size:40});confetti(W*.15,H*.8,'#00e676',22);confetti(W*.85,H*.8,'#ffd54a',22);coinShower(10,W/2,H*.6);sfx.triumph();S.shake=Math.max(S.shake,.25)}
 function bossCelebrate(x,y){hype(t('bossKill'),'#ff1744',{dur:1.4,force:true,size:38});screenFlash('#ff9100',.4,.35);S.shake=.45;sfx.fanfare();coinShower(16,x,y);
   S.fireQ.push(...[0,.25,.5].map(d=>({d,x:W*(.2+Math.random()*.6),y:H*(.18+Math.random()*.3)})))}
@@ -952,7 +959,7 @@ function celebUpdate(dt){
   let arrived=0;for(const c of S.coins){c.t+=dt;if(c.t>=c.dur&&!c.done){c.done=1;arrived++}}S.coins=S.coins.filter(c=>!c.done);
   if(arrived){S.scorePulse=.25;if(S.t-(S.coinT||0)>.07){S.coinT=S.t;sfx.coin()}}}
 function drawCelebrations(){
-  const sp={x:40,y:(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat'))||0)+24};
+  const sp={x:40,y:SAT+24};
   for(const c of S.coins){if(c.t<0)continue;const p=ease(Math.min(1,c.t/c.dur)),x=c.x0+(sp.x-c.x0)*p+Math.sin(p*Math.PI)*c.wob,y=c.y0+(sp.y-c.y0)*p-Math.sin(p*Math.PI)*90,r=9-p*3;
     ctx.save();ctx.fillStyle='#ffc400';ctx.shadowColor='#ffd54a';ctx.shadowBlur=8;ctx.beginPath();ctx.ellipse(x,y,r*Math.abs(Math.cos(c.t*12))+1.5,r,0,0,7);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='#fff59d';ctx.lineWidth=1.5;ctx.stroke();ctx.restore()}
   if(S.hype){const h=S.hype,p=h.t/h.dur,sc=h.t<.12?1.6-4*h.t:1,a=p>.7?Math.max(0,(1-p)/.3):1,y=H*.52;
@@ -1101,17 +1108,18 @@ function freshWeekly(week){ // 2–3 bigger goals; rewards 100–250
   while(out.length<2){const p=pool[out.length];out.push({id:p.t+'-'+p.n,t:p.t,n:p.n,p:0,rew:p.rew,claimed:false})}
   return {week,items:out,days:[]}
 }
-function getDailyBoard(){const day=today();let b=LS.get('fa_daily_m',null);
-  if(!b||b.day!==day||!Array.isArray(b.items)){b=freshDaily(day);LS.set('fa_daily_m',b)}return b}
-function getWeeklyBoard(){const week=weekKey();let b=LS.get('fa_weekly_m',null);
-  if(!b||b.week!==week||!Array.isArray(b.items)){b=freshWeekly(week);LS.set('fa_weekly_m',b)}return b}
+let _dailyBoard=null,_weeklyBoard=null;
+function getDailyBoard(){const day=today();if(_dailyBoard&&_dailyBoard.day===day&&Array.isArray(_dailyBoard.items))return _dailyBoard;
+  let b=LS.get('fa_daily_m',null);if(!b||b.day!==day||!Array.isArray(b.items)){b=freshDaily(day);LS.set('fa_daily_m',b)}return _dailyBoard=b}
+function getWeeklyBoard(){const week=weekKey();if(_weeklyBoard&&_weeklyBoard.week===week&&Array.isArray(_weeklyBoard.items))return _weeklyBoard;
+  let b=LS.get('fa_weekly_m',null);if(!b||b.week!==week||!Array.isArray(b.items)){b=freshWeekly(week);LS.set('fa_weekly_m',b)}return _weeklyBoard=b}
 function boardText(it){const k='bm_'+it.t;return t(k,{n:it.n,s:it.n>1?'s':''})}
 function boardBump(type,val=1){let ch=false;
-  const apply=(b,key)=>{for(const it of b.items){if(it.t!==type||it.claimed)continue;
+  const apply=(b,key)=>{let local=false;for(const it of b.items){if(it.t!==type||it.claimed)continue;
     const before=it.p|0;
     if(BOARD_MAX.has(type)||type==='days')it.p=Math.min(it.n,Math.max(before,val));
     else it.p=Math.min(it.n,before+val);
-    if(it.p!==before)ch=true}LS.set(key,b)};
+    if(it.p!==before){local=true;ch=true}}if(local)LS.set(key,b)};
   apply(getDailyBoard(),'fa_daily_m');apply(getWeeklyBoard(),'fa_weekly_m');
   if(ch){try{syncBoardBtn()}catch(e){}if($('board')&&!$('board').classList.contains('hide'))buildBoard()}}
 function boardMarkDay(){const b=getWeeklyBoard(),d=today();if(!b.days)b.days=[];
@@ -1438,7 +1446,7 @@ apply(load());window.__ctl={open:open,load:load};})();
 var pd=function(e){e.preventDefault()},isIn=function(t){return t&&t.closest&&t.closest('input,textarea,select,[contenteditable]')};
 ['gesturestart','gesturechange','gestureend'].forEach(function(n){document.addEventListener(n,pd,{passive:false})});
 document.addEventListener('dblclick',function(e){if(!isIn(e.target))e.preventDefault()},{passive:false});
-var last=0;document.addEventListener('touchend',function(e){var n=Date.now();if(n-last<300&&!isIn(e.target)&&e.changedTouches.length===1){e.preventDefault();var b=e.target.closest&&e.target.closest('button,[role=button],a');if(b&&!b.disabled)b.click()}last=n},{passive:false});
+var last=0;document.addEventListener('touchend',function(e){var n=Date.now();var interactive=e.target&&e.target.closest&&e.target.closest('button,[role=button],a,input,textarea,select,label,[contenteditable]');if(n-last<300&&!interactive&&e.changedTouches.length===1)e.preventDefault();last=n},{passive:false});
 document.addEventListener('touchmove',function(e){if(e.touches.length>1)e.preventDefault()},{passive:false});
 document.addEventListener('touchstart',function(e){if(e.touches.length>1)e.preventDefault()},{passive:false});
 window.addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault()},{passive:false});
