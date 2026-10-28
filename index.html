@@ -651,7 +651,7 @@ function update(dt){
   const px=S.x*W,py=H*0.78;
   if(inp.attack){inp.attack=false;const hm=hunterMul();if(hm.twinShot){S.shots.push({x:px-7,y:py-30});S.shots.push({x:px+7,y:py-30})}else S.shots.push({x:px,y:py-30});sfx.shot()}
   if(inp.special){inp.special=false;if(S.special>=100){S.special=0;sfx.nova();fx(px,py-60,t('nova'),'#ffd54a',22);screenFlash('#ffd54a',.35,.3);S.shake=.25;ev('nova');
-    for(const e of S.ents)if(e.t==='g'&&!e.boss){e.dead=true;addScore(100,e.x*W,e.y);ev('kill')}else if(e.boss)e.hpL-=3;}}
+    for(const e of S.ents)if(e.t==='g'&&!e.boss){e.dead=true;addScore(10,e.x*W,e.y);ev('kill')}else if(e.boss)e.hpL-=3;}}
   S.spawnT-=dt;if(S.spawnT<=0){S.spawnT=d.spawn*(0.7+S.rng()*.6);spawn();if(S.stage>=8&&S.stage%4===3)spawn()}
   for(const s of S.shots)s.y-=520*dt;S.shots=S.shots.filter(s=>s.y>-20&&!s.hit);if(S.shots.length>MAXSHOTS)S.shots.splice(0,S.shots.length-MAXSHOTS);
   const vac=inp.vac,hitR=U()*28,hmMove=hunterMul(),um=upMul();
@@ -665,7 +665,7 @@ function update(dt){
       for(const s of S.shots)if(!s.hit&&solid&&Math.abs(s.x-ex)<hitR&&Math.abs(s.y-e.y)<hitR){s.hit=true;e.hpL--;fx(ex,e.y,'⚔️');if(e.hpL>0)sfx.hit();
         if(e.hpL<=0){e.dead=true;S.kills++;S.combo++;S.maxCombo=Math.max(S.maxCombo,S.combo);sfx.kill();ev('kill');ev('combo',S.combo);
           if(S.combo>=5&&S.combo%5===0)hypeCombo(S.combo);
-          S.comboT=3;S.special=Math.min(100,S.special+8*upMul().special*(hunterMul().specialKill||1));addScore((e.boss?150:100)*(1+Math.min(S.combo,10)*0.1),ex,e.y);
+          S.comboT=3;S.special=Math.min(100,S.special+8*upMul().special*(hunterMul().specialKill||1));addScore((e.boss?150:10)*(1+Math.min(S.combo,10)*0.1),ex,e.y);
           if(e.boss){ev('boss');bossCelebrate(ex,e.y)}}}
       if(!e.dead&&e.y>py-20&&Math.abs(ex-px)<40){e.dead=true;hurt()}
       if(e.y>H+30){e.dead=true}
