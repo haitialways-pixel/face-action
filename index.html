@@ -1433,8 +1433,8 @@ var rt;function re(){clearTimeout(rt);rt=setTimeout(function(){if(E&&E.o!==ori()
 apply(load());window.__ctl={open:open,load:load};})();
 </script>
 <script>
-/* anti-zoom guard */
-(function(){var vm=document.querySelector('meta[name=viewport]'),V='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover';
+/* anti-zoom guard — prevent pinch/ctrl-zoom; never rewrite viewport meta (that fought iOS/itch and looked like auto-zoom) */
+(function(){
 var pd=function(e){e.preventDefault()},isIn=function(t){return t&&t.closest&&t.closest('input,textarea,select,[contenteditable]')};
 ['gesturestart','gesturechange','gestureend'].forEach(function(n){document.addEventListener(n,pd,{passive:false})});
 document.addEventListener('dblclick',function(e){if(!isIn(e.target))e.preventDefault()},{passive:false});
@@ -1443,6 +1443,7 @@ document.addEventListener('touchmove',function(e){if(e.touches.length>1)e.preven
 document.addEventListener('touchstart',function(e){if(e.touches.length>1)e.preventDefault()},{passive:false});
 window.addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault()},{passive:false});
 document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&/^[+=\-0]$/.test(e.key))e.preventDefault()});
-var busy=false;function fix(){var vv=window.visualViewport;if(!vv||busy||vv.scale<=1.01)return;busy=true;vm.setAttribute('content',V.replace('initial-scale=1,','initial-scale=1.0001,'));setTimeout(function(){vm.setAttribute('content',V);window.scrollTo(0,0);busy=false},60)}
-if(window.visualViewport){visualViewport.addEventListener('resize',fix);}setInterval(fix,1000);})();
+function unpin(){var vv=window.visualViewport;if(vv&&vv.scale>1.01)window.scrollTo(0,0)}
+if(window.visualViewport){visualViewport.addEventListener('resize',unpin);visualViewport.addEventListener('scroll',unpin)}
+})();
 </script></body></html>
