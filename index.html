@@ -66,6 +66,7 @@ h1 small{display:block;font-size:22px;color:#fff;text-shadow:0 0 12px #00e5ff;op
 #touch{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 10px);display:flex;justify-content:space-around;z-index:4}
 #touch button{min-width:0;width:15vw;height:15vw;max-width:76px;max-height:76px;border-radius:50%;font-size:24px;opacity:.85;padding:0}
 #touch button.cd{opacity:.35}
+#touch button[data-k=shield]{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}#touch button[data-k=shield] .rp{font-size:10px;font-weight:bold}
 #touch button[data-k=special]{position:relative;overflow:hidden;width:18vw;height:18vw;max-width:90px;max-height:90px;font-size:32px;opacity:1;border:3px solid #3a1d00;background:linear-gradient(160deg,#fff3a0,#ffc400 45%,#ff7a00);box-shadow:0 0 0 2px #fff8,0 3px 8px #0009;filter:saturate(.7) brightness(.9);align-self:center}
 #touch button[data-k=special] .sf{position:absolute;left:0;right:0;bottom:0;height:var(--f,0%);background:#ffffff55;pointer-events:none}
 #touch button[data-k=special] .si{position:relative;z-index:1}
@@ -251,7 +252,7 @@ window.__startBg={get running(){return !!raf},get count(){return typeof count===
  <div class="hrow"><span class="ic">😑</span><div data-h="hAtk"></div></div>
  <div class="hrow"><span class="ic">😮</span><div data-h="hCol"></div></div>
  <div class="hrow"><span class="ic">😁</span><div data-h="hSp"></div></div>
- <div class="hrow"><span class="ic">😤</span><div data-h="hBlk"></div></div>
+ <div class="hrow"><span class="ic">🔋</span><div data-h="hBlk"></div></div>
  <h2 style="font-size:20px" data-t="tPts"></h2>
  <div class="tgrid"><div><span>🪙</span>5</div><div><span>💍</span>10</div><div><span>🏺</span>20</div><div><span>👑</span>40</div><div><span>💎</span>70</div><div><span>🏆</span>100</div></div>
  <div class="hrow"><span class="ic">📅</span><div data-h="hProg"></div></div>
@@ -274,13 +275,13 @@ window.__startBg={get running(){return !!raf},get count(){return typeof count===
 <div id="camInd" class="hide" style="position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 6px);z-index:6;background:rgba(0,0,0,.6);padding:3px 8px;border-radius:10px;font-size:12px"><span style="color:#f33">●</span> <span data-t="camOn"></span></div>
 <button id="camResume" class="hide" style="position:fixed;left:50%;top:40%;transform:translateX(-50%);z-index:6"><span data-t="camResume"></span></button>
 <div id="touch" class="hide">
- <button data-k="attack">⚔️</button><button data-k="vac">🌀</button><button data-k="shield">🛡️</button><button data-k="special"><span class="sf"></span><span class="si">✨</span><span class="sr" data-t="spReady"></span></button><button data-k="left">⬅️</button><button data-k="right">➡️</button>
+ <button data-k="attack">⚔️</button><button data-k="vac">🌀</button><button data-k="shield"><span class="ri">🔋</span><small class="rp">50🪙</small></button><button data-k="special"><span class="sf"></span><span class="si">✨</span><span class="sr" data-t="spReady"></span></button><button data-k="left">⬅️</button><button data-k="right">➡️</button>
 </div>
 <script type="module">
 const $=id=>document.getElementById(id);
 const L={en:{intro:'Defeat guardians and grab treasure using only your face.<br><small>A fun facial workout. Camera stays on your device; nothing is uploaded.</small>',
 playFace:'😀 Play with Face',howBtn:'❓ How to Play',recalFace:'🎯 Recalibrate face',playTouch:'👆 Play with Touch',privacy:'Privacy policy',copy:'© 2026 Steeve J. All rights reserved.',
-howTitle:'How to Play',hMove:'<b>Move</b><br>Turn your head left / right (eyes work as a backup)',hAtk:'<b>Attack</b><br>Quick blink with both eyes',hCol:'<b>Collect treasure</b><br>Open your mouth and hold',hSp:'<b>Special move</b><br>Big smile held ~0.5 s when the meter is full',hBlk:'<b>Block</b><br>Puff cheeks or raise eyebrows (4 s cooldown). Touch: hold 🛡️',
+howTitle:'How to Play',hMove:'<b>Move</b><br>Turn your head left / right (eyes work as a backup)',hAtk:'<b>Attack</b><br>Quick blink with both eyes',hCol:'<b>Collect treasure</b><br>Open your mouth and hold',hSp:'<b>Special move</b><br>Big smile held ~0.5 s when the meter is full',hBlk:'<b>Ammo refill (stage 50+)</b><br>From stage 50 you have 60 bullets. Catch 🔋 drops (+20) or puff cheeks / raise eyebrows to buy +30 for 50 🪙. Touch: tap 🔋. Ranked runs can only spend coins earned in that run. 🛡️ pickups still block hits.',ammoEmpty:'*click* EMPTY',ammoOn:'🔫 Limited ammo from now on!',ammoFull:'Ammo full',ammoPoor:'Need {c} 🪙',
 hTip:"Keep your face centered and well lit, about an arm's length away.<br>Use <b>⚙️ → 🎯</b> to recalibrate and the <b>🐞</b> sensitivity slider if gestures feel off.",tPts:'Treasure points',gotIt:'Got it!',
 paused:'⏸ Paused',resume:'▶️ Resume',calibrating:'Calibrating…',restT:'😌 Face break',restP:'Relax your face, look into the distance, blink gently.',skip:'Skip',ouch:'Ouch! Out of hearts',again:'Play again',
 sensL:'Sensitivity (left = easier)',recal:'Recalibrate',sound:'Sound',prevT:'Show/hide camera preview',camNote:'🔒 Video stays on your device, never recorded or uploaded.',noFaceRecal:"Can't see your face. Recalibrate?",camOn:'camera on',camResume:'📷 Tap to resume camera',
@@ -295,7 +296,7 @@ combo:'Combo x',comboUp:'COMBO x',nova:'💥 TREASURE NOVA!',magnet:'Magnet!',sl
 dCam:'cam',dModel:'model',dFace:'face',yes:'YES',no:'NO',dSens:'sens',dBlink:'blink',dMouth:'mouth',dSmile:'smile',dPuff:'puff',dBrow:'brow',dMove:'move',langBtn:'Français'},
 fr:{intro:'Battez les gardiens et ramassez les trésors avec votre visage seulement.<br><small>Un exercice facial amusant. La caméra reste sur votre appareil ; rien n\'est envoyé.</small>',
 playFace:'😀 Jouer avec le visage',howBtn:'❓ Comment jouer',recalFace:'🎯 Recalibrer le visage',playTouch:'👆 Jouer en tactile',privacy:'Politique de confidentialité',copy:'© 2026 Steeve J. Tous droits réservés.',
-howTitle:'Comment jouer',hMove:'<b>Se déplacer</b><br>Tournez la tête à gauche / à droite (les yeux servent de secours)',hAtk:'<b>Attaquer</b><br>Clignez rapidement des deux yeux',hCol:'<b>Ramasser les trésors</b><br>Ouvrez la bouche et maintenez',hSp:'<b>Coup spécial</b><br>Grand sourire tenu ~0,5 s quand la jauge est pleine',hBlk:'<b>Bloquer</b><br>Gonflez les joues ou levez les sourcils (recharge de 4 s). Tactile : maintenez 🛡️',
+howTitle:'Comment jouer',hMove:'<b>Se déplacer</b><br>Tournez la tête à gauche / à droite (les yeux servent de secours)',hAtk:'<b>Attaquer</b><br>Clignez rapidement des deux yeux',hCol:'<b>Ramasser les trésors</b><br>Ouvrez la bouche et maintenez',hSp:'<b>Coup spécial</b><br>Grand sourire tenu ~0,5 s quand la jauge est pleine',hBlk:'<b>Recharge de munitions (niveau 50+)</b><br>Dès le niveau 50 vous avez 60 balles. Attrapez les 🔋 (+20) ou gonflez les joues / levez les sourcils pour acheter +30 pour 50 🪙. Tactile : touchez 🔋. En Classé, seules les pièces gagnées pendant la partie comptent. Les bonus 🛡️ bloquent toujours les coups.',ammoEmpty:'*clic* VIDE',ammoOn:'🔫 Munitions limitées désormais !',ammoFull:'Munitions pleines',ammoPoor:'Il faut {c} 🪙',
 hTip:'Gardez le visage centré et bien éclairé, à environ une longueur de bras.<br>Utilisez <b>⚙️ → 🎯</b> pour recalibrer et le curseur de sensibilité <b>🐞</b> si les gestes répondent mal.',tPts:'Points des trésors',gotIt:'Compris !',
 paused:'⏸ Pause',resume:'▶️ Reprendre',calibrating:'Calibrage…',restT:'😌 Pause visage',restP:'Détendez votre visage, regardez au loin, clignez doucement.',skip:'Passer',ouch:'Aïe ! Plus de cœurs',again:'Rejouer',
 sensL:'Sensibilité (gauche = plus facile)',recal:'Recalibrer',sound:'Son',prevT:'Afficher/masquer l\'aperçu caméra',camNote:'🔒 La vidéo reste sur votre appareil, jamais enregistrée ni envoyée.',noFaceRecal:'Visage introuvable. Recalibrer ?',camOn:'caméra active',camResume:'📷 Touchez pour réactiver la caméra',
@@ -332,7 +333,7 @@ chapBtn:'📖 Chapter {n} · {d}/3 missions',chapTitle:'📖 Chapter {n}',chapP:
 mKill:'Defeat {n} guardians',mIdol:'Collect {n} golden idol{s} (🏆 100 pts)',mNova:'Use Treasure Nova {n} time{s}',mBlock:'Block {n} attack{s}',mStage:'Reach stage {n} in one game',mScore:'Score {n} in one game',mCombo:'Reach a x{n} kill combo',mBoss:'Defeat {n} dragon{s}',mTreasure:'Collect {n} treasures',
 mDone:'✅ Mission complete: {m}',chapDone:'CHAPTER {n} COMPLETE!',chapRewOver:'📖 Chapter {n} complete! ⚡ Treasure boost next game',chapTotal:'Chapters completed: {n}',boostOn:'⚡ Treasure boost: full special meter + rarer treasure!',colon:': ',
 collectBtn:'🏆 Collection',collTitle:'🏆 Collection',skinTitle:'⚔️ Hunters',skinP:'Buy hunters with coins, then tap to equip for one run. A loss resets hunters and upgrades back to Scout (no refund).',badgesH:'🏅 Badges',needPts:'🔒 {n} pts',needStreak:'or 🔥 {n} days',bestStreak:'🔥 Best daily streak: {n} day{s}',
-hScout:'Scout',hScoutA:'Classic cavern hunter',hBlade:'Blade',hBladeA:'Twin shots · +15% special from kills',hWarden:'Warden',hWardenA:'Faster shield · +2s start shield',hRelic:'Relic',hRelicA:'Twin shots · faster move · +20% treasure · stronger magnet',buyHunter:'🪙 Buy · {c}',hunterEq:'✓ Equipped',hunterOwn:'Owned — tap to equip (1 run)',
+hScout:'Scout',hScoutA:'Classic cavern hunter',hBlade:'Blade',hBladeA:'Twin shots · +15% special from kills',hWarden:'Warden',hWardenA:'+2s start shield',hRelic:'Relic',hRelicA:'Twin shots · faster move · +20% treasure · stronger magnet',buyHunter:'🪙 Buy · {c}',hunterEq:'✓ Equipped',hunterOwn:'Owned — tap to equip (1 run)',
 b_dragon:'Dragon Slayer',d_dragon:'Defeat a dragon boss',b_hunter:'Guardian Hunter',d_hunter:'Defeat 200 guardians',b_idol:'Idol Collector',d_idol:'Collect 10 golden idols',b_wall:'Iron Wall',d_wall:'Block 25 attacks',
 b_s3:'On a Roll',d_s3:'3-day daily streak',b_s7:'Week Warrior',d_s7:'7-day daily streak',b_s14:'Two-Week Titan',d_s14:'14-day daily streak',b_s30:'Monthly Legend',d_s30:'30-day daily streak',badgeGot:'🏅 Badge: {b}!',
 setBtn:'⚙️ Settings',setTitle:'⚙️ Settings',cbL:'Shape outlines',cbD:'Bold outlines + shape markers: guardians ✖ spiky, treasure ◆ ★ with point value, power-ups ■.',relaxL:'Relaxed speed',relaxD:'Slower guardians and treasure, gentler ramp.',on:'ON',off:'OFF',recalFace:'🎯 Recalibrate face',done:'Done',
@@ -351,7 +352,7 @@ chapBtn:'📖 Chapitre {n} · {d}/3 missions',chapTitle:'📖 Chapitre {n}',chap
 mKill:'Battez {n} gardiens',mIdol:'Ramassez {n} idole{s} dorée{s} (🏆 100 pts)',mNova:'Utilisez la Treasure Nova {n} fois',mBlock:'Bloquez {n} attaque{s}',mStage:'Atteignez le niveau {n} en une partie',mScore:'Marquez {n} en une partie',mCombo:'Atteignez un combo x{n}',mBoss:'Battez {n} dragon{s}',mTreasure:'Ramassez {n} trésors',
 mDone:'✅ Mission réussie : {m}',chapDone:'CHAPITRE {n} TERMINÉ !',chapRewOver:'📖 Chapitre {n} terminé ! ⚡ Bonus trésor à la prochaine partie',chapTotal:'Chapitres terminés : {n}',boostOn:'⚡ Bonus trésor : jauge spéciale pleine + trésors rares !',colon:' : ',
 collectBtn:'🏆 Collection',collTitle:'🏆 Collection',skinTitle:'⚔️ Chasseurs',skinP:'Achetez des chasseurs avec des pièces, puis touchez pour équiper une partie. Une défaite remet chasseurs et améliorations à Éclaireur (sans remboursement).',badgesH:'🏅 Badges',needPts:'🔒 {n} pts',needStreak:'ou 🔥 {n} jours',bestStreak:'🔥 Meilleure série : {n} jour{s}',
-hScout:'Éclaireur',hScoutA:'Chasseur classique de cavernes',hBlade:'Lame',hBladeA:'Tirs doubles · +15 % spécial aux kills',hWarden:'Gardien',hWardenA:'Bouclier plus rapide · +2 s au départ',hRelic:'Relique',hRelicA:'Tirs doubles · déplacement plus rapide · +20 % trésor · aimant plus fort',buyHunter:'🪙 Acheter · {c}',hunterEq:'✓ Équipé',hunterOwn:'Possédé — toucher pour équiper (1 partie)',
+hScout:'Éclaireur',hScoutA:'Chasseur classique de cavernes',hBlade:'Lame',hBladeA:'Tirs doubles · +15 % spécial aux kills',hWarden:'Gardien',hWardenA:'+2 s de bouclier au départ',hRelic:'Relique',hRelicA:'Tirs doubles · déplacement plus rapide · +20 % trésor · aimant plus fort',buyHunter:'🪙 Acheter · {c}',hunterEq:'✓ Équipé',hunterOwn:'Possédé — toucher pour équiper (1 partie)',
 b_dragon:'Tueur de dragon',d_dragon:'Battez un dragon',b_hunter:'Chasseur de gardiens',d_hunter:'Battez 200 gardiens',b_idol:'Collectionneur d\'idoles',d_idol:'Ramassez 10 idoles dorées',b_wall:'Mur de fer',d_wall:'Bloquez 25 attaques',
 b_s3:'Sur la lancée',d_s3:'Série de 3 jours',b_s7:'Guerrier de la semaine',d_s7:'Série de 7 jours',b_s14:'Titan des deux semaines',d_s14:'Série de 14 jours',b_s30:'Légende du mois',d_s30:'Série de 30 jours',badgeGot:'🏅 Badge : {b} !',
 setBtn:'⚙️ Réglages',setTitle:'⚙️ Réglages',cbL:'Contours de formes',cbD:'Contours épais + repères de forme : gardiens ✖ à pointes, trésors ◆ ★ avec leur valeur, bonus ■.',relaxL:'Vitesse détente',relaxD:'Gardiens et trésors plus lents, progression plus douce.',on:'OUI',off:'NON',recalFace:'🎯 Recalibrer le visage',done:'OK',
@@ -452,11 +453,11 @@ function updateInput(dt){
     const sm=(act('mouthSmileLeft')+act('mouthSmileRight'))/2;lvl.smile=sm;
     if(sm>th('smile')){smileHeld+=dt;if(smileHeld>.4){inp.special=true;fire('smile');smileHeld=-1.5}}else if(smileHeld>0)smileHeld=0;else smileHeld=Math.min(0,smileHeld+dt);
     lvl.puff=act('cheekPuff');lvl.brow=act('browInnerUp');
-    inp.shield=lvl.puff>th('puff')||lvl.brow>th('brow');if(inp.shield)fire('shield');
+    {const g=lvl.puff>th('puff')||lvl.brow>th('brow');if(g&&!inp._rg){inp.refill=true;fire('shield')}inp._rg=g}inp.shield=false;
   }else{
     inp.x=(touch.right?1:0)-(touch.left?1:0);
     if(touch.attack){inp.attack=true;touch.attack=false}
-    inp.vac=touch.vac;inp.shield=touch.shield; if(touch.special){inp.special=true;touch.special=false}
+    inp.vac=touch.vac;inp.shield=false;if(touch.shield){inp.refill=true;touch.shield=false} if(touch.special){inp.special=true;touch.special=false}
   }
 }
 // ---------- Debug HUD ----------
@@ -477,10 +478,10 @@ function drawHud(){
   ctx.restore();
 }
 document.querySelectorAll('#touch button').forEach(b=>{const k=b.dataset.k;
-  const on=e=>{e.preventDefault();touch[k]=true},off=e=>{e.preventDefault();if(k!=='attack'&&k!=='special')touch[k]=false};
+  const on=e=>{e.preventDefault();touch[k]=true},off=e=>{e.preventDefault();if(k!=='attack'&&k!=='special'&&k!=='shield')touch[k]=false};
   b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointerleave',off);b.addEventListener('pointercancel',off)});
 addEventListener('keydown',e=>{if(e.key==='ArrowLeft')touch.left=true;if(e.key==='ArrowRight')touch.right=true;if(e.key===' ')touch.attack=true;if(e.key==='v')touch.vac=true;if(e.key==='s')touch.special=true;if(e.key==='b')touch.shield=true});
-addEventListener('keyup',e=>{if(e.key==='ArrowLeft')touch.left=false;if(e.key==='ArrowRight')touch.right=false;if(e.key==='v')touch.vac=false;if(e.key==='b')touch.shield=false});
+addEventListener('keyup',e=>{if(e.key==='ArrowLeft')touch.left=false;if(e.key==='ArrowRight')touch.right=false;if(e.key==='v')touch.vac=false;0});
 
 
 // ---------- Sound: synthesized with Web Audio (no files) ----------
@@ -504,6 +505,7 @@ function noise(dur,{vol=.3,delay=0,hp=800}={}){const ac=SND.ac;if(!ac||SND.vol<=
   g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);s.connect(f);f.connect(g);g.connect(SND.master);s.start(t)}
 const sfx={
   shot:()=>tone(880,.08,{type:'square',vol:.12,slide:.5}),
+  click:()=>tone(1800,.025,{type:'square',vol:.1}),
   hit:()=>{tone(220,.07,{type:'square',vol:.18,slide:.7});noise(.05,{vol:.12})},
   kill:()=>{noise(.18,{vol:.25,hp:400});tone(330,.15,{type:'sawtooth',vol:.15,slide:.3})},
   treasure:p=>{const f=440*Math.pow(2,Math.log2(p/5)*.6);tone(f,.09,{type:'triangle',vol:.22});tone(f*1.5,.12,{type:'triangle',vol:.18,delay:.06});
@@ -607,7 +609,7 @@ function saveRun(){if(!S||!running||S.ended||S.offer||!(S.hearts>0))return;try{
     score:S.score,hearts:S.hearts,stage:S.stage,combo:S.combo,comboT:S.comboT,special:S.special,x:S.x,
     kills:S.kills,need:S.need,stageT:S.stageT,spawnT:S.spawnT,t:S.t,playT:S.playT,
     pw:Object.assign({},S.pw),bossOut:!!S.bossOut,lastIdol:S.lastIdol,maxCombo:S.maxCombo||0,
-    contUsed:!!S.contUsed,boost:!!S.boost,relax:!!S.relax,shieldCd:S.shieldCd||0,freezeT:S.freezeT||0,ranked:!!runRanked,
+    contUsed:!!S.contUsed,boost:!!S.boost,relax:!!S.relax,shieldCd:S.shieldCd||0,ammo:S.ammo??null,ammoSpent:S.ammoSpent||0,freezeT:S.freezeT||0,ranked:!!runRanked,
     newBadges:[...(S.newBadges||[])],chapDone:[...(S.chapDone||[])],
     ents:(S.ents||[]).filter(e=>!e.dead).map(e=>Object.assign({},e)),
     shots:(S.shots||[]).filter(s=>!s.hit).map(s=>({x:s.x,y:s.y}))})}catch(e){}}
@@ -617,7 +619,7 @@ function restoreRun(r){
   S={score:r.score|0,hearts:r.hearts|0,stage:r.stage|0,combo:r.combo|0,comboT:r.comboT||0,special:r.special||0,x:r.x??0.5,
     ents:(r.ents||[]).map(e=>Object.assign({},e)),shots:(r.shots||[]).map(s=>({x:s.x,y:s.y})),fx:[],parts:[],coins:[],
     t:r.t||0,stageT:r.stageT||0,spawnT:r.spawnT||0,kills:r.kills|0,need:r.need|0,banner:()=>t('resumeBanner'),bannerT:3.2,
-    pw:Object.assign({},r.pw||{}),playT:r.playT||0,ended:false,shieldCd:r.shieldCd||0,
+    pw:Object.assign({},r.pw||{}),playT:r.playT||0,ended:false,shieldCd:r.shieldCd||0,ammo:r.ammo??(r.stage>=AMMO_FROM?AMMO_MAX:null),ammoSpent:r.ammoSpent||0,
     daily,day,rng:daily?mulberry(hashStr('fa-'+day)):Math.random,relax:!!r.relax,boost:!!r.boost,contUsed:!!r.contUsed,offer:false,
     hype:null,hypeLast:-9,flash:null,shake:0,freezeT:r.freezeT||0,fireQ:[],prevBest:getBest(mode),recordHit:false,scorePulse:0,
     maxCombo:r.maxCombo||0,newBadges:[...(r.newBadges||[])],chapDone:[...(r.chapDone||[])],bossOut:!!r.bossOut,lastIdol:r.lastIdol,
@@ -632,7 +634,7 @@ function newGame(){const um=upMul(),hm=hunterMul();S={score:0,hearts:um.maxHeart
   nextStage()}
 // Difficulty: gentle ramp, capped (v1.1: unchanged per-stage curve; Relaxed = 75% speed, 20% slower spawns, half the ramp)
 const diff=s=>{const r=S&&S.relax,k=r?.5:1,sc=Math.min(s|0,28);return {speed:60*(r?.75:1)*(1+0.08*k*Math.min(sc-1,15)+0.02*k*Math.min(Math.max(0,sc-16),8)),spawn:Math.max(r?.7:.55,(r?1.6:1.35)*Math.pow(r?.965:.93,sc-1)),kills:5+Math.min(s|0,28)}};
-function nextStage(){const cleared=S.stage;S.stage++;S.kills=0;S.need=diff(S.stage).kills;S.stageT=0;
+function nextStage(){const cleared=S.stage;S.stage++;if(S.stage>=AMMO_FROM&&S.ammo==null){S.ammo=AMMO_MAX;setTimeout(()=>{if(S&&!S.ended)fx(W/2,H*.45,t('ammoOn'),'#ffab00',20)},1500)}S.kills=0;S.need=diff(S.stage).kills;S.stageT=0;
   const st=S.stage;S.banner=()=>{const tw=st<NTW?t('tw')[st-1]:t('tw2')[st%4];return t('stage')+' '+st+(tw?' — '+tw:'')};S.bannerT=3;S.bossOut=false;
   if(cleared>=1){stageCelebrate(cleared);ev('stage',S.stage)}
   // face break every 3 stages (face mode only; touch players don't need it)
@@ -648,6 +650,7 @@ function spawn(){
    let tc=0;for(const e of S.ents)if(e.t==='t'&&!e.dead)tc++;if(tc>=TREAS_CAP)return;
    if(S.lastIdol==null)S.lastIdol=S.t;let tr=pick(TREASURES);if(S.t-S.lastIdol>=IDOL_PITY)tr=TREASURES[5];if(tr.p===100)S.lastIdol=S.t;
    S.ents.push({t:'t',...tr,x:.1+R()*.8,y:-30,ph:0})}
+  else if(r<0.83&&S.ammo!=null&&r>=0.80){let ac=0;for(const e of S.ents)if(e.t==='p'&&e.k==='ammo'&&!e.dead)ac++;if(ac>=1)return;S.ents.push({t:'p',e:'🔋',k:'ammo',x:.1+R()*.8,y:-30,ph:0})}
   else if(r<0.80){let pc=0;for(const e of S.ents)if(e.t==='p'&&!e.dead)pc++;if(pc>=POWER_CAP)return;
    const p=R()<.14?POWER[0]:POWER[1+Math.floor(R()*3)]; // power-ups stay 5%; heart drops ~half as often as v1.0
    S.ents.push({t:'p',...p,x:.1+R()*.8,y:-30,ph:0})}
@@ -683,7 +686,9 @@ function update(dt){
   const d=diff(S.stage),slow=S.pw.slow?.5:1;
   S.x=Math.max(.06,Math.min(.94,S.x+inp.x*dt*0.9*upMul().move*(hunterMul().move||1)));
   const px=S.x*W,py=H*0.78;
-  if(inp.attack){inp.attack=false;const hm=hunterMul();if(hm.twinShot){S.shots.push({x:px-7,y:py-30});S.shots.push({x:px+7,y:py-30})}else S.shots.push({x:px,y:py-30});sfx.shot()}
+  if(inp.refill){inp.refill=false;doRefill()}
+  if(inp.attack&&S.ammo!=null&&S.ammo<=0){inp.attack=false;sfx.click();S.emptyT=1;fx(px,py-50,t('ammoEmpty'),'#f66')}
+  if(inp.attack){inp.attack=false;if(S.ammo!=null)S.ammo--;const hm=hunterMul();if(hm.twinShot){S.shots.push({x:px-7,y:py-30});S.shots.push({x:px+7,y:py-30})}else S.shots.push({x:px,y:py-30});sfx.shot()}
   if(inp.special){inp.special=false;if(S.special>=100){S.special=0;sfx.nova();fx(px,py-60,t('nova'),'#ffd54a',22);screenFlash('#ffd54a',.35,.3);S.shake=.25;ev('nova');
     for(const e of S.ents)if(e.t==='g'&&!e.boss){e.dead=true;addScore(GUARD_PTS,e.x*W,e.y);ev('kill')}else if(e.boss)e.hpL-=3;}}
   S.spawnT-=dt;if(S.spawnT<=0){S.spawnT=d.spawn*(0.7+S.rng()*.6);spawn();if(S.stage>=8&&S.stage%4===3)spawn()}
@@ -715,9 +720,17 @@ function update(dt){
   S.ents=S.ents.filter(e=>!e.dead);
   if(S.kills>=S.need&&!S.ents.some(e=>e.boss))nextStage();
 }
+const AMMO_FROM=50,AMMO_MAX=60,AMMO_PICK=20,REFILL_COST=50,REFILL_AMT=30;
+// Ranked: only coins earned this run (score/10, minus refills already bought) — banked coins can't buy firepower. Casual: banked coins.
+function refillWallet(){if(!S)return 0;return runRanked?Math.max(0,Math.floor((S.score||0)/10)-(S.ammoSpent||0)):getCoins()}
+function canRefill(){return !!S&&S.ammo!=null&&S.ammo<AMMO_MAX&&refillWallet()>=REFILL_COST}
+function doRefill(){if(!S||S.ammo==null)return;const px=S.x*W,py=H*.7;if(S.ammo>=AMMO_MAX){fx(px,py,t('ammoFull'),'#9cf');return}
+  if(refillWallet()<REFILL_COST){sfx.click();fx(px,py,t('ammoPoor',{c:REFILL_COST}),'#f88');return}
+  if(runRanked)S.ammoSpent=(S.ammoSpent||0)+REFILL_COST;else setCoins(getCoins()-REFILL_COST);
+  S.ammo=Math.min(AMMO_MAX,S.ammo+REFILL_AMT);sfx.power();fx(px,py,'+'+REFILL_AMT+' 🔋 −'+REFILL_COST+'🪙','#ffab00')}
 function addScore(p,x,y){p=Math.round(p);S.score+=p;fx(x,y,'+'+p,'#ffd54a');checkRecord();ev('score',S.score)}
-function powerup(k,x,y){sfx.power();if(k==='heart')S.hearts=Math.min(S.maxHearts||5,S.hearts+1);else{const base=k==='shield'?8:6;S.pw[k]=base+(k==='magnet'?1.5*(getUpgrades().magnet||0):k==='shield'?1*(getUpgrades().shield||0):0)}fx(x,y,(k==='heart'?'+❤️':t(k)),'#7cf')}
-function hurt(){if(S.pw.shield||inp.shield&&S.shieldCd<=0){fx(S.x*W,H*.7,t('blocked'),'#7cf');if(!S.pw.shield)S.shieldCd=hunterMul().shieldCd??4;ev('block');parts(S.x*W,H*.74,'#7cf',14,160);return}
+function powerup(k,x,y){sfx.power();if(k==='heart')S.hearts=Math.min(S.maxHearts||5,S.hearts+1);else{const base=k==='shield'?8:6;if(k==='ammo'){S.ammo=Math.min(AMMO_MAX,(S.ammo||0)+AMMO_PICK);S.emptyT=0;fx(x,y,'+'+AMMO_PICK+' 🔋','#ffab00');return}const um=upMul();S.pw[k]=base+(k==='magnet'?1.5*(um.magnet>1?(um.magnet-1)/.3:0):k==='shield'?1*um.shield:0)}fx(x,y,(k==='heart'?'+❤️':t(k)),'#7cf')}
+function hurt(){if(S.pw.shield){fx(S.x*W,H*.7,t('blocked'),'#7cf');if(!S.pw.shield)S.shieldCd=hunterMul().shieldCd??4;ev('block');parts(S.x*W,H*.74,'#7cf',14,160);return}
   S.hearts--;S.combo=0;sfx.hurt();S.shake=.3;navigator.vibrate&&navigator.vibrate(120);if(S.hearts<=0){S.hearts=0;endOrOffer()}}
 function parts(x,y,col,n=16,sp=220){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=sp*(.3+Math.random());S.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-80,t:.6+Math.random()*.5,col,s:2+Math.random()*4})}}
 function expireHunter(){skin='scout';try{localStorage.setItem('fa_skin','scout')}catch(e){}try{if(!$('styles').classList.contains('hide'))buildSkins()}catch(e){}}
@@ -732,7 +745,7 @@ function gameOver(){S.ended=true;running=false;sfx.over();camStop();$('bPause').
   clearRun();
   try{boardBump('games',1);boardMarkDay()}catch(e){}
   // Bank soft currency first, then wipe upgrades/collections (continue-offer path never reaches here).
-  const gained=addCoins(Math.floor((S.score||0)/10));
+  const gained=addCoins(Math.max(0,Math.floor((S.score||0)/10)-(S.ammoSpent||0)));
   if(!runRanked)resetAcquiredOnLoss();
   const m=mode==='face'?'face':'touch',prev=getBest(m),b=Math.max(S.score,prev);localStorage.setItem(BEST_KEYS[m],b);if(S.score>prev&&S.score>0){localStorage.setItem(BEST_KEYS[m]+'_stage',S.stage|0);stampBestAt(m)}localStorage.setItem('fa_top',Math.max(topScore(),S.score));showBest();
   let streak=null;if(S.daily){const dk='fa_daily_'+S.day+'_'+m;localStorage.setItem(dk,Math.max(+localStorage.getItem(dk)||0,S.score));streak=recordDaily()}
@@ -752,7 +765,7 @@ function toMenu(){running=false;paused=false;camStop();['pause','bPause','touch'
 $('bQuit').onclick=toMenu;
 const U=()=>Math.min(W,H)/400;
 const COL={goblin:['#e53935','G'],bat:['#d500f9','B'],golem:['#ff6d00','R'],ghost:['#00e5ff','?'],mimic:['#ff1744','M'],dragon:['#ff1744','D'],
- heart:['#ff4081','+'],magnet:['#2979ff','U'],slow:['#00e676','S'],shield:['#18ffff','O']};
+ heart:['#ff4081','+'],magnet:['#2979ff','U'],slow:['#00e676','S'],shield:['#18ffff','O'],ammo:['#ffab00','A']};
 const TCOL={5:'#ffd600',10:'#e0e0e0',20:'#ff9100',40:'#ffea00',70:'#40c4ff',100:'#ffd740'};
 function shapePath(kind,x,y,r){ctx.beginPath();
  if(kind==='circle')ctx.arc(x,y,r,0,Math.PI*2);
@@ -942,7 +955,7 @@ function draw(){
   ctx.globalAlpha=1;ctx.fillStyle='#ffd54a';for(const s of S.shots){ctx.beginPath();ctx.arc(s.x,s.y,U()*7,0,7);ctx.fill()}
   const px=S.x*W,py=H*.78;
   if(inp.vac){ctx.strokeStyle='rgba(120,200,255,.5)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(px,py,55+Math.sin(S.t*20)*5,0,7);ctx.stroke()}
-  if(S.pw.shield||inp.shield&&S.shieldCd<=0){ctx.strokeStyle=S.pw.shield?'#7cf':'rgba(124,204,255,.6)';ctx.lineWidth=4;ctx.beginPath();ctx.arc(px,py,42,0,7);ctx.stroke()}
+  if(S.pw.shield){ctx.strokeStyle=S.pw.shield?'#7cf':'rgba(124,204,255,.6)';ctx.lineWidth=4;ctx.beginPath();ctx.arc(px,py,42,0,7);ctx.stroke()}
   if(aura!=='none'){const tr=S._trail||(S._trail=[]);tr.push(px);if(tr.length>9)tr.shift();const cd=COSMETICS.find(c=>c.k===aura);
     for(let i=0;i<tr.length;i++){const a=(i+1)/tr.length;ctx.globalAlpha=a*.35;ctx.fillStyle=cd&&cd.c?cd.c:'hsl('+((S.t*140+i*30)%360)+',95%,60%)';ctx.beginPath();ctx.arc(tr[i],py+6,U()*(10+i*1.6),0,7);ctx.fill()}ctx.globalAlpha=1}
   drawHero(px,py,U()*26,runHunter());
@@ -953,7 +966,7 @@ function draw(){
   ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font='bold '+Math.round(18*(1+S.scorePulse*.8))+'px sans-serif';ctx.shadowColor='#ffd54a';ctx.shadowBlur=S.scorePulse*40;
   ctx.fillText('💰 '+S.score,12,top+10);ctx.shadowBlur=0;ctx.font='bold 18px sans-serif';ctx.fillText('❤️'.repeat(Math.max(0,S.hearts)),12,top+36);
   ctx.fillText(t('stage')+' '+S.stage+'  '+S.kills+'/'+S.need+(S.relax?'  '+t('relaxHud'):'')+(S.boost?'  ⚡':''),12,top+62);
-  let hy=top+88;if(S.combo>1){ctx.fillStyle='#ffd54a';ctx.fillText(t('combo')+S.combo,12,hy);hy+=24}
+  let hy=top+88;if(S.ammo!=null){ctx.fillStyle=S.ammo<=0?(S.t%0.5<.25?'#f44':'#fff'):S.ammo<=10?'#ffab00':'#fff';ctx.fillText('🔫 '+S.ammo+'/'+AMMO_MAX+'  🪙'+refillWallet(),12,hy);hy+=24;ctx.fillStyle='#fff'}if(S.combo>1){ctx.fillStyle='#ffd54a';ctx.fillText(t('combo')+S.combo,12,hy);hy+=24}
   if(S.daily){ctx.fillStyle='#9cf';ctx.font='12px sans-serif';ctx.fillText('📅 '+S.day,12,hy)}
   {const sb=SPB||(SPB=document.querySelector('#touch button[data-k=special]'));if(sb){sb.style.setProperty('--f',S.special+'%');sb.classList.toggle('rdy',S.special>=100)}}
   ctx.fillStyle='#333';ctx.fillRect(12,H*.86,W*.4,10);ctx.fillStyle=S.special>=100?'#ffd54a':'#a58';ctx.fillRect(12,H*.86,W*.4*S.special/100,10);
@@ -962,7 +975,7 @@ function draw(){
   drawCelebrations();
   drawHud();
   if(mode==='face'&&running&&!faceSeen){ctx.textAlign='center';ctx.fillStyle='#f88';ctx.font='14px sans-serif';ctx.fillText(t('noFace'),W/2,H*.45)}
-  if(mode==='touch'&&running){const c=S.shieldCd>0&&!S.pw.shield;$('touch').querySelector('[data-k=shield]').classList.toggle('cd',c)}
+  if(mode==='touch'&&running){const rb=$('touch').querySelector('[data-k=shield]');rb.classList.toggle('cd',!canRefill());const rp=rb.querySelector('.rp');if(rp)rp.textContent=REFILL_COST+'🪙'}
 }
 document.documentElement.style.setProperty('--sat','env(safe-area-inset-top)');try{refreshUiMetrics()}catch(e){}
 
