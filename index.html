@@ -363,7 +363,7 @@ hProg:'<b>📅 Défi du jour</b> : les mêmes gardiens et trésors pour tout le 
 const tp=(k,n,v={})=>t(k,{n,s:n>1?'s':'',...v});
 
 const cv=$('game'),video=$('cam');let ctx=cv.getContext('2d');
-let W,H,DPR,SAT=0,REDUCE_MOT=false;function refreshUiMetrics(){try{SAT=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat'))||0}catch(e){SAT=0}try{REDUCE_MOT=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){REDUCE_MOT=false}}function resize(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);refreshUiMetrics()}addEventListener('resize',resize);
+let W,H,DPR,SAT=0,REDUCE_MOT=false;function refreshUiMetrics(){try{SAT=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat'))||0}catch(e){SAT=0}try{REDUCE_MOT=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){REDUCE_MOT=false}}function resize(){DPR=Math.min(devicePixelRatio||1,(typeof LOWFX!=='undefined'&&LOWFX)?1.25:2);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);refreshUiMetrics()}addEventListener('resize',resize);
 const BEST_KEYS={face:'fa_best_face',touch:'fa_best_touch'};const getBest=m=>+localStorage.getItem(BEST_KEYS[m])||0;function showBest(){$('best').innerHTML=t('faceBest')+': <b>'+getBest('face')+'</b> &nbsp;·&nbsp; '+t('touchBest')+': <b>'+getBest('touch')+'</b>'}
 /** Weekly LB opens 2026-10-26 00:00 America/Port-au-Prince. One-time Play upgrade clears local bests so pre-launch scores never show/post. */
 const LB_CUTOFF_MS=Date.parse('2026-10-26T00:00:00-04:00');
@@ -542,6 +542,8 @@ const GUARDS=[
  {id:'dragon',e:'🐉',hp:8,sp:.4,boss:true,from:5}];
 const POWER=[{e:'❤️',k:'heart'},{e:'🧲',k:'magnet'},{e:'⏳',k:'slow'},{e:'🛡️',k:'shield'}];
 const NTW=8;
+// Guardian kill points: 10 on Play/itch (normal), 100 on the GitHub Pages web build (boosted event scoring).
+const GUARD_PTS=(String(window.__FA_PLATFORM__||'web')==='web')?100:10;
 let S,FAKE_DAY=null,daily=false;
 const today=()=>{if(FAKE_DAY)return FAKE_DAY;const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let x=Math.imul(a^a>>>15,1|a);x=x+Math.imul(x^x>>>7,61|x)^x;return((x^x>>>14)>>>0)/4294967296}}
@@ -557,11 +559,11 @@ const UP_DEFS=[
 ];
 const RUN_KEY='fa_run',RUN_VER=1;let pendingResume=null;
 const _lsGet=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
-const _lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const _lsSet=(k,v)=>{if(/_upgrades$/.test(k))_upCache=null;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 const getCoins=()=>Math.max(0,+localStorage.getItem('fa_coins')||0);
 const setCoins=n=>{localStorage.setItem('fa_coins',Math.max(0,Math.floor(n)));try{syncCoinsUI()}catch(e){}};
 const addCoins=n=>{if(n>0)setCoins(getCoins()+n);return n};
-const getUpgrades=()=>{const u=_lsGet('fa_upgrades',{});const o={};for(const d of UP_DEFS)o[d.k]=Math.min(d.max,Math.max(0,+u[d.k]||0));return o};
+let _upCache=null;const getUpgrades=()=>{if(_upCache)return Object.assign({},_upCache);const u=_lsGet('fa_upgrades',{});const o={};for(const d of UP_DEFS)o[d.k]=Math.min(d.max,Math.max(0,+u[d.k]||0));_upCache=Object.assign({},o);return o};
 const setUpgrade=(k,lv)=>{const u=getUpgrades();u[k]=lv;_lsSet('fa_upgrades',u)};
 const upMul=()=>{const u=getUpgrades();return{hearts:u.hearts,special:1+.15*u.special,move:1+.08*u.move,shield:u.shield,magnet:1+.3*u.magnet,maxHearts:Math.min(5,3+u.hearts)}};
 /* Hunters early so drawHero / combat hooks never hit TDZ */
@@ -632,8 +634,15 @@ $('bSkip').onclick=endRest;
 
 // ---------- Loop ----------
 let last=performance.now(),running=false;
-function step(now){requestAnimationFrame(step);const dt=Math.min(.05,(now-last)/1000);last=now;
-  if(!running)return;updateInput(dt);if(!paused&&!S.ended)update(dt);if(running||S.ended)draw()}
+// v1.1.7 perf: real elapsed time split into <=1/30 s substeps (slow phones used to run in slow motion when fps<20),
+// plus adaptive low-FX (no canvas shadows, lower canvas resolution) while fps stays under 40.
+let fpsAcc=0,fpsN=0,LOWFX=false;
+function step(now){requestAnimationFrame(step);const el=Math.min(.25,Math.max(0,(now-last)/1000));last=now;
+  if(!running)return;fpsAcc+=el;fpsN++;if(fpsAcc>=2){const f=fpsN/fpsAcc;if(!LOWFX&&f<40){LOWFX=true;resize()}else if(LOWFX&&f>57){LOWFX=false;resize()}fpsAcc=0;fpsN=0}
+  const n=Math.max(1,Math.ceil(el/(1/30)-1e-6)),dt=el/n;
+  for(let i=0;i<n;i++){updateInput(dt);if(!paused&&!S.ended)update(dt)}if(running||S.ended)draw()}
+{const P=CanvasRenderingContext2D.prototype,d=Object.getOwnPropertyDescriptor(P,'shadowBlur');
+ Object.defineProperty(ctx,'shadowBlur',{get(){return d.get.call(this)},set(v){d.set.call(this,LOWFX&&this===ctx?0:v)}})}
 function update(dt){
   if(S.offer)return; // waiting on the Continue? offer
   S._saveAcc=(S._saveAcc||0)+dt;if(S._saveAcc>2.5){S._saveAcc=0;saveRun()}
@@ -651,7 +660,7 @@ function update(dt){
   const px=S.x*W,py=H*0.78;
   if(inp.attack){inp.attack=false;const hm=hunterMul();if(hm.twinShot){S.shots.push({x:px-7,y:py-30});S.shots.push({x:px+7,y:py-30})}else S.shots.push({x:px,y:py-30});sfx.shot()}
   if(inp.special){inp.special=false;if(S.special>=100){S.special=0;sfx.nova();fx(px,py-60,t('nova'),'#ffd54a',22);screenFlash('#ffd54a',.35,.3);S.shake=.25;ev('nova');
-    for(const e of S.ents)if(e.t==='g'&&!e.boss){e.dead=true;addScore(100,e.x*W,e.y);ev('kill')}else if(e.boss)e.hpL-=3;}}
+    for(const e of S.ents)if(e.t==='g'&&!e.boss){e.dead=true;addScore(GUARD_PTS,e.x*W,e.y);ev('kill')}else if(e.boss)e.hpL-=3;}}
   S.spawnT-=dt;if(S.spawnT<=0){S.spawnT=d.spawn*(0.7+S.rng()*.6);spawn();if(S.stage>=8&&S.stage%4===3)spawn()}
   for(const s of S.shots)s.y-=520*dt;S.shots=S.shots.filter(s=>s.y>-20&&!s.hit);if(S.shots.length>MAXSHOTS)S.shots.splice(0,S.shots.length-MAXSHOTS);
   const vac=inp.vac,hitR=U()*28,hmMove=hunterMul(),um=upMul();
@@ -665,7 +674,7 @@ function update(dt){
       for(const s of S.shots)if(!s.hit&&solid&&Math.abs(s.x-ex)<hitR&&Math.abs(s.y-e.y)<hitR){s.hit=true;e.hpL--;fx(ex,e.y,'⚔️');if(e.hpL>0)sfx.hit();
         if(e.hpL<=0){e.dead=true;S.kills++;S.combo++;S.maxCombo=Math.max(S.maxCombo,S.combo);sfx.kill();ev('kill');ev('combo',S.combo);
           if(S.combo>=5&&S.combo%5===0)hypeCombo(S.combo);
-          S.comboT=3;S.special=Math.min(100,S.special+8*upMul().special*(hunterMul().specialKill||1));addScore((e.boss?150:100)*(1+Math.min(S.combo,10)*0.1),ex,e.y);
+          S.comboT=3;S.special=Math.min(100,S.special+8*upMul().special*(hunterMul().specialKill||1));addScore((e.boss?150:GUARD_PTS)*(1+Math.min(S.combo,10)*0.1),ex,e.y);
           if(e.boss){ev('boss');bossCelebrate(ex,e.y)}}}
       if(!e.dead&&e.y>py-20&&Math.abs(ex-px)<40){e.dead=true;hurt()}
       if(e.y>H+30){e.dead=true}
@@ -1279,7 +1288,7 @@ async function calibrate(){const cg=window.__faceGen;const chk=()=>{if(cg!==wind
 }
 function begin(again,fromSave){try{audioUnlock()}catch(e){}try{faRequestFullscreen()}catch(e){}$('start').classList.add('hide');$('bPause').classList.remove('hide');$('touch').classList.toggle('hide',mode!=='touch');
   if(fromSave){restoreRun(fromSave); /* keep fa_run until game over / quit / fresh start */}
-  else{clearRun();newGame();if(!daily&&getBoost()>0){S.boost=true;addBoost(-1);S.special=100;S.banner=t('boostOn');S.bannerT=2.6}}
+  else{clearRun();newGame();try{lbStartRun(mode)}catch(e){}if(!daily&&getBoost()>0){S.boost=true;addBoost(-1);S.special=100;S.banner=t('boostOn');S.bannerT=2.6}}
   for(const k in touch)touch[k]=false;running=true;paused=false;last=performance.now();if(again||fromSave)camResume();saveRun();syncResumeUI();
   try{boardMarkDay();if(!fromSave)boardBump(mode==='face'?'face':'touch',1);S._survAcc=0}catch(e){}}
 $('bFace').onclick=()=>{try{faRequestFullscreen()}catch(e){}pendingResume=null;askFace()};
@@ -1310,23 +1319,40 @@ window.__ft={sfx,SND,startRest,endRest,gameOver,get stream(){return stream},get 
 
 // ===== Weekly online leaderboard (Cloudflare Worker + D1) =====
 const LB_API='https://face-action-scores.haitialways.workers.dev';
-/** Leaderboard protocol version — must be >= Worker MIN_CLIENT (2 = loss-reset / TH 1.1.6). */
-const LB_CLIENT=2;
+const LB_GAME='treasure';
 function faPlayerId(){let id=localStorage.getItem('fa_pid');if(!id){id=(crypto.randomUUID&&crypto.randomUUID())||('p'+Math.random().toString(36).slice(2)+Date.now().toString(36));localStorage.setItem('fa_pid',id)}return id}
 function faName(){return (localStorage.getItem('fa_name')||'').trim()}
 function setFaName(n){n=String(n||'').trim().replace(/\s+/g,' ').slice(0,16);if(n)localStorage.setItem('fa_name',n);return n}
 function escLb(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 let lbMode='touch';
 async function lbFetch(path,opt){const r=await fetch(LB_API+path,{...opt,headers:{'Content-Type':'application/json',...((opt&&opt.headers)||{})}});if(!r.ok)throw new Error('http '+r.status);return r.json()}
+/** Leaderboard protocol v3: signed run session. /start at run begin -> server-signed run token (server start time);
+ *  /submit must carry it + a payload HMAC. Worker checks elapsed time vs score/level per platform. */
+const LB_CLIENT=3;
+const LB_PLATFORM=(function(){const p=String(window.__FA_PLATFORM__||'web');return p==='play'||p==='itch'?p:'web'})();
+const LB_KEY='fa3-k7Qm2xVb9Lr4Tz8Wn1Hc6Pd';
+const LB_RUN_KEY='fa_lb_run_'+LB_GAME;
+function lbB64u(buf){let s='';for(const x of new Uint8Array(buf))s+=String.fromCharCode(x);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+async function lbSig(msg){try{const e=new TextEncoder();const k=await crypto.subtle.importKey('raw',e.encode(LB_KEY),{name:'HMAC',hash:'SHA-256'},false,['sign']);return lbB64u(await crypto.subtle.sign('HMAC',k,e.encode(msg)))}catch(e){return ''}}
+function lbGetRun(){try{const r=JSON.parse(localStorage.getItem(LB_RUN_KEY)||'null');return r&&r.run?r:null}catch(e){return null}}
+let lbRunSeq=0;
+function lbStartRun(m){const seq=++lbRunSeq;try{localStorage.removeItem(LB_RUN_KEY)}catch(e){}
+  const md=m==='face'?'face':'touch';let tries=0;
+  const go=()=>{if(seq!==lbRunSeq)return;tries++;
+    lbFetch('/start',{method:'POST',body:JSON.stringify({playerId:faPlayerId(),game:LB_GAME,mode:md,platform:LB_PLATFORM,client:LB_CLIENT})})
+      .then(d=>{if(seq===lbRunSeq&&d&&d.run){try{localStorage.setItem(LB_RUN_KEY,JSON.stringify({run:d.run,m:md}))}catch(e){}}})
+      .catch(()=>{if(tries<6)setTimeout(go,15000*tries)})};
+  go()}
+function lbClearRun(){lbRunSeq++;try{localStorage.removeItem(LB_RUN_KEY)}catch(e){}}
+
 /** Resolve nickname: localStorage, then #lbName field (typed but unsaved), never rely on window.prompt (blocked on many phones). */
 function resolveLbName(){let name=faName();if(!name){const el=$('lbName');if(el&&el.value)name=setFaName(el.value)}return name}
-async function submitScore(o){try{const score=(o&&(o.score!=null?o.score:o.s))|0,stage=(o&&(o.stage!=null?o.stage:o.g))|0||1;if(!(score>0))return null;const now=Date.now();if(now<LB_CUTOFF_MS)return null;let name=resolveLbName();if(!name){name=await askLbName();if(!name)return null}
-  const body={playerId:faPlayerId(),name,score,stage,mode:o.m==='face'?'face':'touch',game:'treasure',secs:o.secs|0||0,ts:now,client:LB_CLIENT};
+async function submitScore(o){try{const R=lbGetRun();lbClearRun();const score=(o&&(o.score!=null?o.score:o.s))|0,stage=(o&&(o.stage!=null?o.stage:o.g))|0||1;if(!(score>0)||!R)return null;const now=Date.now();if(now<LB_CUTOFF_MS)return null;let name=resolveLbName();if(!name){name=await askLbName();if(!name)return null}
+  const body={playerId:faPlayerId(),name,score,stage,mode:o.m==='face'?'face':'touch',game:'treasure',secs:o.secs|0||0,ts:now,client:LB_CLIENT,platform:LB_PLATFORM,run:R.run};
+  if(body.mode!==R.m)return null;body.sig=await lbSig([R.run,body.game,body.mode,body.playerId,body.score,body.stage,body.secs].join('|'));
   return await lbFetch('/submit',{method:'POST',body:JSON.stringify(body)})}catch(e){return null}}
 /** Post local bests only if stamped on/after LB cutoff (pre-launch bests were zeroed by resetLbScoresOnce). */
-async function publishLocalBests(name){name=setFaName(name||faName());if(!name)return null;const pid=faPlayerId();const modes=['touch','face'];const out=[];
-  for(const mode of modes){if(!isLbPublishable(mode))continue;const score=getBest(mode)|0,stage=(+localStorage.getItem(BEST_KEYS[mode]+'_stage')|0),at=bestAt(mode);try{out.push(await lbFetch('/submit',{method:'POST',body:JSON.stringify({playerId:pid,name,score,stage,mode,game:'treasure',secs:0,ts:at,client:LB_CLIENT})}))}catch(e){out.push(null)}}
-  return out}
+async function publishLocalBests(name){name=setFaName(name||faName());if(!name)return null;return [] /* v3: only live signed runs post */}
 function askLbName(){return new Promise(resolve=>{let ov=$('lbAsk');if(!ov){ov=document.createElement('div');ov.id='lbAsk';ov.className='ov thHall hide';ov.innerHTML='<h2 data-t="lbName"></h2><p id="lbAskP" style="margin:0;font-size:14px;opacity:.85"></p><input id="lbAskIn" maxlength="16" style="width:min(280px,80vw);padding:10px 12px;border-radius:10px;border:1px solid #ffd54a66;background:#1a1430;color:#fff;font-size:16px"><button id="lbAskOk" class="play pTouch" data-t="lbSave"></button>';document.body.appendChild(ov)}
   const inp=$('lbAskIn');inp.value=faName()||($('lbName')&&$('lbName').value)||'';const h2=ov.querySelector('h2');if(h2)h2.textContent=t('lbName');const p=ov.querySelector('#lbAskP')||ov.querySelector('p');if(p)p.textContent=t('lbP');const ok=$('lbAskOk');if(ok)ok.textContent=t('lbSave')||'Save';ov.classList.remove('hide');try{inp.focus();inp.select()}catch(e){}
   const done=()=>{const n=setFaName(inp.value);ov.classList.add('hide');resolve(n||null)};ok.onclick=done;inp.onkeydown=e=>{if(e.key==='Enter')done()}})}
