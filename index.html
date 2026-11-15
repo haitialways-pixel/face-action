@@ -13,10 +13,11 @@
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <title>Face-Action Treasure Hunt</title>
 <style>
-html,body{margin:0;height:100%;background:#05030c;color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+:root{--vvh:100dvh;--vvt:0px;--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px)}
+html,body{margin:0;height:100%;height:100dvh;height:var(--vvh,100dvh);background:#05030c;color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 #cam.off{opacity:0;pointer-events:none}
 #camNote{position:fixed;right:4px;top:calc(env(safe-area-inset-top) + 124px);width:90px;font-size:9px;line-height:1.2;text-align:right;opacity:.7;z-index:3}
-#howto,#styles,#settings,#missions,#upgrades,#board{justify-content:flex-start;overflow-y:auto;background:#05030c;z-index:8;padding:calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 16px);gap:8px}
+#howto,#styles,#settings,#missions,#upgrades,#board{justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#05030c;z-index:8;padding:calc(var(--sat,env(safe-area-inset-top,0px)) + 56px) 16px calc(var(--sab,env(safe-area-inset-bottom,0px)) + 16px);gap:8px;box-sizing:border-box}
 #howto h2,#styles h2,#settings h2,#missions h2,#upgrades h2,#board h2,#styles h3,#board h3{margin:4px 0;color:#ffd54a;font-size:24px}
 .boardBtn{position:relative;min-width:0;font-size:14px;padding:7px 14px;background:#1a1430;color:#ffd54a;border:1px solid #ffd54a66;border-radius:12px}
 .boardBtn .dot{position:absolute;top:-3px;right:-3px;width:12px;height:12px;border-radius:50%;background:#ff1744;border:2px solid #05030c;box-shadow:0 0 8px #ff1744}
@@ -35,8 +36,8 @@ html,body{margin:0;height:100%;background:#05030c;color:#fff;font-family:system-
 .tgrid div{background:#1a1430;border-radius:10px;padding:6px;font-size:15px}.tgrid span{font-size:30px;display:block}
 #game{position:fixed;inset:0;width:100vw;height:100dvh;display:block}
 #cam{position:fixed;right:8px;top:calc(env(safe-area-inset-top) + 48px);width:54px;height:72px;object-fit:cover;transform:scaleX(-1);border-radius:10px;border:2px solid #ffd54a;opacity:.8;z-index:3}
-.ov{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:rgba(20,10,40,.94);z-index:5;gap:12px;overflow-y:auto;justify-content:safe center}
-@media (max-height:720px){#start{gap:8px;padding-top:58px;padding-bottom:14px}#start h1{font-size:30px}#start .play{padding:12px 10px;font-size:20px}#start .daily{padding:8px 12px}}
+.ov{position:fixed;left:0;right:0;top:var(--vvt,0px);width:100%;height:var(--vvh,100dvh);max-height:var(--vvh,100dvh);box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:calc(var(--sat,env(safe-area-inset-top,0px)) + 24px) calc(var(--sar,env(safe-area-inset-right,0px)) + 24px) calc(var(--sab,env(safe-area-inset-bottom,0px)) + 24px) calc(var(--sal,env(safe-area-inset-left,0px)) + 24px);background:rgba(20,10,40,.94);z-index:5;gap:12px;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;justify-content:safe center}
+@media (max-height:720px){#start{gap:8px;padding-top:calc(var(--sat,env(safe-area-inset-top,0px)) + 58px);padding-bottom:calc(var(--sab,env(safe-area-inset-bottom,0px)) + 14px)}#start h1{font-size:30px}#start .play{padding:12px 10px;font-size:20px}#start .daily{padding:8px 12px}}
 .hide{display:none!important}
 button{font-size:18px;padding:14px 22px;border:0;border-radius:14px;background:#ffd54a;color:#2a1600;font-weight:700;min-width:220px;font-family:inherit}
 button.sec{background:#5b4a8a;color:#fff}
@@ -111,7 +112,7 @@ small{opacity:.75}
 @media (max-height:780px){.thFA .heroArt{width:96px;height:96px;padding:4px}.thFA .faT1{font-size:36px}}
 @media (max-height:660px){.thFA .heroArt{width:70px;height:70px}.thFA .faT1{font-size:32px}.thFA [data-h="intro"] small{display:none}}
 /* ===== Weekly Hall of Champions (Treasure Hunt) — cavern gold, distinct from generic .ov purple & from Falling Bricks neon arcade ===== */
-#lb.thHall{background:radial-gradient(ellipse at 50% 0%,#4a2a12 0%,#1a0c06 45%,#080310 100%);border:0;font-family:Georgia,'DejaVu Serif',serif;gap:10px;padding:calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 16px)}
+#lb.thHall{background:radial-gradient(ellipse at 50% 0%,#4a2a12 0%,#1a0c06 45%,#080310 100%);border:0;font-family:Georgia,'DejaVu Serif',serif;gap:10px;padding:calc(var(--sat,env(safe-area-inset-top,0px)) + 56px) 16px calc(var(--sab,env(safe-area-inset-bottom,0px)) + 16px);overflow:hidden;justify-content:flex-start;box-sizing:border-box}
 #lb.thHall::before{content:'';position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 20% 90%,rgba(255,140,0,.12),transparent 40%),radial-gradient(ellipse at 80% 85%,rgba(0,200,255,.08),transparent 35%);z-index:0}
 #lb.thHall>*{position:relative;z-index:1}
 #lb.thHall [data-t="lbGame"]{font-family:'Cinzel',Georgia,serif;font-size:clamp(26px,7vw,34px);font-weight:800;letter-spacing:1px;line-height:1.15;margin:0;max-width:min(94vw,440px);background:linear-gradient(180deg,#fff7cf 0%,#ffd54a 35%,#b97812 62%,#ffe7a0 78%,#7d4d0c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 #3b2208) drop-shadow(0 0 14px rgba(255,170,40,.45));text-transform:none}
@@ -126,9 +127,9 @@ small{opacity:.75}
 #lb.thHall #lbName{flex:1;min-width:120px;padding:8px 10px;border-radius:8px;border:1px solid #c48a1c;background:#120a04;color:#fff7cf;font-size:15px;font-family:Georgia,serif}
 #lb.thHall #lbSaveName{min-width:0;padding:8px 14px;border-radius:8px;border:2px solid #2e1d0c;background:linear-gradient(180deg,#ffe48a,#d35400);color:#2b1200;font-weight:800;font-family:Georgia,serif}
 #lb.thHall #lbYou{color:#ffe082;font-weight:700;font-size:14px;text-shadow:0 0 8px rgba(255,180,40,.4)}
-#lb.thHall #lbList{width:100%;max-width:420px;gap:8px}
+#lb.thHall #lbList{width:100%;max-width:420px;gap:8px;flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}
 #lb.thHall #lbTop{gap:8px}
-#lb.thHall #lbRest{display:none;flex-direction:column;gap:6px;max-height:168px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 4px 4px;border-top:2px solid #b8862f66;margin-top:2px;scrollbar-color:#c48a1c #1a0c06}
+#lb.thHall #lbRest{display:none;flex-direction:column;gap:6px;padding:8px 4px 4px;border-top:2px solid #b8862f66;margin-top:2px;scrollbar-color:#c48a1c #1a0c06}
 #lb.thHall .lbRow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;flex-shrink:0;border-radius:10px;background:linear-gradient(180deg,#2e1b0d,#170d06);border:2px solid #8a5a1e;box-shadow:inset 0 1px 0 rgba(255,220,150,.12),0 2px 8px rgba(0,0,0,.4);font-family:system-ui,sans-serif;text-align:left}
 #lb.thHall .lbRow.podium{border-width:2px;padding:12px 14px}
 #lb.thHall .lbRow.r1{border-color:#ffd54a;background:linear-gradient(135deg,#4a3410,#2a1a08 60%,#1a1006);box-shadow:0 0 0 1px #ffd54a55,0 0 20px rgba(255,180,40,.25),inset 0 1px 0 rgba(255,240,180,.25)}
@@ -150,6 +151,13 @@ html,body,button{touch-action:manipulation;-webkit-user-select:none;user-select:
 .ov,#howto,#styles,#settings,#missions,#upgrades,#board,#lb{touch-action:pan-y}
 #touch{touch-action:none}
 input,textarea,select{-webkit-user-select:text;user-select:text;touch-action:auto}
+/* Keep overlays inside the visible viewport (100dvh / visualViewport). Leaderboard: chrome + Done stay put, the score list scrolls. */
+#lb{overflow:hidden!important;justify-content:flex-start!important;box-sizing:border-box}
+#lb [data-t="lbGame"],#lb h2,#lb [data-t="lbP"],#lb .lbTabs,#lb #lbWeek,#lb .lbNick,#lb #lbYou,#lb #lbStatus,#lb #bLbOk{flex:none}
+#lb #lbList{flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#lb #lbRest{max-height:none;overflow:visible}
+.navBack{position:fixed!important}
+#bHowOk,#bStyleOk,#bSetOk,#bMisOk,#bUpOk,#bBoardOk{flex:none;position:sticky;bottom:0;z-index:2}
 </style></head><body>
 <canvas id="game"></canvas>
 <video id="cam" playsinline muted autoplay class="hide"></video>
@@ -216,7 +224,7 @@ window.__startBg={get running(){return !!raf},get count(){return typeof count===
   <button id="bUpOk" data-t="done"></button></div>
 <div id="settings" class="ov hide"><h2 data-t="setTitle"></h2>
   <div class="hrow"><span class="ic">🔷</span><div><b data-t="cbL"></b><br><span data-t="cbD"></span></div><button id="tCb" class="tog"></button></div>
-  <div class="hrow"><span class="ic">🐢</span><div><b data-t="relaxL"></b><br><span data-t="relaxD"></span></div><button id="tRelax" class="tog"></button></div>
+  <div class="hrow" id="relaxRow"><span class="ic">🐢</span><div><b data-t="relaxL"></b><br><span data-t="relaxD"></span></div><button id="tRelax" class="tog"></button></div>
   <button id="bRecalStart" class="sec" data-t="recalFace"></button><button id="bSetOk" data-t="done"></button></div>
 <div id="board" class="ov hide"><h2 data-t="boardTitle"></h2>
   <p data-t="boardP" style="margin:0;font-size:13px;max-width:400px;opacity:.85"></p>
@@ -638,14 +646,14 @@ function restoreRun(r){
     ents:(r.ents||[]).map(e=>Object.assign({},e)),shots:(r.shots||[]).map(s=>({x:s.x,y:s.y})),fx:[],parts:[],coins:[],
     t:r.t||0,stageT:r.stageT||0,spawnT:r.spawnT||0,kills:r.kills|0,need:r.need|0,banner:()=>t('resumeBanner'),bannerT:3.2,
     pw:Object.assign({},r.pw||{}),playT:r.playT||0,ended:false,shieldCd:r.shieldCd||0,ammo:r.ammo??(r.stage>=AMMO_FROM?AMMO_MAX:null),ammoSpent:r.ammoSpent||0,
-    daily,day,rng:daily?mulberry(hashStr('fa-'+day)):Math.random,relax:!!r.relax,boost:!!r.boost,contUsed:!!r.contUsed,offer:false,
+    daily,day,rng:daily?mulberry(hashStr('fa-'+day)):Math.random,relax:!!(RELAX_ENABLED&&r.relax),boost:!!r.boost,contUsed:!!r.contUsed,offer:false,
     hype:null,hypeLast:-9,flash:null,shake:0,freezeT:r.freezeT||0,fireQ:[],prevBest:getBest(mode),recordHit:false,scorePulse:0,
     maxCombo:r.maxCombo||0,newBadges:[...(r.newBadges||[])],chapDone:[...(r.chapDone||[])],bossOut:!!r.bossOut,lastIdol:r.lastIdol,
     maxHearts:upMul().maxHearts};
   if(!S.need)S.need=diff(S.stage).kills;
 }
 function newGame(){const um=upMul(),hm=hunterMul();S={score:0,hearts:um.maxHearts,maxHearts:um.maxHearts,stage:0,combo:0,comboT:0,special:0,x:0.5,ents:[],shots:[],fx:[],parts:[],coins:[],t:0,stageT:0,spawnT:0,kills:0,need:0,banner:'',bannerT:0,pw:{},playT:0,ended:false,shieldCd:0,
-  daily,day:today(),rng:daily?mulberry(hashStr('fa-'+today())):Math.random,relax:OPT.relax,boost:false,contUsed:false,offer:false,
+  daily,day:today(),rng:daily?mulberry(hashStr('fa-'+today())):Math.random,relax:!!(RELAX_ENABLED&&OPT.relax),boost:false,contUsed:false,offer:false,
   hype:null,hypeLast:-9,flash:null,shake:0,freezeT:0,fireQ:[],prevBest:getBest(mode),recordHit:false,scorePulse:0,maxCombo:0,newBadges:[],chapDone:[]};
   if(um.shield>0)S.pw.shield=1.5+um.shield*1.5; // starting shield seconds
   if(hm.startShield)S.pw.shield=(S.pw.shield||0)+hm.startShield;
@@ -1067,10 +1075,12 @@ $('bShare').onclick=async()=>{
 
 // ---------- Meta: settings, daily streak, chapters & missions, badges, hunters, continue offer ----------
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const RELAX_ENABLED=false; // set true to bring Relaxed speed back after Play / marketplace launch
 let OPT=Object.assign({cb:true,relax:false},LS.get('fa_opts',{}));
-function buildSettings(){for(const [id,k] of [['tCb','cb'],['tRelax','relax']]){const b=$(id);b.textContent=OPT[k]?t('on'):t('off');b.classList.toggle('off',!OPT[k])}}
-function setOpt(k,v){OPT[k]=v;LS.set('fa_opts',OPT);buildSettings()}
-$('tCb').onclick=()=>setOpt('cb',!OPT.cb);$('tRelax').onclick=()=>setOpt('relax',!OPT.relax);
+if(!RELAX_ENABLED){OPT.relax=false;const rr=$('relaxRow');if(rr)rr.classList.add('hide')}
+function buildSettings(){for(const [id,k] of [['tCb','cb'],['tRelax','relax']]){const b=$(id);if(!b)continue;b.textContent=OPT[k]?t('on'):t('off');b.classList.toggle('off',!OPT[k])}}
+function setOpt(k,v){if(k==='relax'&&!RELAX_ENABLED)v=false;OPT[k]=v;if(!RELAX_ENABLED)OPT.relax=false;LS.set('fa_opts',OPT);buildSettings()}
+$('tCb').onclick=()=>setOpt('cb',!OPT.cb);if($('tRelax'))$('tRelax').onclick=()=>{if(RELAX_ENABLED)setOpt('relax',!OPT.relax)};
 $('bSet').onclick=()=>{buildSettings();$('settings').classList.remove('hide')};$('bSetOk').onclick=()=>$('settings').classList.add('hide');
 function syncRankUI(){const n=$('coinNote');if(n)n.textContent=ecoNote?t(ecoNote.k,{n:ecoNote.n}):t('ecoInfo')}
 function buildAuras(){const g=$('auraGrid');if(!g)return;g.innerHTML='';const own=getCos(),coins=getCoins();
@@ -1583,7 +1593,11 @@ document.addEventListener('touchmove',function(e){if(e.touches.length>1)e.preven
 document.addEventListener('touchstart',function(e){if(e.touches.length>1)e.preventDefault()},{passive:false});
 window.addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault()},{passive:false});
 document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&/^[+=\-0]$/.test(e.key))e.preventDefault()});
+function fitVh(){try{var vv=window.visualViewport,h=Math.round((vv&&vv.height)||window.innerHeight)||0,t=Math.round((vv&&vv.offsetTop)||0);if(h){document.documentElement.style.setProperty('--vvh',h+'px');document.documentElement.style.setProperty('--vvt',t+'px')}}catch(e){}}
+fitVh();
 function unpin(){var vv=window.visualViewport;if(vv&&vv.scale>1.01)window.scrollTo(0,0)}
-if(window.visualViewport){visualViewport.addEventListener('resize',unpin);visualViewport.addEventListener('scroll',unpin)}
+if(window.visualViewport){visualViewport.addEventListener('resize',function(){fitVh();unpin()});visualViewport.addEventListener('scroll',function(){fitVh();unpin()})}
+addEventListener('resize',fitVh);
+addEventListener('orientationchange',fitVh);
 })();
 </script></body></html>
