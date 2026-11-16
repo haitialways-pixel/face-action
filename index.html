@@ -282,6 +282,9 @@ window.__startBg={get running(){return !!raf},get count(){return typeof count===
 <button id="bRecalAuto" class="hide" style="position:fixed;left:50%;top:50%;transform:translateX(-50%);z-index:6" data-t="noFaceRecal"></button>
 <div id="camInd" class="hide" style="position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 6px);z-index:6;background:rgba(0,0,0,.6);padding:3px 8px;border-radius:10px;font-size:12px"><span style="color:#f33">●</span> <span data-t="camOn"></span></div>
 <button id="camResume" class="hide" style="position:fixed;left:50%;top:40%;transform:translateX(-50%);z-index:6"><span data-t="camResume"></span></button>
+<style>#camWait{z-index:11}.cwSpin{width:56px;height:56px;border-radius:50%;border:6px solid rgba(255,255,255,.18);border-top-color:#7df;animation:cwSpin .9s linear infinite;will-change:transform}@keyframes cwSpin{to{transform:rotate(360deg)}}#sndTap{position:fixed;left:50%;transform:translateX(-50%);top:calc(var(--sat,env(safe-area-inset-top,0px)) + 40px);z-index:7;min-width:0;padding:7px 14px;font-size:14px;border-radius:999px}#touch,#touch button{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}</style>
+<div id="camWait" class="ov hide" role="status" aria-live="polite"><div class="cwSpin" aria-hidden="true"></div><h2 data-t="camWait" style="margin:0;color:#7df;max-width:340px"></h2><p data-t="camWaitSub" style="margin:0;opacity:.85;max-width:320px"></p><button id="bCamWaitX" class="sec" data-t="camWaitX"></button></div>
+<button id="sndTap" class="hide" data-t="sndTap"></button>
 <div id="touch" class="hide">
  <button data-k="attack">⚔️</button><button data-k="vac">🌀</button><button data-k="shield"><span class="ri">🔋</span><small class="rp">50🪙</small></button><button data-k="special"><span class="sf"></span><span class="si">✨</span><span class="sr" data-t="spReady"></span></button><button data-k="left">⬅️</button><button data-k="right">➡️</button>
 </div>
@@ -295,7 +298,7 @@ paused:'⏸ Paused',resume:'▶️ Resume',calibrating:'Calibrating…',restT:'�
 sensL:'Sensitivity (left = easier)',recal:'Recalibrate',sound:'Sound',prevT:'Show/hide camera preview',camNote:'🔒 Video stays on your device, never recorded or uploaded.',noFaceRecal:"Can't see your face. Recalibrate?",camOn:'camera on',camResume:'📷 Tap to resume camera',
 faceBest:'🙂 Face best',touchBest:'👆 Touch best',faceL:'🙂 Face',touchL:'👆 Touch',overLine:'{m} mode · Score {s} · Stage {g}',newBest:'🏆 New {m} best!',bestIs:'{m} best {b}',
 needHttps:'<b style="color:#ff6">⚠️ Face controls need HTTPS.</b><br><small>You opened this as {p}// — browsers block the camera/face model here. Open the https:// link (or http://localhost) instead. Touch mode still works.</small>',
-blockedHttps:'<b style="color:#f66">Camera blocked: page is not HTTPS ({p}). Use the https link.</b>',noCamApi:'<b style="color:#f66">This browser has no camera API.</b>',startingCam:'<small>Starting camera…</small>',
+blockedHttps:'<b style="color:#f66">Camera blocked: page is not HTTPS ({p}). Use the https link.</b>',noCamApi:'<b style="color:#f66">This browser has no camera API.</b>',startingCam:'<small>Starting camera…</small>',camWait:'😌 Relax, getting the camera ready…',camWaitSub:'This can take a few seconds. The game starts on its own.',camWaitX:'Cancel',sndTap:'🔈 Tap for sound',
 loadFail:'<b style="color:#f66">{e}</b><br><small>Check internet / try another browser. Touch mode works.</small>',camErr:'<b style="color:#f66">Camera error: {e}</b>',loadingModel:'Loading face model…',
 findFace:'Finding your face…',noFaceCal:'No face found — hold the phone at eye level in good light. Continuing anyway; open 🐞 to debug.',stepOf:'Step {i} of {n}',
 c1:'Relax your face and look straight at the screen. Hold still.',c2:'Turn your head to YOUR LEFT and hold it there.',c3:'Face the screen again. Blink a few times: each blink = attack!',c4:'Open your mouth wide: this vacuums up treasure.',c5:'Give a big smile and hold it: this fires your special move.',
@@ -310,7 +313,7 @@ paused:'⏸ Pause',resume:'▶️ Reprendre',calibrating:'Calibrage…',restT:'�
 sensL:'Sensibilité (gauche = plus facile)',recal:'Recalibrer',sound:'Son',prevT:'Afficher/masquer l\'aperçu caméra',camNote:'🔒 La vidéo reste sur votre appareil, jamais enregistrée ni envoyée.',noFaceRecal:'Visage introuvable. Recalibrer ?',camOn:'caméra active',camResume:'📷 Touchez pour réactiver la caméra',
 faceBest:'🙂 Record Visage ',touchBest:'👆 Record Tactile ',faceL:'🙂 Visage',touchL:'👆 Tactile',overLine:'Mode {m} · Score {s} · Niveau {g}',newBest:'🏆 Nouveau record {m} !',bestIs:'Record {m} : {b}',
 needHttps:'<b style="color:#ff6">⚠️ Les commandes faciales nécessitent HTTPS.</b><br><small>Vous avez ouvert cette page en {p}// — les navigateurs y bloquent la caméra et le modèle facial. Ouvrez plutôt le lien https:// (ou http://localhost). Le mode tactile fonctionne toujours.</small>',
-blockedHttps:'<b style="color:#f66">Caméra bloquée : la page n\'est pas en HTTPS ({p}). Utilisez le lien https.</b>',noCamApi:'<b style="color:#f66">Ce navigateur n\'a pas d\'accès caméra.</b>',startingCam:'<small>Démarrage de la caméra…</small>',
+blockedHttps:'<b style="color:#f66">Caméra bloquée : la page n\'est pas en HTTPS ({p}). Utilisez le lien https.</b>',noCamApi:'<b style="color:#f66">Ce navigateur n\'a pas d\'accès caméra.</b>',startingCam:'<small>Démarrage de la caméra…</small>',camWait:'😌 Détendez-vous, préparation de la caméra…',camWaitSub:'Cela peut prendre quelques secondes. Le jeu démarre tout seul.',camWaitX:'Annuler',sndTap:'🔈 Touchez pour le son',
 loadFail:'<b style="color:#f66">{e}</b><br><small>Vérifiez votre connexion ou essayez un autre navigateur. Le mode tactile fonctionne.</small>',camErr:'<b style="color:#f66">Erreur caméra : {e}</b>',loadingModel:'Chargement du modèle facial…',
 findFace:'Recherche de votre visage…',noFaceCal:'Aucun visage détecté — tenez le téléphone à hauteur des yeux, dans un endroit bien éclairé. On continue quand même ; ouvrez 🐞 pour diagnostiquer.',stepOf:'Étape {i} sur {n}',
 c1:'Détendez votre visage et regardez l\'écran bien en face. Ne bougez pas.',c2:'Tournez la tête vers VOTRE GAUCHE et restez ainsi.',c3:'Regardez de nouveau l\'écran. Clignez des yeux plusieurs fois : chaque clignement = attaque !',c4:'Ouvrez grand la bouche : cela aspire les trésors.',c5:'Faites un grand sourire et tenez-le : cela déclenche votre coup spécial.',
@@ -485,22 +488,59 @@ function drawHud(){
   ctx.fillStyle='#fa0';const mid=x+48+(w-50)/2;ctx.fillRect(Math.min(mid,mid+(lvl.move||0)*(w-50)/2),y,Math.abs(lvl.move||0)*(w-50)/2,12);
   ctx.restore();
 }
-document.querySelectorAll('#touch button').forEach(b=>{const k=b.dataset.k;
-  const on=e=>{e.preventDefault();touch[k]=true},off=e=>{e.preventDefault();if(k!=='attack'&&k!=='special'&&k!=='shield')touch[k]=false};
-  b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointerleave',off);b.addEventListener('pointercancel',off)});
+// v68 touch: every finger is tracked by pointerId and hit-tested, so sliding ⬅️↔➡️ switches direction (implicit touch capture used
+// to keep the first button held), and a lost pointerup/cancel can no longer leave a key stuck or the controls "dead".
+{const TP=new Map(),HOLD={left:1,right:1,vac:1},TB=$('touch');
+ const keyAt=(x,y)=>{const el=document.elementFromPoint(x,y),b=el&&el.closest&&el.closest('#touch button');return b?b.dataset.k:null};
+ const sync=()=>{for(const k in HOLD)touch[k]=false;for(const k of TP.values())if(k&&HOLD[k])touch[k]=true};
+ TB.addEventListener('pointerdown',e=>{if(TB.classList.contains('ctlEdit'))return;const b=e.target.closest&&e.target.closest('#touch button');if(!b)return;e.preventDefault();
+   try{if(b.hasPointerCapture&&b.hasPointerCapture(e.pointerId))b.releasePointerCapture(e.pointerId)}catch(_){}
+   const k=b.dataset.k;TP.set(e.pointerId,k);if(!HOLD[k])touch[k]=true;sync()},{passive:false});
+ addEventListener('pointermove',e=>{if(!TP.has(e.pointerId))return;const k=keyAt(e.clientX,e.clientY),o=TP.get(e.pointerId);if(k===o)return;TP.set(e.pointerId,k&&HOLD[k]?k:null);sync()},{passive:true});
+ const up=e=>{if(TP.delete(e.pointerId))sync()};['pointerup','pointercancel'].forEach(n=>addEventListener(n,up,{passive:true,capture:true}));
+ const allUp=e=>{if(!e.touches||e.touches.length===0){if(TP.size){TP.clear();sync()}}};addEventListener('touchend',allUp,{passive:true,capture:true});addEventListener('touchcancel',allUp,{passive:true,capture:true});
+ const clr=()=>{TP.clear();sync()};addEventListener('blur',clr);document.addEventListener('visibilitychange',clr);TB.addEventListener('contextmenu',e=>e.preventDefault());
+ window.__touchPtrs=TP;}
 addEventListener('keydown',e=>{if(e.key==='ArrowLeft')touch.left=true;if(e.key==='ArrowRight')touch.right=true;if(e.key===' ')touch.attack=true;if(e.key==='v')touch.vac=true;if(e.key==='s')touch.special=true;if(e.key==='b')touch.shield=true});
 addEventListener('keyup',e=>{if(e.key==='ArrowLeft')touch.left=false;if(e.key==='ArrowRight')touch.right=false;if(e.key==='v')touch.vac=false;0});
 
 
 // ---------- Sound: synthesized with Web Audio (no files) ----------
 const SND={ac:null,master:null,vol:+(localStorage.getItem('fa_vol')??'0.7'),musicOn:true,mT:null,step:0};
-function audioUnlock(){
-  if(!SND.ac){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;SND.ac=new AC();SND.master=SND.ac.createGain();SND.master.gain.value=SND.vol;SND.master.connect(SND.ac.destination)}
-  if(SND.ac.state==='suspended')SND.ac.resume();
-  // iOS: play a silent buffer inside the gesture
-  const b=SND.ac.createBuffer(1,1,22050),s=SND.ac.createBufferSource();s.buffer=b;s.connect(SND.master);s.start(0);
-}
-['pointerdown','touchend','click','keydown'].forEach(ev=>addEventListener(ev,audioUnlock,{passive:true}));
+// v68 audio: iOS puts the context in 'interrupted' (call, lock, camera start) or leaves it 'suspended'; the old code only
+// resumed 'suspended' and only on taps, so in face mode (no taps) sound never came back. Now: resume on every return path,
+// retry after interruptions, rebuild a context that stays stuck, and show a small "tap for sound" pill as a last resort.
+function audioMake(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;const old=SND.ac;
+  try{SND.ac=new AC({latencyHint:'interactive'})}catch(e){try{SND.ac=new AC()}catch(e2){SND.ac=null;return null}}
+  SND.master=SND.ac.createGain();SND.master.gain.value=SND.vol;SND.master.connect(SND.ac.destination);SND.nb={};SND.fails=0;SND.madeAt=performance.now();
+  try{SND.ac.onstatechange=audioWatch}catch(e){}
+  if(old&&old!==SND.ac){try{old.onstatechange=null;const p=old.close();if(p&&p.catch)p.catch(()=>{})}catch(e){}}
+  return SND.ac}
+function audioOk(){return !!(SND.ac&&SND.ac.state==='running')}
+function audioSilent(){try{const ac=SND.ac,b=ac.createBuffer(1,1,22050),s=ac.createBufferSource();s.buffer=b;s.connect(SND.master);s.start(0)}catch(e){}}
+function audioResume(ac){try{const p=ac.resume();if(p&&p.then)p.then(()=>{if(ac===SND.ac)SND.fails=0;audioSync()},()=>{if(ac===SND.ac)SND.fails++;audioSync()})}catch(e){if(ac===SND.ac)SND.fails++}}
+function audioUnlock(e){const g=!!(e&&e.isTrusted);
+  if(!SND.ac||SND.ac.state==='closed'){if(!audioMake())return}
+  else if(g&&SND.ac.state!=='running'&&(SND.fails>0||SND.ac.state==='interrupted')&&performance.now()-(SND.madeAt||0)>800)audioMake(); // stuck: rebuild inside the tap
+  const ac=SND.ac;
+  if(ac.state!=='running'){audioResume(ac);if(g)setTimeout(()=>{if(ac===SND.ac&&ac.state!=='running')SND.fails++;audioSync()},600)}
+  audioSilent();audioSync()}
+function audioKick(){try{if(document.hidden||!SND.ac)return; // never unlocked yet: the first tap does it
+  if(SND.ac.state==='closed')audioMake();if(SND.ac.state!=='running')audioResume(SND.ac);audioSync()}catch(e){}}
+let audioRetryT=null;
+function audioWatch(){audioSync();if(!SND.ac||document.hidden||SND.ac.state==='running')return;clearTimeout(audioRetryT);let n=0;
+  const go=()=>{if(audioOk()||document.hidden)return audioSync();audioKick();if(++n<5)audioRetryT=setTimeout(go,[0,300,800,1600,3000][n])};audioRetryT=setTimeout(go,150)}
+function audioSync(){try{const el=document.getElementById('sndTap');if(!el)return;
+  const need=SND.vol>0&&!!SND.ac&&!audioOk()&&running&&!paused&&!!S&&!S.ended&&!document.hidden;
+  if(need){if(!SND.offSince)SND.offSince=performance.now()}else SND.offSince=0;
+  el.classList.toggle('hide',!(need&&performance.now()-SND.offSince>1500))}catch(e){}}
+function noiseBuf(ac,dur){const k=Math.max(1,Math.round(dur*100));SND.nb=SND.nb||{};let b=SND.nb[k];if(b&&b._ac===ac)return b;
+  b=ac.createBuffer(1,Math.ceil(ac.sampleRate*k/100),ac.sampleRate);const d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;b._ac=ac;SND.nb[k]=b;return b}
+['pointerdown','touchend','click','keydown'].forEach(ev=>addEventListener(ev,audioUnlock,{passive:true,capture:true}));
+addEventListener('pageshow',()=>audioKick());addEventListener('focus',()=>audioKick());
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)audioKick()});document.addEventListener('resume',()=>audioKick());
+try{const A=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;if(A&&A.addListener)A.addListener('appStateChange',st=>{if(st&&st.isActive)audioKick()})}catch(e){}
+setInterval(()=>{try{if(SND.ac&&!audioOk()&&running&&!paused&&!document.hidden)audioKick();else audioSync()}catch(e){}},1000);
 function tone(f,dur,{type='square',vol=.25,slide=0,delay=0,attack=.005}={}){
   const ac=SND.ac;if(!ac||SND.vol<=0||ac.state!=='running')return;
   const t=ac.currentTime+delay,o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,t);
@@ -508,7 +548,7 @@ function tone(f,dur,{type='square',vol=.25,slide=0,delay=0,attack=.005}={}){
   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+attack);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
   o.connect(g);g.connect(SND.master);o.start(t);o.stop(t+dur+.02)}
 function noise(dur,{vol=.3,delay=0,hp=800}={}){const ac=SND.ac;if(!ac||SND.vol<=0||ac.state!=='running')return;
-  const t=ac.currentTime+delay,b=ac.createBuffer(1,ac.sampleRate*dur,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  const t=ac.currentTime+delay,b=noiseBuf(ac,dur);
   const s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();s.buffer=b;f.type='highpass';f.frequency.value=hp;
   g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);s.connect(f);f.connect(g);g.connect(SND.master);s.start(t)}
 const sfx={
@@ -538,7 +578,7 @@ function musicTick(){if(!running||paused||!S||S.ended||!SND.musicOn)return;const
   tone(root*Math.pow(2,MEL[st%8]/12)*2,.18,{type:'triangle',vol:.05});if(st%4===0)tone(root*Math.pow(2,BASS[(st/4|0)%4]/12)/2,.4,{type:'sine',vol:.08})}
 SND.mT=setInterval(musicTick,240);
 const VOLS=[0.7,0.3,0];function volIcon(){return SND.vol===0?'🔇':SND.vol<0.5?'🔉':'🔊'}
-function cycleVol(){const i=VOLS.indexOf(SND.vol);SND.vol=VOLS[(i+1)%VOLS.length];localStorage.setItem('fa_vol',SND.vol);if(SND.master)SND.master.gain.value=SND.vol;$('bVol').textContent=volIcon()}
+function cycleVol(){const i=VOLS.indexOf(SND.vol);SND.vol=VOLS[(i+1)%VOLS.length];localStorage.setItem('fa_vol',SND.vol);if(SND.master)SND.master.gain.value=SND.vol;$('bVol').textContent=volIcon();audioSync()}
 
 // ---------- Game data ----------
 // v1.1 (Oct 18): rarer high-value treasure (was 40/25/15/10/6/4)
@@ -692,7 +732,7 @@ let last=performance.now(),running=false;
 // plus adaptive low-FX (no canvas shadows, lower canvas resolution) while fps stays under 40.
 let fpsAcc=0,fpsN=0,LOWFX=false;
 function step(now){requestAnimationFrame(step);const el=Math.min(.25,Math.max(0,(now-last)/1000));last=now;
-  if(!running)return;fpsAcc+=el;fpsN++;if(fpsAcc>=2){const f=fpsN/fpsAcc;if(!LOWFX&&f<40){LOWFX=true;resize()}else if(LOWFX&&f>57){LOWFX=false;resize()}fpsAcc=0;fpsN=0}
+  if(!running)return;fpsAcc+=el;fpsN++;if(fpsAcc>=2){const f=fpsN/fpsAcc;if(!LOWFX&&f<40){LOWFX=true;resize()}fpsAcc=0;fpsN=0}
   const n=Math.max(1,Math.ceil(el/(1/30)-1e-6)),dt=el/n;
   for(let i=0;i<n;i++){updateInput(dt);if(!paused&&!S.ended)update(dt)}if(running||S.ended)draw()}
 {const P=CanvasRenderingContext2D.prototype,d=Object.getOwnPropertyDescriptor(P,'shadowBlur');
@@ -700,7 +740,7 @@ function step(now){requestAnimationFrame(step);const el=Math.min(.25,Math.max(0,
 function update(dt){
   if(S.offer)return; // waiting on the Continue? offer
   S._saveAcc=(S._saveAcc||0)+dt;if(S._saveAcc>2.5){S._saveAcc=0;saveRun()}
-  celebUpdate(dt);const frozen=S.freezeT>0;
+  celebUpdate(dt);const frozen=false; // v68: the new-record moment no longer holds the game still (it read as a freeze); the gold frame still flashes
   S.t+=dt;S.bannerT-=dt;S.shake=Math.max(0,S.shake-dt);
   S._survAcc=(S._survAcc||0)+dt;if(S._survAcc>=1){const sec=Math.floor(S._survAcc);S._survAcc-=sec;try{boardBump('survive',sec)}catch(e){}}
   const pd=frozen?dt*.5:dt;for(const p of S.parts){p.t-=pd;if(p.conf){p.vx*=1-pd*1.5;p.vy=p.vy*(1-pd*1.5)+260*pd;p.rot+=p.vr*pd}else p.vy+=(p.spark?160:500)*pd;p.x+=p.vx*pd;p.y+=p.vy*pd}S.parts=S.parts.filter(p=>p.t>0);
@@ -1016,7 +1056,17 @@ const MAXPARTS=260;
 const HYPECOL={5:'#7cf',10:'#ff9100',15:'#ff1493',20:'#ffd54a'};
 const ease=x=>1-Math.pow(1-x,3);
 // big short banner in the middle of the cavern (above the hero, below the stage banner), throttled
-function hype(txt,col,{dur=.9,force=false,size=40}={}){if(!force&&S.t-S.hypeLast<1.1)return false;S.hypeLast=S.t;S.hype={txt,col,t:0,dur,size};return true}
+// splash text is rendered once into a small bitmap (glow included) and then only moved/scaled/faded: the old per-frame
+// 24px shadowBlur on a 40px italic string (plus a measureText fit loop) was the hitch players saw when a splash popped.
+const HYPE_IMG=new Map();
+function hypeImg(txt,col,size){const r=Math.min(2,Math.max(1,devicePixelRatio||1)),k=txt+'|'+col+'|'+size+'|'+Math.round(W)+'|'+r+'|'+(LOWFX?1:0);let im=HYPE_IMG.get(k);if(im)return im;
+  try{const m=document.createElement('canvas').getContext('2d');let fs=size;m.font='900 italic '+fs+'px sans-serif';while(fs>20&&m.measureText(txt).width>W-24){fs-=2;m.font='900 italic '+fs+'px sans-serif'}
+    const pad=LOWFX?8:30,w=Math.ceil(m.measureText(txt).width)+pad*2,h=Math.ceil(fs*1.5)+pad*2,c=document.createElement('canvas');c.width=Math.ceil(w*r);c.height=Math.ceil(h*r);
+    const g=c.getContext('2d');g.scale(r,r);g.translate(w/2,h/2);g.textAlign='center';g.textBaseline='middle';g.font='900 italic '+fs+'px sans-serif';
+    g.lineWidth=7;g.strokeStyle='rgba(0,0,0,.8)';g.strokeText(txt,0,0);g.fillStyle=col;if(!LOWFX){g.shadowColor=col;g.shadowBlur=24}g.fillText(txt,0,0);
+    g.shadowBlur=0;g.fillStyle='rgba(255,255,255,.55)';g.fillText(txt,0,-2);im={c,w,h};if(HYPE_IMG.size>48)HYPE_IMG.clear();HYPE_IMG.set(k,im)}catch(e){im=null}return im}
+function hypeWarm(){const L0=[[t('hype5'),HYPECOL[5],40],[t('hype10'),HYPECOL[10],40],[t('hype15'),HYPECOL[15],40],[t('hype20'),HYPECOL[20],44],[t('stageClr'),'#00e676',40],[t('bossKill'),'#ff1744',38],[t('record'),'#ffd54a',42],[t('contGo'),'#ff6ec7',32]];let i=0;const ric=window.requestIdleCallback||(f=>setTimeout(f,30));const go=()=>{if(i>=L0.length)return;const [a,b,c]=L0[i++];try{if(a)hypeImg(a,b,c)}catch(e){}ric(go)};ric(go)}
+function hype(txt,col,{dur=.9,force=false,size=40}={}){if(!force&&S.t-S.hypeLast<1.1)return false;S.hypeLast=S.t;S.hype={txt,col,t:0,dur,size,im:hypeImg(txt,col,size)};return true}
 function screenFlash(col,dur=.3,a=.35){S.flash={col,t:dur,dur,a}}
 function hypeCombo(n){const k=n>=20?20:n;if(hype(t('hype'+k),HYPECOL[k],{size:n>=20?44:40})){screenFlash(HYPECOL[k],.3,.28);sfx.sting(Math.min(4,n/5));navigator.vibrate&&navigator.vibrate(30)}else sfx.combo(n)}
 function jackpotPop(x,y){fx(Math.max(80,Math.min(W-80,x)),y-50,t('jackpot'),'#fff59d',24);screenFlash('#ffffff',.2,.2);confetti(x,y,'#ffd740',24)}
@@ -1044,10 +1094,7 @@ function drawCelebrations(){
   for(const c of S.coins){if(c.t<0)continue;const p=ease(Math.min(1,c.t/c.dur)),x=c.x0+(sp.x-c.x0)*p+Math.sin(p*Math.PI)*c.wob,y=c.y0+(sp.y-c.y0)*p-Math.sin(p*Math.PI)*90,r=9-p*3;
     ctx.save();ctx.fillStyle='#ffc400';ctx.shadowColor='#ffd54a';ctx.shadowBlur=8;ctx.beginPath();ctx.ellipse(x,y,r*Math.abs(Math.cos(c.t*12))+1.5,r,0,0,7);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='#fff59d';ctx.lineWidth=1.5;ctx.stroke();ctx.restore()}
   if(S.hype){const h=S.hype,p=h.t/h.dur,sc=h.t<.12?1.6-4*h.t:1,a=p>.7?Math.max(0,(1-p)/.3):1,y=H*.52;
-    ctx.save();ctx.globalAlpha=a;ctx.translate(W/2,y);ctx.scale(sc,sc);ctx.textAlign='center';ctx.textBaseline='middle';let fs=h.size;ctx.font='900 italic '+fs+'px sans-serif';
-    while(fs>20&&ctx.measureText(h.txt).width>W-24){fs-=2;ctx.font='900 italic '+fs+'px sans-serif'}
-    ctx.lineWidth=7;ctx.strokeStyle='rgba(0,0,0,.8)';ctx.strokeText(h.txt,0,0);ctx.fillStyle=h.col;ctx.shadowColor=h.col;ctx.shadowBlur=24;ctx.fillText(h.txt,0,0);
-    ctx.shadowBlur=0;ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText(h.txt,0,-2);ctx.restore()}
+    const im=h.im||(h.im=hypeImg(h.txt,h.col,h.size));if(im){ctx.save();ctx.globalAlpha=a;ctx.translate(W/2,y);ctx.scale(sc,sc);ctx.drawImage(im.c,-im.w/2,-im.h/2,im.w,im.h);ctx.restore()}}
   if(S.freezeT>0){ctx.save();ctx.strokeStyle='rgba(255,213,74,'+(.5*S.freezeT)+')';ctx.lineWidth=8;ctx.strokeRect(4,4,W-8,H-8);ctx.restore()}
   if(S.flash){const f=S.flash;ctx.save();ctx.globalAlpha=f.a*(f.t/f.dur);ctx.fillStyle=f.col;ctx.fillRect(0,0,W,H);ctx.restore()}}
 
@@ -1310,16 +1357,18 @@ if(!SECURE){setMsg('needHttps',{p:location.protocol})}
 async function startFace(){
   if(!SECURE){setMsg('blockedHttps',{p:location.protocol});return}
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setMsg('noCamApi');return}
-  setMsg('startingCam');
+  setMsg('startingCam');camWait(true);
   const gen=window.__faceGen=(window.__faceGen||0)+1; // bumped by Home/back/Touch to cancel a pending face start
-  if(!await camStart(true))return;if(gen!==window.__faceGen){camStop();return}
+  if(!await camStart(true)){camWait(false);return}if(gen!==window.__faceGen){camStop();camWait(false);return}
   try{
     const iv=setInterval(()=>{msgState=null;$('msg').innerHTML='<small>'+t('loadingModel')+' ('+modelStatus+')</small>'},200);
     try{await initFace()}finally{clearInterval(iv)}
-  }catch(e){setMsg('loadFail',{e:e.message});camStop();return}
-  if(gen!==window.__faceGen){camStop();setMsg(null);return}
-  mode='face';faceLoopOn=true;faceLoop();$('start').classList.add('hide');if(forceCal||!loadCal()){try{await calibrate()}catch(e){if(e==='cancel'){lightWatch(false);return}throw e}}if(gen!==window.__faceGen)return;forceCal=false;if(pendingResume){const r=pendingResume;pendingResume=null;begin(false,r)}else begin(false);
+  }catch(e){camWait(false);setMsg('loadFail',{e:e.message});camStop();return}
+  if(gen!==window.__faceGen){camStop();setMsg(null);camWait(false);return}
+  camWait(false);mode='face';faceLoopOn=true;faceLoop();$('start').classList.add('hide');if(forceCal||!loadCal()){try{await calibrate()}catch(e){if(e==='cancel'){lightWatch(false);return}throw e}}if(gen!==window.__faceGen)return;forceCal=false;if(pendingResume){const r=pendingResume;pendingResume=null;begin(false,r)}else begin(false);
 }
+function camWait(on){const el=$('camWait');if(el)el.classList.toggle('hide',!on)}
+$('bCamWaitX').onclick=()=>{window.__faceGen=(window.__faceGen||0)+1;camWait(false);camStop();setMsg(null)};
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 // ---------- Camera lifecycle: camera only on while actively playing ----------
 let stream=null,camWanted=false;
@@ -1333,7 +1382,7 @@ async function camStart(first){
     video.muted=true;video.setAttribute('playsinline','');video.srcObject=stream;video.classList.remove('hide');
     await video.play();
     if(video.readyState<2)await new Promise(r=>video.addEventListener('loadeddata',r,{once:true}));
-    camStatus='playing';camWanted=true;lastVT=-1;localStorage.setItem('fa_cam_ok','1');
+    camStatus='playing';camWanted=true;lastVT=-1;localStorage.setItem('fa_cam_ok','1');try{audioWatch()}catch(e){}
     if(landmarker&&!faceLoopOn){faceLoopOn=true;faceLoop()}
     updInd();return true;
   }catch(e){stream=null;camStatus='error '+e.name;
@@ -1369,7 +1418,7 @@ async function calibrate(){const cg=window.__faceGen;const chk=()=>{if(cg!==wind
   $('cCount').textContent='';$('cStep').textContent='';calState={};
   saveCal();lightWatch(false);$('calib').classList.add('hide');
 }
-function begin(again,fromSave){try{audioUnlock()}catch(e){}try{faRequestFullscreen()}catch(e){}$('start').classList.add('hide');$('bPause').classList.remove('hide');$('touch').classList.toggle('hide',mode!=='touch');
+function begin(again,fromSave){try{audioUnlock()}catch(e){}try{if(LOWFX&&!fromSave){LOWFX=false;resize()}hypeWarm()}catch(e){}try{faRequestFullscreen()}catch(e){}$('start').classList.add('hide');$('bPause').classList.remove('hide');$('touch').classList.toggle('hide',mode!=='touch');
   if(fromSave){if(isRunExpired(fromSave)){settleExpiredRun();return}restoreRun(fromSave); /* keep fa_run until game over / quit / fresh start */}
   else{clearRun();ecoRun();ecoNote=null;runRanked=true;newGame();S.ranked=true;try{lbStartRun(mode)}catch(e){}if(!daily&&getBoost()>0){S.boost=true;addBoost(-1);S.special=100;S.banner=t('boostOn');S.bannerT=2.6}}
   for(const k in touch)touch[k]=false;running=true;paused=false;last=performance.now();if(again||fromSave)camResume();saveRun();syncResumeUI();
@@ -1383,6 +1432,7 @@ if(!localStorage.getItem(HOW_KEY))showHow();
 function doPause(){if(!running||S.ended||paused)return;paused=true;camStop();saveRun('pause');armPauseExpiry();$('pause').classList.remove('hide')}
 $('bPause').onclick=doPause;
 $('bResume').onclick=()=>{if(settleExpiredRun())return;try{audioUnlock()}catch(e){}$('pause').classList.add('hide');paused=false;last=performance.now();try{saveRun()}catch(e){}camResume()};
+$('sndTap').onclick=e=>{e.stopPropagation();if(!audioOk()&&performance.now()-(SND.madeAt||0)>800)audioMake();audioUnlock(e);audioSync()};
 $('bVol').textContent=volIcon();$('bVol').onclick=e=>{e.stopPropagation();cycleVol();sfx.beep(true)};
 const sl=$('sens');sl.value=sens;sl.oninput=()=>{sens=+sl.value;localStorage.setItem('ftq_sens',sens);if(localStorage.getItem(CAL_KEY))saveCal()};
 function syncHud(){$('sensBox').classList.toggle('hide',!hudOn)}syncHud();
@@ -1412,8 +1462,8 @@ async function lbFetch(path,opt){const r=await fetch(LB_API+path,{...opt,headers
 /** Leaderboard protocol v3: signed run session. /start at run begin -> server-signed run token (server start time);
  *  /submit must carry it + a payload HMAC. Worker checks elapsed time vs score/level per platform. */
 const LB_CLIENT=4; // v4: ranked-only submissions (fair start)
-const LB_BUILD=67; // shared build (fa-v67) reported to the leaderboard Worker
-const LB_VER='fa-v67';
+const LB_BUILD=68; // shared build (fa-v68) reported to the leaderboard Worker
+const LB_VER='fa-v68';
 const LB_PLATFORM=(function(){const p=String(window.__FA_PLATFORM__||'web');return p==='play'||p==='itch'?p:'web'})();
 const LB_KEY='fa3-k7Qm2xVb9Lr4Tz8Wn1Hc6Pd';
 const LB_RUN_KEY='fa_lb_run_'+LB_GAME;
