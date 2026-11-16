@@ -1621,10 +1621,11 @@ applyLang();
   function safe(){try{const st=document.getElementById('start');if(!st||st.classList.contains('hide'))return false;
     for(const o of document.querySelectorAll('.ov'))if(o!==st&&!o.classList.contains('hide'))return false;
     const g=window.__ft||window.__fb;return !(g&&g.running)}catch(e){return false}}
-  async function chk(force){if(document.hidden)return;if(want){if(safe())location.reload();return}
+  function go(){try{const k='upd_try_'+location.pathname;if(sessionStorage.getItem(k)==String(want))return;sessionStorage.setItem(k,String(want))}catch(e){return}location.reload()} // once per version: never loop if the CDN still serves the old page
+  async function chk(force){if(document.hidden)return;if(want){if(safe())go();return}
     if(busy||(!force&&Date.now()-last<60000))return;busy=1;last=Date.now();
     try{const r=await fetch('sw.js?u='+Date.now(),{cache:'no-store'});const m=(await r.text()).match(/const C='[a-z]+-v(\d+)'/);
-      if(m&&+m[1]>MY){want=1;try{const g=await navigator.serviceWorker.getRegistration();if(g)g.update()}catch(e){}if(safe())location.reload()}}catch(e){}busy=0}
+      if(m&&+m[1]>MY){want=+m[1];try{const g=await navigator.serviceWorker.getRegistration();if(g)await g.update()}catch(e){}if(safe())go()}}catch(e){}busy=0}
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk(true)});addEventListener('pageshow',()=>chk(true));
   setTimeout(()=>chk(true),4000);setInterval(()=>chk(false),20000)})();
 </script>
