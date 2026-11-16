@@ -507,40 +507,63 @@ addEventListener('keyup',e=>{if(e.key==='ArrowLeft')touch.left=false;if(e.key===
 
 // ---------- Sound: synthesized with Web Audio (no files) ----------
 const SND={ac:null,master:null,vol:+(localStorage.getItem('fa_vol')??'0.7'),musicOn:true,mT:null,step:0};
-// v68 audio: iOS puts the context in 'interrupted' (call, lock, camera start) or leaves it 'suspended'; the old code only
-// resumed 'suspended' and only on taps, so in face mode (no taps) sound never came back. Now: resume on every return path,
-// retry after interruptions, rebuild a context that stays stuck, and show a small "tap for sound" pill as a last resort.
-function audioMake(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;const old=SND.ac;
-  try{SND.ac=new AC({latencyHint:'interactive'})}catch(e){try{SND.ac=new AC()}catch(e2){SND.ac=null;return null}}
-  SND.master=SND.ac.createGain();SND.master.gain.value=SND.vol;SND.master.connect(SND.ac.destination);SND.nb={};SND.fails=0;SND.madeAt=performance.now();
-  try{SND.ac.onstatechange=audioWatch}catch(e){}
-  if(old&&old!==SND.ac){try{old.onstatechange=null;const p=old.close();if(p&&p.catch)p.catch(()=>{})}catch(e){}}
-  return SND.ac}
-function audioOk(){return !!(SND.ac&&SND.ac.state==='running')}
+// v69 audio (iOS WebKit): starting/stopping the camera and backgrounding the tab switch the iOS audio session, and the old
+// AudioContext can then report 'running' while producing no sound, so nothing retried and no "tap for sound" showed.
+// Now: any hide/camera change marks the context stale; the next real tap (touchend/click/pointerup/key) always builds a
+// fresh context inside the gesture; without a tap we try a fresh context quietly and adopt it only if its clock runs;
+// a running context whose clock is frozen counts as dead; the pill shows whenever sound isn't known to be working.
+const AUDIO_ACT={touchend:1,click:1,pointerup:1,mouseup:1,keydown:1};
+function audioSess(){try{const s=navigator.audioSession;if(s&&s.type!=='playback')s.type='playback'}catch(e){}}
+function audioNew(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;
+  try{return new AC({latencyHint:'interactive'})}catch(e){try{return new AC()}catch(e2){return null}}}
+function audioAdopt(ac){const old=SND.ac;SND.ac=ac;
+  SND.master=ac.createGain();SND.master.gain.value=SND.vol;SND.master.connect(ac.destination);SND.nb={};SND.fails=0;SND.madeAt=performance.now();
+  SND.stale=false;SND.frozen=0;SND.stall=0;SND.lastT=-1;SND.probes=0;
+  try{ac.onstatechange=audioWatch}catch(e){}
+  if(old&&old!==ac){try{old.onstatechange=null;const p=old.close();if(p&&p.catch)p.catch(()=>{})}catch(e){}}
+  return ac}
+function audioMake(){audioSess();const ac=audioNew();if(!ac){SND.ac=null;return null}return audioAdopt(ac)}
+function audioMark(){if(SND.ac){SND.stale=true;SND.probes=0}audioSync()}
+function audioOk(){const ac=SND.ac;return !!(ac&&ac.state==='running'&&!SND.stale&&!SND.frozen)}
 function audioSilent(){try{const ac=SND.ac,b=ac.createBuffer(1,1,22050),s=ac.createBufferSource();s.buffer=b;s.connect(SND.master);s.start(0)}catch(e){}}
 function audioResume(ac){try{const p=ac.resume();if(p&&p.then)p.then(()=>{if(ac===SND.ac)SND.fails=0;audioSync()},()=>{if(ac===SND.ac)SND.fails++;audioSync()})}catch(e){if(ac===SND.ac)SND.fails++}}
-function audioUnlock(e){const g=!!(e&&e.isTrusted);
-  if(!SND.ac||SND.ac.state==='closed'){if(!audioMake())return}
-  else if(g&&SND.ac.state!=='running'&&(SND.fails>0||SND.ac.state==='interrupted')&&performance.now()-(SND.madeAt||0)>800)audioMake(); // stuck: rebuild inside the tap
-  const ac=SND.ac;
-  if(ac.state!=='running'){audioResume(ac);if(g)setTimeout(()=>{if(ac===SND.ac&&ac.state!=='running')SND.fails++;audioSync()},600)}
+function audioUnlock(e){const g=!!(e&&e.isTrusted&&AUDIO_ACT[e.type]);
+  if(!g){ // not a gesture iOS accepts for audio: only nudge what we have
+    if(!SND.ac)return;if(SND.ac.state==='closed'){audioMake();return audioSync()}if(SND.ac.state!=='running')audioResume(SND.ac);return audioSync()}
+  audioSess();
+  // always start clean inside the tap when sound isn't known-good (300 ms guard so touchend+click don't double-build)
+  if(!SND.ac||SND.ac.state==='closed'||(!audioOk()&&performance.now()-(SND.madeAt||0)>300)){if(!audioMake())return}
+  const ac=SND.ac;if(ac.state!=='running'){audioResume(ac);setTimeout(()=>{if(ac===SND.ac&&ac.state!=='running')SND.fails++;audioSync()},600)}
   audioSilent();audioSync()}
 function audioKick(){try{if(document.hidden||!SND.ac)return; // never unlocked yet: the first tap does it
-  if(SND.ac.state==='closed')audioMake();if(SND.ac.state!=='running')audioResume(SND.ac);audioSync()}catch(e){}}
+  if(SND.ac.state==='closed')audioMake();if(SND.ac.state!=='running')audioResume(SND.ac);if(SND.stale||SND.frozen)audioProbe();audioSync()}catch(e){}}
+// try a brand-new context without a tap; adopt it only if it really starts and its clock moves (else the pill asks for a tap)
+function audioProbe(){if(!SND.ac||document.hidden||SND.probing||(SND.probes||0)>=3)return;SND.probes=(SND.probes||0)+1;
+  const n=audioNew();if(!n)return;SND.probing=true;let t0=0;try{t0=n.currentTime;const p=n.resume();if(p&&p.catch)p.catch(()=>{})}catch(e){}
+  setTimeout(()=>{SND.probing=false;
+    if(!document.hidden&&n.state==='running'&&n.currentTime>t0+.1&&(SND.stale||!audioOk())){audioAdopt(n);audioSilent()}
+    else{try{const p=n.close();if(p&&p.catch)p.catch(()=>{})}catch(e){}}audioSync()},700)}
+function audioCam(){audioMark();setTimeout(()=>{audioKick();audioProbe()},400)} // camera just (re)started
 let audioRetryT=null;
-function audioWatch(){audioSync();if(!SND.ac||document.hidden||SND.ac.state==='running')return;clearTimeout(audioRetryT);let n=0;
+function audioWatch(){if(SND.ac&&SND.ac.state==='interrupted')SND.stale=true;audioSync();if(!SND.ac||document.hidden||SND.ac.state==='running')return;clearTimeout(audioRetryT);let n=0;
   const go=()=>{if(audioOk()||document.hidden)return audioSync();audioKick();if(++n<5)audioRetryT=setTimeout(go,[0,300,800,1600,3000][n])};audioRetryT=setTimeout(go,150)}
 function audioSync(){try{const el=document.getElementById('sndTap');if(!el)return;
-  const need=SND.vol>0&&!!SND.ac&&!audioOk()&&running&&!paused&&!!S&&!S.ended&&!document.hidden;
+  const need=SND.vol>0&&!audioOk()&&running&&!paused&&!!S&&!S.ended&&!document.hidden;
   if(need){if(!SND.offSince)SND.offSince=performance.now()}else SND.offSince=0;
-  el.classList.toggle('hide',!(need&&performance.now()-SND.offSince>1500))}catch(e){}}
+  el.classList.toggle('hide',!(need&&performance.now()-SND.offSince>1200))}catch(e){}}
 function noiseBuf(ac,dur){const k=Math.max(1,Math.round(dur*100));SND.nb=SND.nb||{};let b=SND.nb[k];if(b&&b._ac===ac)return b;
   b=ac.createBuffer(1,Math.ceil(ac.sampleRate*k/100),ac.sampleRate);const d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;b._ac=ac;SND.nb[k]=b;return b}
-['pointerdown','touchend','click','keydown'].forEach(ev=>addEventListener(ev,audioUnlock,{passive:true,capture:true}));
-addEventListener('pageshow',()=>audioKick());addEventListener('focus',()=>audioKick());
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)audioKick()});document.addEventListener('resume',()=>audioKick());
-try{const A=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;if(A&&A.addListener)A.addListener('appStateChange',st=>{if(st&&st.isActive)audioKick()})}catch(e){}
-setInterval(()=>{try{if(SND.ac&&!audioOk()&&running&&!paused&&!document.hidden)audioKick();else audioSync()}catch(e){}},1000);
+['pointerdown','pointerup','touchend','click','keydown'].forEach(ev=>addEventListener(ev,audioUnlock,{passive:true,capture:true}));
+addEventListener('pageshow',()=>audioKick());addEventListener('focus',()=>audioKick());addEventListener('pagehide',()=>audioMark());
+document.addEventListener('visibilitychange',()=>{if(document.hidden)audioMark();else audioKick()});document.addEventListener('resume',()=>audioKick());
+try{const A=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;if(A&&A.addListener)A.addListener('appStateChange',st=>{if(st&&st.isActive)audioKick();else audioMark()})}catch(e){}
+// once a second: a 'running' context whose clock stopped is dead; retry/probe while a run is live
+setInterval(()=>{try{const ac=SND.ac;
+  if(ac&&ac.state==='running'&&!document.hidden){const t=ac.currentTime;if(SND.lastT>=0&&t<=SND.lastT)SND.stall=(SND.stall||0)+1;else SND.stall=0;SND.lastT=t;
+    const fz=SND.stall>=2?1:0;if(fz&&!SND.frozen)SND.probes=0;SND.frozen=fz} // one missed tick can be jitter; two in a row is dead
+  else if(ac)SND.lastT=-1;
+  if(ac&&!audioOk()&&running&&!paused&&!document.hidden)audioKick();else audioSync()}catch(e){}},1000);
+window.__snd={audioOk,audioMark,audioCam,audioUnlock,get SND(){return SND}};
 function tone(f,dur,{type='square',vol=.25,slide=0,delay=0,attack=.005}={}){
   const ac=SND.ac;if(!ac||SND.vol<=0||ac.state!=='running')return;
   const t=ac.currentTime+delay,o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,t);
@@ -1382,7 +1405,7 @@ async function camStart(first){
     video.muted=true;video.setAttribute('playsinline','');video.srcObject=stream;video.classList.remove('hide');
     await video.play();
     if(video.readyState<2)await new Promise(r=>video.addEventListener('loadeddata',r,{once:true}));
-    camStatus='playing';camWanted=true;lastVT=-1;localStorage.setItem('fa_cam_ok','1');try{audioWatch()}catch(e){}
+    camStatus='playing';camWanted=true;lastVT=-1;localStorage.setItem('fa_cam_ok','1');try{audioCam()}catch(e){}
     if(landmarker&&!faceLoopOn){faceLoopOn=true;faceLoop()}
     updInd();return true;
   }catch(e){stream=null;camStatus='error '+e.name;
@@ -1390,7 +1413,7 @@ async function camStart(first){
     updInd();return false}
 }
 function camStop(){faceLoopOn=false;faceSeen=false;bs={};
-  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;try{audioMark()}catch(e){}}
   video.srcObject=null;video.classList.add('hide');if(camStatus==='playing')camStatus='stopped';updInd()}
 const camResume=()=>{if(mode==='face'&&camWanted&&running&&!S.ended&&!paused&&!document.hidden)camStart()};
 async function sample(ms){const acc={},n={};let y=0,yn=0;const end=performance.now()+ms;while(performance.now()<end){if(faceSeen){for(const k in bs){acc[k]=(acc[k]||0)+bs[k];n[k]=(n[k]||0)+1}y+=yaw;yn++}await wait(40)}const o={};for(const k in acc)o[k]=acc[k]/n[k];o._yaw=yn?y/yn:0;o._n=yn;return o}
@@ -1432,7 +1455,7 @@ if(!localStorage.getItem(HOW_KEY))showHow();
 function doPause(){if(!running||S.ended||paused)return;paused=true;camStop();saveRun('pause');armPauseExpiry();$('pause').classList.remove('hide')}
 $('bPause').onclick=doPause;
 $('bResume').onclick=()=>{if(settleExpiredRun())return;try{audioUnlock()}catch(e){}$('pause').classList.add('hide');paused=false;last=performance.now();try{saveRun()}catch(e){}camResume()};
-$('sndTap').onclick=e=>{e.stopPropagation();if(!audioOk()&&performance.now()-(SND.madeAt||0)>800)audioMake();audioUnlock(e);audioSync()};
+$('sndTap').onclick=e=>{e.stopPropagation();audioUnlock(e);audioSync()};
 $('bVol').textContent=volIcon();$('bVol').onclick=e=>{e.stopPropagation();cycleVol();sfx.beep(true)};
 const sl=$('sens');sl.value=sens;sl.oninput=()=>{sens=+sl.value;localStorage.setItem('ftq_sens',sens);if(localStorage.getItem(CAL_KEY))saveCal()};
 function syncHud(){$('sensBox').classList.toggle('hide',!hudOn)}syncHud();
@@ -1462,8 +1485,8 @@ async function lbFetch(path,opt){const r=await fetch(LB_API+path,{...opt,headers
 /** Leaderboard protocol v3: signed run session. /start at run begin -> server-signed run token (server start time);
  *  /submit must carry it + a payload HMAC. Worker checks elapsed time vs score/level per platform. */
 const LB_CLIENT=4; // v4: ranked-only submissions (fair start)
-const LB_BUILD=68; // shared build (fa-v68) reported to the leaderboard Worker
-const LB_VER='fa-v68';
+const LB_BUILD=69; // shared build (fa-v69) reported to the leaderboard Worker
+const LB_VER='fa-v69';
 const LB_PLATFORM=(function(){const p=String(window.__FA_PLATFORM__||'web');return p==='play'||p==='itch'?p:'web'})();
 const LB_KEY='fa3-k7Qm2xVb9Lr4Tz8Wn1Hc6Pd';
 const LB_RUN_KEY='fa_lb_run_'+LB_GAME;
@@ -1591,7 +1614,21 @@ function navBack(){
 addEventListener('keydown',e=>{if(e.key==='Escape')navBack()});
 window.__nav={navBack,goHome,askQuit,vis};
 applyLang();
-</script><script>
+</script><<script>
+// v69: Chrome/Safari on iPhone keep an open tab's old code in memory, so a deploy never reaches a player who just switches back.
+// On return (and every minute) check sw.js for a newer version; reload only from the start menu so no run or score entry is lost.
+(function(){const MY=69;let busy=0,last=0,want=0;
+  function safe(){try{const st=document.getElementById('start');if(!st||st.classList.contains('hide'))return false;
+    for(const o of document.querySelectorAll('.ov'))if(o!==st&&!o.classList.contains('hide'))return false;
+    const g=window.__ft||window.__fb;return !(g&&g.running)}catch(e){return false}}
+  async function chk(force){if(document.hidden)return;if(want){if(safe())location.reload();return}
+    if(busy||(!force&&Date.now()-last<60000))return;busy=1;last=Date.now();
+    try{const r=await fetch('sw.js?u='+Date.now(),{cache:'no-store'});const m=(await r.text()).match(/const C='[a-z]+-v(\d+)'/);
+      if(m&&+m[1]>MY){want=1;try{const g=await navigator.serviceWorker.getRegistration();if(g)g.update()}catch(e){}if(safe())location.reload()}}catch(e){}busy=0}
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk(true)});addEventListener('pageshow',()=>chk(true));
+  setTimeout(()=>chk(true),4000);setInterval(()=>chk(false),20000)})();
+</script>
+script>
 /* customize controls: slot-based reorder in the bottom bar */
 (function(){var KEY='fa_ctl_layout',T=document.getElementById('touch'),DEF=['attack','vac','shield','special','left','right'];
 function Bs(){return [].slice.call(T.querySelectorAll('button'))}
