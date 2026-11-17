@@ -1614,7 +1614,7 @@ function navBack(){
 addEventListener('keydown',e=>{if(e.key==='Escape')navBack()});
 window.__nav={navBack,goHome,askQuit,vis};
 applyLang();
-</script><<script>
+</script><script>
 // v69: Chrome/Safari on iPhone keep an open tab's old code in memory, so a deploy never reaches a player who just switches back.
 // On return (and every minute) check sw.js for a newer version; reload only from the start menu so no run or score entry is lost.
 (function(){const MY=69;let busy=0,last=0,want=0;
@@ -1629,7 +1629,7 @@ applyLang();
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk(true)});addEventListener('pageshow',()=>chk(true));
   setTimeout(()=>chk(true),4000);setInterval(()=>chk(false),20000)})();
 </script>
-script>
+<script>
 /* customize controls: slot-based reorder in the bottom bar */
 (function(){var KEY='fa_ctl_layout',T=document.getElementById('touch'),DEF=['attack','vac','shield','special','left','right'];
 function Bs(){return [].slice.call(T.querySelectorAll('button'))}
